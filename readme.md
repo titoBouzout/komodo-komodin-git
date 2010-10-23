@@ -42,7 +42,7 @@ Available commands:
 + Diff
   - git diff "/selected/paths/files/or/and/folders"
 + Log
-  - git diff "/selected/paths/files/or/and/folders"
+  - git log "/selected/paths/files/or/and/folders"
 + Status
   - git status "/selected/paths/files/or/and/folders"
  
