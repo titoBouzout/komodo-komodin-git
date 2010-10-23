@@ -28,44 +28,44 @@ Select from the the git submenu a command...
 
 Available commands:
 
-[*] Add & Commit
- - git add "/selected/paths/files/or/folders"
- - git commit "/selected/paths/files/or/folders" -m "a message"
-[*] Add & Commit & Push
- - git add "/selected/paths/files/or/folders"
- - git commit "/selected/paths/files/or/folders" -m "a message"
+[+] Add & Commit
+ - git add "/selected/paths/files/or/and/folders"
+ - git commit "/selected/paths/files/or/and/folders" -m "a message"
+[+] Add & Commit & Push
+ - git add "/selected/paths/files/or/and/folders"
+ - git commit "/selected/paths/files/or/and/folders" -m "a message"
  - git push
 
-[*] Commit
- - git commit "/selected/paths/files/or/folders" -m "a message"
+[+] Commit
+ - git commit "/selected/paths/files/or/and/folders" -m "a message"
  
-[*] Diff
- - git diff "/selected/paths/files/or/folders"
-[*] Log
- - git diff "/selected/paths/files/or/folders"
-[*] Status
- - git status "/selected/paths/files/or/folders"
+[+] Diff
+ - git diff "/selected/paths/files/or/and/folders"
+[+] Log
+ - git diff "/selected/paths/files/or/and/folders"
+[+] Status
+ - git status "/selected/paths/files/or/and/folders"
  
-[*] Revert
- - git checkout -- "/selected/paths/files/or/folders"
-[*] Revert & Clean
- - git checkout -- "/selected/paths/files/or/folders"
- - git clean "/selected/paths/files/or/folders" -f -d
-[*] Revert to object
+[+] Revert
+ - git checkout -- "/selected/paths/files/or/and/folders"
+[+] Revert & Clean
+ - git checkout -- "/selected/paths/files/or/and/folders"
+ - git clean "/selected/paths/files/or/and/folders" -f -d
+[+] Revert to object
   - git revert promptMessage
   
-[*] Push
+[+] Push
  - git push
-[*] Pull
+[+] Pull
  - git pull
  
-[*] Checkout to
+[+] Checkout to
   - git checkout promptMessage
 
-[*] Clone
+[+] Clone
  - git clone promptMessage
  
-[*] Init
+[+] Init
  - git init
  
  
