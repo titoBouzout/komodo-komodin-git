@@ -1,7 +1,7 @@
 Komodo Edit "Places" Git Extension ( aka "Komodin" )
 =============
 
-We use this extension on Linux to add Git commands to Komodo Edit
+Use this extension on Linux to add Git commands to Komodo Edit
 
 Requirements
 ------------
@@ -16,7 +16,7 @@ On my fedora installation these are under /tmp/kGit/kGit-[1-n].sh
 The script runs asynchronously /bin/sh "/tmp/kGit/kGit-[1-n].sh"
 to execute the commands saved.
 
-The output is redirected to "/tmp/kGit/kGit-[1-n.diff" and
+The output is redirected to "/tmp/kGit/kGit-[1-n].diff" and
 "on command complete" the file is opened in a new komodo tab, which shows
 the output with pretty colours.
 
@@ -28,44 +28,44 @@ Select from the the git submenu a command...
 
 Available commands:
 
-[+] Add & Commit
++ Add & Commit
  - git add "/selected/paths/files/or/and/folders"
  - git commit "/selected/paths/files/or/and/folders" -m "a message"
-[+] Add & Commit & Push
++ Add & Commit & Push
  - git add "/selected/paths/files/or/and/folders"
  - git commit "/selected/paths/files/or/and/folders" -m "a message"
  - git push
 
-[+] Commit
++ Commit
  - git commit "/selected/paths/files/or/and/folders" -m "a message"
  
-[+] Diff
++ Diff
  - git diff "/selected/paths/files/or/and/folders"
-[+] Log
++ Log
  - git diff "/selected/paths/files/or/and/folders"
-[+] Status
++ Status
  - git status "/selected/paths/files/or/and/folders"
  
-[+] Revert
++ Revert
  - git checkout -- "/selected/paths/files/or/and/folders"
-[+] Revert & Clean
++ Revert & Clean
  - git checkout -- "/selected/paths/files/or/and/folders"
  - git clean "/selected/paths/files/or/and/folders" -f -d
-[+] Revert to object
++ Revert to object
   - git revert promptMessage
   
-[+] Push
++ Push
  - git push
-[+] Pull
++ Pull
  - git pull
  
-[+] Checkout to
++ Checkout to
   - git checkout promptMessage
 
-[+] Clone
++ Clone
  - git clone promptMessage
  
-[+] Init
++ Init
  - git init
  
  
