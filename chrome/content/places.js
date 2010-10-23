@@ -46,7 +46,7 @@ function kGit()
     {
       var selected =   gPlacesViewMgr.getSelectedURIs();
       for(var id in selected)
-        selected[id] = selected[id].replace(/file\:\/\//, '').replace(/"/g, '\"'); 
+        selected[id] = selected[id].replace(/file\:\/\//, '').replace(/"/g, '\\"'); 
       return selected;
     }
     this.commit = function()
@@ -206,7 +206,7 @@ function kGit()
         var aMsg = this.prompt('Enter a commit message...');
         if(aMsg != '')
         {
-            aMsg = aMsg.replace(/"/g, '\"');
+            aMsg = aMsg.replace(/"/g, '\\"');
             
             var selected = this.getSelectedURIs();
             for(var id in selected)
@@ -235,7 +235,7 @@ function kGit()
         var aMsg = this.prompt('Enter a commit message...');
         if(aMsg != '')
         {
-            aMsg = aMsg.replace(/"/g, '\"');
+            aMsg = aMsg.replace(/"/g, '\\"');
             
             var selected = this.getSelectedURIs();
             for(var id in selected)
