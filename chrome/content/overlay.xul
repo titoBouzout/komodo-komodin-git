@@ -23,8 +23,9 @@
                 <menuseparator/>
                 <menuitem oncommand="kgit.diff()" label="Diff" class="menuitem-iconic" hideIf="project"/>
                 <menuitem oncommand="kgit.log()" label="Log" class="menuitem-iconic" hideIf="project" />
+                <menuitem oncommand="kgit.status()" label="Status" class="menuitem-iconic" hideIf="project" />
                 <menuseparator/>
-                <menuitem oncommand="kgit.revert()" label="Revert" class="menuitem-iconic" hideIf="project"/>
+                <menuitem oncommand="kgit.revertClean()" label="Revert &amp; Clean" class="menuitem-iconic" hideIf="project"/>
                 <menuseparator/>
                 <menuitem oncommand="kgit.push()" label="Push" class="menuitem-iconic" hideIf="project" />
                 <menuitem oncommand="kgit.pull()" label="Pull" class="menuitem-iconic" hideIf="project" />

@@ -4,23 +4,21 @@ function kGit()
     this.temporal = [];
     this.temporal['diff'] = [];
     this.temporal['log'] = [];
+    this.temporal['status'] = [];
+    this.temporal['revert'] = [];
 
     this.observe = function(aSubject, aTopic, aData)
 	{
-        for(var id in this.temporal['diff'])
+        var toOpen = ['diff', 'log', 'status', 'revert'];
+        for(var i in toOpen)
         {
-            var file = this.temporal['diff'][id];
-                this.temporal['diff'][id] = null;
-                delete this.temporal['diff'][id];
-            ko.open.multipleURIs([file]);
-        }
-        
-        for(var id in this.temporal['log'])
-        {
-            var file = this.temporal['log'][id];
-                this.temporal['log'][id] = null;
-                delete this.temporal['log'][id];
-            ko.open.multipleURIs([file]);
+            for(var id in this.temporal[toOpen[i]])
+            {
+                var file = this.temporal[toOpen[i]][id];
+                    this.temporal[toOpen[i]][id] = null;
+                    delete this.temporal[toOpen[i]][id];
+                ko.open.multipleURIs([file]);
+            }
         }
     }
     this.run = function(aScriptPath)
@@ -51,20 +49,6 @@ function kGit()
     {
        this.run();
     }
-    this.status = function()
-    {
-        /*
-        this.alert(document.popupNode);
-        var childs = document.popupNode.getElementsByTagName('treerow');
-        for(var id=0;id < childs.length;id++)
-        {
-            this.alert(childs[id].getAttribute('value'))
-            this.alert(childs[id].getAttribute('href'))
-            this.alert(childs[id].getAttribute('url'))
-        }
-        
-        */
-    }
     this.diff = function()
     {
         var selected = this.getSelectedURIs();
@@ -93,7 +77,7 @@ function kGit()
         for(var id in selected)
         {
             var file = this.fileCreateTemporal('kGit.sh');
-            var output = this.fileCreateTemporal('kGit.log');
+            var output = this.fileCreateTemporal('kGit.diff');
             
             var dir;
             
@@ -108,6 +92,51 @@ function kGit()
             
             this.run(file);
         }
+    }
+    this.status = function()
+    {
+        var selected = this.getSelectedURIs();
+        for(var id in selected)
+        {
+            var file = this.fileCreateTemporal('kGit.sh');
+            var output = this.fileCreateTemporal('kGit.diff');
+            
+            var dir;
+            
+            if(this.fileIsFolder(selected[id]))
+                dir = selected[id];
+            else
+                dir = this.fileDirname(selected[id]);
+            
+            this.temporal['status'][this.temporal['status'].length] = output;
+            
+            this.fileWrite(file, 'cd "'+dir+'" \ngit status "'+selected[id]+'" > "'+output+'" ');
+            
+            this.run(file);
+        }
+    }
+    this.revertClean = function()
+    {
+        var selected = this.getSelectedURIs();
+        for(var id in selected)
+        {
+            var file = this.fileCreateTemporal('kGit.sh');
+            var output = this.fileCreateTemporal('kGit.diff');
+            
+            var dir;
+            
+            if(this.fileIsFolder(selected[id]))
+                dir = selected[id];
+            else
+                dir = this.fileDirname(selected[id]);
+            
+            this.temporal['revert'][this.temporal['revert'].length] = output;
+            
+            this.fileWrite(file, 'cd "'+dir+'" \ngit checkout -- "'+selected[id]+'" >>"'+output+'" 2>&1 \n git clean "'+selected[id]+'" -f -d >>"'+output+'" 2>&1  \n ');
+            
+            this.run(file);
+        }
+
     }
     
     
