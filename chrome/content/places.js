@@ -163,7 +163,7 @@ function kGit()
             
             this.temporal['revert'][this.temporal['revert'].length] = output;
             
-            this.fileWrite(file, 'cd "'+dir+'" \ngit checkout -- "'+selected[id]+'" >>"'+output+'" 2>&1 \n \n ');
+            this.fileWrite(file, 'cd "'+dir+'" \ngit checkout -- "'+selected[id]+'" >> "'+output+'"  \n \n ');
             
             this.run(file);
         }
