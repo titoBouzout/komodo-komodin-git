@@ -29,44 +29,44 @@ Select from the the git submenu a command...
 Available commands:
 
 + Add & Commit
- - git add "/selected/paths/files/or/and/folders"
- - git commit "/selected/paths/files/or/and/folders" -m "a message"
+  - git add "/selected/paths/files/or/and/folders"
+  - git commit "/selected/paths/files/or/and/folders" -m "a message"
 + Add & Commit & Push
- - git add "/selected/paths/files/or/and/folders"
- - git commit "/selected/paths/files/or/and/folders" -m "a message"
- - git push
+  - git add "/selected/paths/files/or/and/folders"
+  - git commit "/selected/paths/files/or/and/folders" -m "a message"
+  - git push
 
 + Commit
- - git commit "/selected/paths/files/or/and/folders" -m "a message"
+  - git commit "/selected/paths/files/or/and/folders" -m "a message"
  
 + Diff
- - git diff "/selected/paths/files/or/and/folders"
+  - git diff "/selected/paths/files/or/and/folders"
 + Log
- - git diff "/selected/paths/files/or/and/folders"
+  - git diff "/selected/paths/files/or/and/folders"
 + Status
- - git status "/selected/paths/files/or/and/folders"
+  - git status "/selected/paths/files/or/and/folders"
  
 + Revert
- - git checkout -- "/selected/paths/files/or/and/folders"
+  - git checkout -- "/selected/paths/files/or/and/folders"
 + Revert & Clean
- - git checkout -- "/selected/paths/files/or/and/folders"
- - git clean "/selected/paths/files/or/and/folders" -f -d
+  - git checkout -- "/selected/paths/files/or/and/folders"
+  - git clean "/selected/paths/files/or/and/folders" -f -d
 + Revert to object
   - git revert promptMessage
   
 + Push
- - git push
+  - git push
 + Pull
- - git pull
+  - git pull
  
 + Checkout to
   - git checkout promptMessage
 
 + Clone
- - git clone promptMessage
+  - git clone promptMessage
  
 + Init
- - git init
+  - git init
  
  
 ### License
