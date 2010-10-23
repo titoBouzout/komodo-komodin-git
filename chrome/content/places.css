@@ -1,5 +1,5 @@
 
-
+/*
 treechildren#places-files-tree-body::-moz-tree-image {
   margin-right: 2px;
 }
@@ -9,4 +9,4 @@ treechildren#places-files-tree-body::-moz-tree-cell-text(disabled) {
 treechildren#places-files-tree-body::-moz-tree-image(places_folder_open) {
   list-style-image : url("chrome://komodo/skin/images/folder-open.png");
 }
-
+*/
