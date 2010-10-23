@@ -217,6 +217,37 @@ function kGit()
         this.run(file);
     }
 
+    this.init = function()
+    {
+        var selected = this.getSelectedURIFolder();
+
+        var file = this.fileCreateTemporal('kGit.sh');
+        var output = this.fileCreateTemporal('kGit.diff');
+        
+        this.temporal['push'][this.temporal['push'].length] = output;
+        
+        this.fileWrite(file, 'cd "'+selected+'" \ngit init >>"'+output+'" 2>&1 \n ');
+        
+        this.run(file);
+    }
+    this.clone = function()
+    {
+        var aMsg = this.prompt('Enter URL to clone...');
+        if(aMsg != '')
+        {
+            var selected = this.getSelectedURIFolder();
+            
+            var file = this.fileCreateTemporal('kGit.sh');
+            var output = this.fileCreateTemporal('kGit.diff');
+            
+            this.temporal['push'][this.temporal['push'].length] = output;
+            
+            this.fileWrite(file, 'cd "'+selected+'" \ngit clone '+aMsg+' >>"'+output+'" 2>&1 \n ');
+            
+            this.run(file);
+        }
+    }
+
     this.pull = function()
     {
         var selected = this.getSelectedURIFolder();

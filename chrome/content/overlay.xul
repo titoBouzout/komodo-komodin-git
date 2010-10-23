@@ -34,6 +34,9 @@
                 <menuitem oncommand="kgit.push()" label="Push" class="menuitem-iconic"  />
                 <menuitem oncommand="kgit.pull()" label="Pull" class="menuitem-iconic"  />
                 <menuitem oncommand="kgit.checkoutTo()" label="Checkout to..." class="menuitem-iconic"  />
+                <menuseparator/>
+                <menuitem oncommand="kgit.clone()" label="Clone.." class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.init()" label="Init.." class="menuitem-iconic"  />
             </menupopup>
             
         </menu>
