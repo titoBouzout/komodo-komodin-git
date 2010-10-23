@@ -2,13 +2,13 @@
 
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+	
     <Description about="urn:mozilla:install-manifest">
         <em:id>tito@kgit</em:id>
-        <em:name>kGit</em:name>
+        <em:name>Komodin (Komodo Edit Git)</em:name>
         <em:version>0.1</em:version>
         <em:description>Git to Komodo Edit</em:description>
         <em:creator>Roberto Bouzout (tito)</em:creator>
-        <em:type>2</em:type> <!-- type=extension --> 
 
         <em:targetApplication>
             <Description>
@@ -18,5 +18,7 @@
                 <em:maxVersion>6.*</em:maxVersion>
             </Description>
         </em:targetApplication>
+		
     </Description>
+	
 </RDF>
