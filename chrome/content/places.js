@@ -6,10 +6,14 @@ function kGit()
     this.temporal['log'] = [];
     this.temporal['status'] = [];
     this.temporal['revert'] = [];
+    this.temporal['push'] = [];
+    this.temporal['pull'] = [];
+    this.temporal['commit'] = [];
 
     this.observe = function(aSubject, aTopic, aData)
 	{
-        var toOpen = ['diff', 'log', 'status', 'revert'];
+        var toOpen = ['diff', 'log', 'status', 'revert', 'push', 'pull', 'commit'];
+        
         for(var i in toOpen)
         {
             for(var id in this.temporal[toOpen[i]])
@@ -136,19 +140,133 @@ function kGit()
             
             this.run(file);
         }
+    }
+    this.revert = function()
+    {
+        var selected = this.getSelectedURIs();
+        for(var id in selected)
+        {
+            var file = this.fileCreateTemporal('kGit.sh');
+            var output = this.fileCreateTemporal('kGit.diff');
+            
+            var dir;
+            
+            if(this.fileIsFolder(selected[id]))
+                dir = selected[id];
+            else
+                dir = this.fileDirname(selected[id]);
+            
+            this.temporal['revert'][this.temporal['revert'].length] = output;
+            
+            this.fileWrite(file, 'cd "'+dir+'" \ngit revert "'+selected[id]+'" >>"'+output+'" 2>&1 \n ');
+            
+            this.run(file);
+        }
+    }
 
+    this.push = function()
+    {
+        var dir = this.getSelectedURIs()[0];
+
+        var file = this.fileCreateTemporal('kGit.sh');
+        var output = this.fileCreateTemporal('kGit.diff');
+
+        if(this.fileIsFolder(dir)){}
+        else
+            dir = this.fileDirname(dir);
+        
+        this.temporal['push'][this.temporal['push'].length] = output;
+        
+        this.fileWrite(file, 'cd "'+dir+'" \ngit push >>"'+output+'" 2>&1 \n ');
+        
+        this.run(file);
+    }
+
+    this.pull = function()
+    {
+        var dir = this.getSelectedURIs()[0];
+
+        var file = this.fileCreateTemporal('kGit.sh');
+        var output = this.fileCreateTemporal('kGit.diff');
+
+        if(this.fileIsFolder(dir)){}
+        else
+            dir = this.fileDirname(dir);
+        
+        this.temporal['pull'][this.temporal['pull'].length] = output;
+        
+        this.fileWrite(file, 'cd "'+dir+'" \ngit pull >>"'+output+'" 2>&1 \n ');
+        
+        this.run(file);
+    }
+
+
+    this.commit = function()
+    {
+        var aMsg = this.prompt('Enter a commit message...');
+        if(aMsg != '')
+        {
+            aMsg = aMsg.replace(/"/g, '\"');
+            
+            var selected = this.getSelectedURIs();
+            for(var id in selected)
+            {
+                var file = this.fileCreateTemporal('kGit.sh');
+                var output = this.fileCreateTemporal('kGit.diff');
+                
+                var dir;
+                
+                if(this.fileIsFolder(selected[id]))
+                    dir = selected[id];
+                else
+                    dir = this.fileDirname(selected[id]);
+                
+                this.temporal['commit'][this.temporal['commit'].length] = output;
+                
+                this.fileWrite(file, 'cd "'+dir+'" \ngit commit "'+selected[id]+'" -m "'+aMsg+'" >>"'+output+'" 2>&1 \n ');
+                
+                this.run(file);
+            }
+        }
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    this.addCommit = function()
+    {
+        var aMsg = this.prompt('Enter a commit message...');
+        if(aMsg != '')
+        {
+            aMsg = aMsg.replace(/"/g, '\"');
+            
+            var selected = this.getSelectedURIs();
+            for(var id in selected)
+            {
+                var file = this.fileCreateTemporal('kGit.sh');
+                var output = this.fileCreateTemporal('kGit.diff');
+                
+                var dir;
+                
+                if(this.fileIsFolder(selected[id]))
+                    dir = selected[id];
+                else
+                    dir = this.fileDirname(selected[id]);
+                
+                this.temporal['commit'][this.temporal['commit'].length] = output;
+                
+                this.fileWrite(file, 'cd "'+dir+'" \ngit add "'+selected[id]+'" \ngit commit "'+selected[id]+'" -m "'+aMsg+'" >>"'+output+'" 2>&1 \n ');
+                
+                this.run(file);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
     /* UTILS */
     
     //shows a custom prompt

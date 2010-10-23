@@ -12,26 +12,29 @@
 
     <menupopup id="places-files-popup">
         
-        <menuseparator/>
+        <menuseparator hideIf="project" />
         
-        <menu label="Git">
+        <menu label="Git" hideIf="project">
             
             <menupopup>
                 
-                <menuitem oncommand="kgit.commit()" label="Commit" class="menuitem-iconic" hideIf="project" />
-                <menuitem oncommand="kgit.commitPush()" label="Commit &amp; Push" class="menuitem-iconic" hideIf="project" />
+                <menuitem oncommand="kgit.addCommit()" label="Add &amp; Commit" class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.commit()" label="Commit" class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.commitPush()" label="Commit &amp; Push" class="menuitem-iconic"  />
                 <menuseparator/>
-                <menuitem oncommand="kgit.diff()" label="Diff" class="menuitem-iconic" hideIf="project"/>
-                <menuitem oncommand="kgit.log()" label="Log" class="menuitem-iconic" hideIf="project" />
-                <menuitem oncommand="kgit.status()" label="Status" class="menuitem-iconic" hideIf="project" />
+                <menuitem oncommand="kgit.diff()" label="Diff" class="menuitem-iconic" />
+                <menuitem oncommand="kgit.log()" label="Log" class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.status()" label="Status" class="menuitem-iconic"  />
                 <menuseparator/>
-                <menuitem oncommand="kgit.revertClean()" label="Revert &amp; Clean" class="menuitem-iconic" hideIf="project"/>
+                <menuitem oncommand="kgit.revertClean()" label="Revert &amp; Clean" class="menuitem-iconic" />
+                <menuitem oncommand="kgit.revert()" label="Revert" class="menuitem-iconic" />
+                <menuitem oncommand="kgit.reset()" label="Reset.." class="menuitem-iconic" />
                 <menuseparator/>
-                <menuitem oncommand="kgit.push()" label="Push" class="menuitem-iconic" hideIf="project" />
-                <menuitem oncommand="kgit.pull()" label="Pull" class="menuitem-iconic" hideIf="project" />
-                <menuitem oncommand="kgit.checkout()" label="Checkout" class="menuitem-iconic" hideIf="project" />
+                <menuitem oncommand="kgit.push()" label="Push" class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.pull()" label="Pull" class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.checkout()" label="Checkout" class="menuitem-iconic"  />
                 <menuseparator/>
-                <menuitem oncommand="kgit.commandLine()" label="Git command line here" class="menuitem-iconic" hideIf="project"/>
+                <menuitem oncommand="kgit.commandLine()" label="Git command line here" class="menuitem-iconic" />
             
             </menupopup>
             
