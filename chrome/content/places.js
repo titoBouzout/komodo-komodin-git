@@ -349,9 +349,94 @@ function kGit()
         }
     }
 
+  
+  
+    this.crazyIconsEvent = function(event)
+    {
+        /*
+          gPlacesViewMgr.tree.body.addEventListener('DOMSubtreeModified',
+                          function(event){kgit.crazyIcons(event, 1);}, false);
+            
+             document.getElementById("places-files-tree").addEventListener('DOMSubtreeModified',
+                                function(event){kgit.crazyIcons(event, 2);}, false);
+             
+            document.getElementById("places-files-tree-body").addEventListener('DOMSubtreeModified',
+                                function(event){kgit.crazyIcons(event, 3);}, false);
+            alert('dale hdp');
+        */ 
+    }
+    this.crazyIcons = function(event, coso)
+    {
+          /*
+            alert(coso);
+   var tree = document.getElementById("my-tree");
+  var tbo = tree.treeBoxObject;
 
+  // get the row, col and child element at the point
+  var row = { }, col = { }, child = { };
+  tbo.getCellAt(event.clientX, event.clientY, row, col, child);
 
+  var cellText = tree.view.getCellText(row.value, col.value);
+  alert(cellText);  xul:treerows
 
+//gPlacesViewMgr.tree.view
+  alert(event.explicitOriginalTarget.tagName)
+        if(
+           event.explicitOriginalTarget.tagName == 'treechildren' ||
+           event.explicitOriginalTarget.tagName == 'tree' || 
+           event.explicitOriginalTarget.tagName == 'treerows' ||
+           event.explicitOriginalTarget.tagName == 'treerow' || 
+           event.explicitOriginalTarget.tagName == 'treeitem'
+           )
+        {
+            for(var id in event.explicitOriginalTarget)
+            {
+                if(id.indexOf('tag') != -1)
+                    alert(id+'=>'+event.explicitOriginalTarget[id])
+            }
+        }
+          */
+    
+    /*
+        this.recentProjectsTreeView.prototype.getCellProperties = function(index, column, properties) {
+        var row = this.rows[index];
+        var currentProject = ko.projects.manager.currentProject;
+        if (currentProject && currentProject.url == row[0]) {
+            properties.AppendElement(this._atomService.getAtom("projectActive"));
+        }
+        
+        
+        def getCellProperties(self, row_idx, column, properties):
+        #assert col.id == "name"
+        col_id = column.id
+        try:
+            rowNode = self._rows[row_idx]
+####        zips = rowNode.getCellPropertyNames(col_id)
+####            qlog.debug("props(row:%d) name:%s) : %s",
+####                       row_idx, rowNode.name,  zips)
+            for propName in rowNode.getCellPropertyNames(col_id):
+                try:
+                    properties.AppendElement(self._atomsFromName[propName])
+                except KeyError:
+                    log.debug("getCellProperties: no property for %s",
+                               propName)
+        except AttributeError:
+            log.exception("getCellProperties(row_idx:%d, col_id:%r",
+                          row_idx, col_id)
+            return ""
+        if rowNode.properties is None:
+            # These values are cached, until there is a file_status change.
+            atomProperties = []
+            for prop in self._buildCellProperties(rowNode):
+                atomProperties.append(self.atomSvc.getAtom(prop))
+            rowNode.properties = atomProperties
+        for atomProp in rowNode.properties:
+            properties.AppendElement(atomProp)
+    
+    gfvk tkg kgfk gjk y
+            */
+    
+    }
 
 
 
@@ -524,7 +609,13 @@ function kGit()
 		var dirname =  aDestination.parent.path;
 		return dirname;
 	}
+    
     return this;
 }
 
 var kgit = new kGit();
+
+/*
+addEventListener('load', function(){
+                            window.setTimeout(function(){ kgit.crazyIconsEvent()}, 5000)
+                        }, false);*/

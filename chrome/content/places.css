@@ -1,0 +1,12 @@
+
+
+treechildren#places-files-tree-body::-moz-tree-image {
+  margin-right: 2px;
+}
+treechildren#places-files-tree-body::-moz-tree-cell-text(disabled) {
+  color: grey;
+}
+treechildren#places-files-tree-body::-moz-tree-image(places_folder_open) {
+  list-style-image : url("chrome://komodo/skin/images/folder-open.png");
+}
+
