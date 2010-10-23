@@ -1,28 +1,41 @@
 <?xml version="1.0"?>
 <!DOCTYPE overlay PUBLIC "-//MOZILLA//DTD XUL V1.0//EN" "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+
+<?xml-stylesheet href="chrome://kgit/content/places.css" type="text/css"?>
 
 <overlay
-         xmlns:html="http://www.w3.org/1999/xhtml"
-         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  
-  <script src="chrome://kgit/content/places.js" type="application/x-javascript"/>
+ xmlns:html="http://www.w3.org/1999/xhtml"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+ 
+ <script src="chrome://kgit/content/places.js" type="application/x-javascript"/>
 
-  <menupopup id="places-files-popup">
-
-    <menu label="Git">
+    <menupopup id="places-files-popup">
         
-        <menupopup>
-            <menuitem 
-                oncommand="kgit.alert('yeah')"
-                label="Commit"
-                class="menuitem-iconic"
-                hideIf="project"
-            />
-        </menupopup>
+        <menuseparator/>
         
-    </menu>
-  </menupopup>
-  
+        <menu label="Git">
+            
+            <menupopup>
+                
+                <menuitem oncommand="kgit.commit()" label="Commit" class="menuitem-iconic" hideIf="project" />
+                <menuitem oncommand="kgit.commitPush()" label="Commit &amp; Push" class="menuitem-iconic" hideIf="project" />
+                <menuseparator/>
+                <menuitem oncommand="kgit.diff()" label="Diff" class="menuitem-iconic" hideIf="project"/>
+                <menuitem oncommand="kgit.log()" label="Log" class="menuitem-iconic" hideIf="project" />
+                <menuseparator/>
+                <menuitem oncommand="kgit.revert()" label="Revert" class="menuitem-iconic" hideIf="project"/>
+                <menuseparator/>
+                <menuitem oncommand="kgit.push()" label="Push" class="menuitem-iconic" hideIf="project" />
+                <menuitem oncommand="kgit.pull()" label="Pull" class="menuitem-iconic" hideIf="project" />
+                <menuitem oncommand="kgit.checkout()" label="Checkout" class="menuitem-iconic" hideIf="project" />
+                <menuseparator/>
+                <menuitem oncommand="kgit.commandLine()" label="Git command line here" class="menuitem-iconic" hideIf="project"/>
+            
+            </menupopup>
+            
+        </menu>
+        
+    </menupopup>
+ 
 </overlay>
