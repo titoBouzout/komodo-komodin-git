@@ -51,7 +51,7 @@ function kGit()
     }
     this.getSelectedURIFolder = function()
     {
-      var selected =   gPlacesViewMgr.getSelectedURIs()[0];
+      var selected = gPlacesViewMgr.getSelectedURIs()[0].replace(/file\:\/\//, '').replace(/"/g, '\\"');
         if(this.fileIsFolder(selected)){}
         else
             selected = this.fileDirname(selected);
