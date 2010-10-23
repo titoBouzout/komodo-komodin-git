@@ -258,6 +258,35 @@ function kGit()
             }
         }
     }
+    
+    this.addCommitPush = function()
+    {
+        var aMsg = this.prompt('Enter a commit message...');
+        if(aMsg != '')
+        {
+            aMsg = aMsg.replace(/"/g, '\\"');
+            
+            var selected = this.getSelectedURIs();
+            for(var id in selected)
+            {
+                var file = this.fileCreateTemporal('kGit.sh');
+                var output = this.fileCreateTemporal('kGit.diff');
+                
+                var dir;
+                
+                if(this.fileIsFolder(selected[id]))
+                    dir = selected[id];
+                else
+                    dir = this.fileDirname(selected[id]);
+                
+                this.temporal['commit'][this.temporal['commit'].length] = output;
+                
+                this.fileWrite(file, 'cd "'+dir+'" \ngit add "'+selected[id]+'" \ngit commit "'+selected[id]+'" -m "'+aMsg+'" >>"'+output+'" 2>&1 \n \ngit push >>"'+output+'" 2>&1 \n ');
+                
+                this.run(file);
+            }
+        }
+    }
 
 
 
