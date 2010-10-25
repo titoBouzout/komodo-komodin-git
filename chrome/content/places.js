@@ -352,6 +352,24 @@ function kGit()
             }
         }
     }
+	//empty our temp folder when komodo is closed.
+    this.emptyTemp = function()
+    {
+		var file = Components.classes["@mozilla.org/file/directory_service;1"]
+						 .getService(Components.interfaces.nsIProperties)
+						 .get("TmpD", Components.interfaces.nsIFile);
+		//security - works always in a folder with with the name of this extension
+		file.append('kGit');
+		
+		if( !file.exists() || !file.isDirectory() )   // if it doesn't exist..
+		{
+			
+		}
+		else
+		{
+		  file.remove(true);
+		}
+	}
 
   
   
@@ -646,3 +664,5 @@ function kGit()
 }
 
 var kgit = new kGit();
+
+addEventListener('unload', kgit.emptyTemp, false);
