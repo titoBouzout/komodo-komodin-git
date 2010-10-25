@@ -2,28 +2,26 @@
 function kGit()
 {
     this.temporal = [];
-    this.temporal['diff'] = [];
-    this.temporal['log'] = [];
-    this.temporal['status'] = [];
-    this.temporal['revert'] = [];
-    this.temporal['push'] = [];
-    this.temporal['pull'] = [];
-    this.temporal['commit'] = [];
+    this.temporal['open'] = [];//opens in a new tab the output
+    this.temporal['display'] = [];//shows in the command output the output
 
     this.observe = function(aSubject, aTopic, aData)
 	{
-        var toOpen = ['diff', 'log', 'status', 'revert', 'push', 'pull', 'commit'];
-        
-        for(var i in toOpen)
-        {
-            for(var id in this.temporal[toOpen[i]])
-            {
-                var file = this.temporal[toOpen[i]][id];
-                    this.temporal[toOpen[i]][id] = null;
-                    delete this.temporal[toOpen[i]][id];
-                ko.open.multipleURIs([file]);
-            }
-        }
+	  
+	  for(var id in this.temporal['open'])
+	  {
+		  var file = this.temporal['open'][id];
+			  this.temporal['open'][id] = null;
+			  delete this.temporal['open'][id];
+		  ko.open.multipleURIs([file]);
+	  }
+	  for(var id in this.temporal['display'])
+	  {
+		  var file = this.temporal['display'][id];
+			  this.temporal['display'][id] = null;
+			  delete this.temporal['display'][id];
+		  this.commandOutput(this.fileRead(file));
+	  }
     }
     this.run = function(aScriptPath)
     {
@@ -40,18 +38,30 @@ function kGit()
         var argv = [aScriptPath];
 
         process.runAsync(argv, argv.length, this, false);
-
     }
     this.getSelectedURIs = function()
     {
-      var selected =   gPlacesViewMgr.getSelectedURIs();
-      for(var id in selected)
-        selected[id] = selected[id].replace(/file\:\/\//, '').replace(/"/g, '\\"'); 
+      var selected = gPlacesViewMgr.getSelectedURIs();
+	  
+	  if(selected && selected.length && selected.length > 0)
+	  {
+		for(var id in selected)
+		  selected[id] = selected[id].replace(/file\:\/\//, '').replace(/"/g, '\\"');
+	  }
+	  else if(ko && ko.places && ko.places.manager && ko.places.manager.currentPlace &&  ko.places.manager.currentPlace != '')
+	  {
+		 selected = [];
+		 selected[0] = String(ko.places.manager.currentPlace).replace(/file\:\/\//, '').replace(/"/g, '\\"');
+	  }
+	  else
+	  {
+		this.error('no path');
+	  }
       return selected;
     }
     this.getSelectedURIFolder = function()
     {
-      var selected = gPlacesViewMgr.getSelectedURIs()[0].replace(/file\:\/\//, '').replace(/"/g, '\\"');
+      var selected = gPlacesViewMgr.getSelectedURIs()[0];
         if(this.fileIsFolder(selected)){}
         else
             selected = this.fileDirname(selected);
@@ -73,7 +83,7 @@ function kGit()
             else
                 dir = this.fileDirname(selected[id]);
             
-            this.temporal['diff'][this.temporal['diff'].length] = output;
+            this.temporal['open'][this.temporal['open'].length] = output;
             
             this.fileWrite(file, 'cd "'+dir+'" \ngit diff "'+selected[id]+'" > "'+output+'" ');
             
@@ -95,7 +105,7 @@ function kGit()
             else
                 dir = this.fileDirname(selected[id]);
             
-            this.temporal['log'][this.temporal['log'].length] = output;
+            this.temporal['open'][this.temporal['open'].length] = output;
             
             this.fileWrite(file, 'cd "'+dir+'" \ngit log "'+selected[id]+'" > "'+output+'" ');
             
@@ -117,7 +127,7 @@ function kGit()
             else
                 dir = this.fileDirname(selected[id]);
             
-            this.temporal['status'][this.temporal['status'].length] = output;
+            this.temporal['open'][this.temporal['open'].length] = output;
             
             this.fileWrite(file, 'cd "'+dir+'" \ngit status "'+selected[id]+'" > "'+output+'" ');
             
@@ -139,7 +149,7 @@ function kGit()
             else
                 dir = this.fileDirname(selected[id]);
             
-            this.temporal['revert'][this.temporal['revert'].length] = output;
+            this.temporal['open'][this.temporal['open'].length] = output;
             
             this.fileWrite(file, 'cd "'+dir+'" \ngit checkout -- "'+selected[id]+'" >>"'+output+'" 2>&1 \n git clean "'+selected[id]+'" -f -d >>"'+output+'" 2>&1  \n ');
             
@@ -161,7 +171,7 @@ function kGit()
             else
                 dir = this.fileDirname(selected[id]);
             
-            this.temporal['revert'][this.temporal['revert'].length] = output;
+            this.temporal['open'][this.temporal['open'].length] = output;
             
             this.fileWrite(file, 'cd "'+dir+'" \ngit checkout -- "'+selected[id]+'" >> "'+output+'"  \n \n ');
             
@@ -170,7 +180,7 @@ function kGit()
     }
     this.revertToObject = function()
     {
-        var aMsg = this.prompt('Revert to object...');
+        var aMsg = this.prompt('Revert to object...').replace(/"/g, '\\"');
         if(aMsg != '')
         {
             var selected = this.getSelectedURIFolder();
@@ -178,7 +188,7 @@ function kGit()
             var file = this.fileCreateTemporal('kGit.sh');
             var output = this.fileCreateTemporal('kGit.diff');
             
-            this.temporal['revert'][this.temporal['revert'].length] = output;
+            this.temporal['open'][this.temporal['open'].length] = output;
             
             this.fileWrite(file, 'cd "'+selected+'" \ngit revert '+aMsg+' >>"'+output+'" 2>&1 \n ');
             
@@ -187,7 +197,7 @@ function kGit()
     }
     this.checkoutTo = function()
     {
-        var aMsg = this.prompt('Checkout to...');
+        var aMsg = this.prompt('Checkout to...').replace(/"/g, '\\"');
         if(aMsg != '')
         {
             var selected = this.getSelectedURIFolder();
@@ -195,7 +205,7 @@ function kGit()
             var file = this.fileCreateTemporal('kGit.sh');
             var output = this.fileCreateTemporal('kGit.diff');
             
-            this.temporal['revert'][this.temporal['revert'].length] = output;
+            this.temporal['open'][this.temporal['open'].length] = output;
             
             this.fileWrite(file, 'cd "'+selected+'" \ngit checkout '+aMsg+' >>"'+output+'" 2>&1 \n ');
             
@@ -210,7 +220,7 @@ function kGit()
         var file = this.fileCreateTemporal('kGit.sh');
         var output = this.fileCreateTemporal('kGit.diff');
         
-        this.temporal['push'][this.temporal['push'].length] = output;
+        this.temporal['display'][this.temporal['display'].length] = output;
         
         this.fileWrite(file, 'cd "'+selected+'" \ngit push >>"'+output+'" 2>&1 \n ');
         
@@ -224,7 +234,7 @@ function kGit()
         var file = this.fileCreateTemporal('kGit.sh');
         var output = this.fileCreateTemporal('kGit.diff');
         
-        this.temporal['push'][this.temporal['push'].length] = output;
+        this.temporal['display'][this.temporal['display'].length] = output;
         
         this.fileWrite(file, 'cd "'+selected+'" \ngit init >>"'+output+'" 2>&1 \n ');
         
@@ -232,7 +242,7 @@ function kGit()
     }
     this.clone = function()
     {
-        var aMsg = this.prompt('Enter URL to clone...');
+        var aMsg = this.prompt('Enter URL to clone...').replace(/"/g, '\\"');
         if(aMsg != '')
         {
             var selected = this.getSelectedURIFolder();
@@ -240,7 +250,7 @@ function kGit()
             var file = this.fileCreateTemporal('kGit.sh');
             var output = this.fileCreateTemporal('kGit.diff');
             
-            this.temporal['push'][this.temporal['push'].length] = output;
+            this.temporal['display'][this.temporal['display'].length] = output;
             
             this.fileWrite(file, 'cd "'+selected+'" \ngit clone '+aMsg+' >>"'+output+'" 2>&1 \n ');
             
@@ -255,7 +265,7 @@ function kGit()
         var file = this.fileCreateTemporal('kGit.sh');
         var output = this.fileCreateTemporal('kGit.diff');
         
-        this.temporal['pull'][this.temporal['pull'].length] = output;
+        this.temporal['display'][this.temporal['display'].length] = output;
         
         this.fileWrite(file, 'cd "'+selected+'" \ngit pull >>"'+output+'" 2>&1 \n ');
         
@@ -264,11 +274,9 @@ function kGit()
 
     this.commit = function()
     {
-        var aMsg = this.prompt('Enter a commit message...');
+        var aMsg = this.prompt('Enter a commit message...').replace(/"/g, '\\"');
         if(aMsg != '')
         {
-            aMsg = aMsg.replace(/"/g, '\\"');
-            
             var selected = this.getSelectedURIs();
             for(var id in selected)
             {
@@ -282,7 +290,7 @@ function kGit()
                 else
                     dir = this.fileDirname(selected[id]);
                 
-                this.temporal['commit'][this.temporal['commit'].length] = output;
+                this.temporal['open'][this.temporal['open'].length] = output;
                 
                 this.fileWrite(file, 'cd "'+dir+'" \ngit commit "'+selected[id]+'" -m "'+aMsg+'" >>"'+output+'" 2>&1 \n ');
                 
@@ -293,11 +301,9 @@ function kGit()
     
     this.addCommit = function()
     {
-        var aMsg = this.prompt('Enter a commit message...');
+        var aMsg = this.prompt('Enter a commit message...').replace(/"/g, '\\"');
         if(aMsg != '')
         {
-            aMsg = aMsg.replace(/"/g, '\\"');
-            
             var selected = this.getSelectedURIs();
             for(var id in selected)
             {
@@ -311,7 +317,7 @@ function kGit()
                 else
                     dir = this.fileDirname(selected[id]);
                 
-                this.temporal['commit'][this.temporal['commit'].length] = output;
+                this.temporal['open'][this.temporal['open'].length] = output;
                 
                 this.fileWrite(file, 'cd "'+dir+'" \ngit add "'+selected[id]+'" \ngit commit "'+selected[id]+'" -m "'+aMsg+'" >>"'+output+'" 2>&1 \n ');
                 
@@ -322,11 +328,9 @@ function kGit()
     
     this.addCommitPush = function()
     {
-        var aMsg = this.prompt('Enter a commit message...');
+        var aMsg = this.prompt('Enter a commit message...').replace(/"/g, '\\"');
         if(aMsg != '')
         {
-            aMsg = aMsg.replace(/"/g, '\\"');
-            
             var selected = this.getSelectedURIs();
             for(var id in selected)
             {
@@ -340,7 +344,7 @@ function kGit()
                 else
                     dir = this.fileDirname(selected[id]);
                 
-                this.temporal['commit'][this.temporal['commit'].length] = output;
+                this.temporal['open'][this.temporal['open'].length] = output;
                 
                 this.fileWrite(file, 'cd "'+dir+'" \ngit add "'+selected[id]+'" \ngit commit "'+selected[id]+'" -m "'+aMsg+'" >>"'+output+'" 2>&1 \n \ngit push >>"'+output+'" 2>&1 \n ');
                 
@@ -441,8 +445,7 @@ function kGit()
 
 
 
-
-    /* UTILS */
+/* UTILS */
 	
 	//outputs text to the command output window
 	//http://community.activestate.com/faq/how-do-you-write-command-output-window
@@ -563,7 +566,7 @@ function kGit()
             else
                 return false;
     }
-    //returns true if a file exists
+    //returns true if a path is a folder
 	this.fileIsFolder = function(aFilePath)
 	{
         var aFile = Components.classes["@mozilla.org/file/local;1"]
@@ -643,8 +646,3 @@ function kGit()
 }
 
 var kgit = new kGit();
-
-/*
-addEventListener('load', function(){
-                            window.setTimeout(function(){ kgit.crazyIconsEvent()}, 5000)
-                        }, false);*/
