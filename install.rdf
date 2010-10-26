@@ -5,11 +5,11 @@
 	
     <Description about="urn:mozilla:install-manifest">
         <em:id>tito@kgit</em:id>
-        <em:name>Komodin (Komodo Edit Git)</em:name>
-        <em:version>0.1</em:version>
-        <em:description>Git to Komodo Edit</em:description>
+        <em:name>Komodin</em:name>
+        <em:version>1.101026.0</em:version>
+        <em:description>Git to Komodo Edit (Linux only)</em:description>
         <em:creator>Roberto Bouzout (tito)</em:creator>
-
+		<em:iconURL>chrome://kgit/content/icon.png</em:iconURL>
         <em:targetApplication>
             <Description>
                 <!-- Komodo Edit's uuid -->
