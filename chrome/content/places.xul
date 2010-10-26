@@ -18,10 +18,10 @@
             
             <menupopup>
                 
-                <menuitem oncommand="kgit.addCommit()" label="Add &amp; Commit.." class="menuitem-iconic"  />
-                <menuitem oncommand="kgit.addCommitPush()" label="Add &amp; Commit &amp; Push.." class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.addCommit()" label="Add &amp; Commit…" class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.addCommitPush()" label="Add &amp; Commit &amp; Push…" class="menuitem-iconic"  />
                 <menuseparator/>
-                <menuitem oncommand="kgit.commit()" label="Commit.." class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.commit()" label="Commit…" class="menuitem-iconic"  />
                 <menuseparator/>
                 <menuitem oncommand="kgit.diff()" label="Diff" class="menuitem-iconic" />
                 <menuitem oncommand="kgit.log()" label="Log" class="menuitem-iconic"  />
@@ -29,14 +29,16 @@
                 <menuseparator/>
                 <menuitem oncommand="kgit.revert()" label="Revert" class="menuitem-iconic" />
                 <menuitem oncommand="kgit.revertClean()" label="Revert &amp; Clean" class="menuitem-iconic" />
-                <menuitem oncommand="kgit.revertToObject()" label="Revert to object.." class="menuitem-iconic" />
+                <menuitem oncommand="kgit.revertToObject()" label="Revert to object…" class="menuitem-iconic" />
                 <menuseparator/>
                 <menuitem oncommand="kgit.push()" label="Push" class="menuitem-iconic"  />
                 <menuitem oncommand="kgit.pull()" label="Pull" class="menuitem-iconic"  />
-                <menuitem oncommand="kgit.checkoutTo()" label="Checkout to..." class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.checkoutTo()" label="Checkout to…" class="menuitem-iconic"  />
                 <menuseparator/>
-                <menuitem oncommand="kgit.clone()" label="Clone.." class="menuitem-iconic"  />
-                <menuitem oncommand="kgit.init()" label="Init.." class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.init()" label="Init…" class="menuitem-iconic"  />
+                <menuitem oncommand="kgit.clone()" label="Clone…" class="menuitem-iconic"  />
+				<menuseparator/>
+                <menuitem oncommand="kgit.command()" label="Liberal git command…" class="menuitem-iconic"  />
             </menupopup>
             
         </menu>

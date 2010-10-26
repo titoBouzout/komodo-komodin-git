@@ -183,7 +183,7 @@ function kGit()
     }
     this.revertToObject = function()
     {
-        var aMsg = this.prompt('Revert to object...').replace(/"/g, '\\"');
+        var aMsg = this.prompt('Revert to object…').replace(/"/g, '\\"');
         if(aMsg != '')
         {
             var selected = this.getSelectedURIFolder();
@@ -200,7 +200,7 @@ function kGit()
     }
     this.checkoutTo = function()
     {
-        var aMsg = this.prompt('Checkout to...').replace(/"/g, '\\"');
+        var aMsg = this.prompt('Checkout to…').replace(/"/g, '\\"');
         if(aMsg != '')
         {
             var selected = this.getSelectedURIFolder();
@@ -245,7 +245,7 @@ function kGit()
     }
     this.clone = function()
     {
-        var aMsg = this.prompt('Enter URL to clone...').replace(/"/g, '\\"');
+        var aMsg = this.prompt('Enter URL to clone…').replace(/"/g, '\\"');
         if(aMsg != '')
         {
             var selected = this.getSelectedURIFolder();
@@ -273,11 +273,30 @@ function kGit()
         this.fileWrite(file, 'cd "'+selected+'" \ngit pull >>"'+output+'" 2>&1 \n ');
         
         this.run(file);
+	}
+	
+	//free input command
+    this.command = function()
+    {
+        var aMsg = this.prompt('[kgit@komodo] $ ', 'git ').replace(/"/g, '\\"');
+        if(aMsg != '')
+        {
+		  var selected = this.getSelectedURIFolder();
+
+		  var file = this.fileCreateTemporal('kGit.sh');
+		  var output = this.fileCreateTemporal('kGit.diff');
+		  
+		  this.temporal['open'][this.temporal['open'].length] = output;
+		  
+		  this.fileWrite(file, 'cd "'+selected+'" \n'+aMsg+' >>"'+output+'" 2>&1 \n ');
+		  
+		  this.run(file);
+		}
     }
 
     this.commit = function()
     {
-        var aMsg = this.prompt('Enter a commit message...').replace(/"/g, '\\"');
+        var aMsg = this.prompt('Enter a commit message…').replace(/"/g, '\\"');
         if(aMsg != '')
         {
             var selected = this.getSelectedURIs();
@@ -304,7 +323,7 @@ function kGit()
     
     this.addCommit = function()
     {
-        var aMsg = this.prompt('Enter a commit message...').replace(/"/g, '\\"');
+        var aMsg = this.prompt('Enter a commit message…').replace(/"/g, '\\"');
         if(aMsg != '')
         {
             var selected = this.getSelectedURIs();
@@ -331,7 +350,7 @@ function kGit()
     
     this.addCommitPush = function()
     {
-        var aMsg = this.prompt('Enter a commit message...').replace(/"/g, '\\"');
+        var aMsg = this.prompt('Enter a commit message…').replace(/"/g, '\\"');
         if(aMsg != '')
         {
             var selected = this.getSelectedURIs();
