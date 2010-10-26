@@ -5,7 +5,7 @@
 		title="kGit"
         buttons="accept,cancel"
         width = "500"
-        height = "320"
+        height = "340"
         xmlns = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         ondialogaccept="
 		  var r = window.arguments[0];
