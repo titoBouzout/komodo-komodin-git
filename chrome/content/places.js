@@ -13,7 +13,10 @@ function kGit()
 		  var file = this.temporal['open'][id];
 			  this.temporal['open'][id] = null;
 			  delete this.temporal['open'][id];
-		  ko.open.multipleURIs([file]);
+			  if(this.fileRead(file) != '')
+				ko.open.multipleURIs([file]);
+			  else
+				this.commandOutput('kGit: Nothing to show');
 	  }
 	  for(var id in this.temporal['display'])
 	  {
@@ -361,9 +364,9 @@ function kGit()
 		//security - works always in a folder with with the name of this extension
 		file.append('kGit');
 		
-		if( !file.exists() || !file.isDirectory() )   // if it doesn't exist..
+		if( !file.exists() || !file.isDirectory() ) // if it doesn't exist..
 		{
-			
+		  
 		}
 		else
 		{
