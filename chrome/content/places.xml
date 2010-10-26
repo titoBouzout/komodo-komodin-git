@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE bindings [
+
+]>
+
+<bindings xmlns="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+          xmlns:xbl="http://www.mozilla.org/xbl">
+
+	<binding
+		id="kgit-menupopup-xbl"
+		extends="chrome://global/content/bindings/popup.xml#popup"
+	>
+	  <content>
+
+		<xul:menuitem oncommand="kgit.addCommit(event)" label="Add &amp; Commit…"/>
+		<xul:menuitem oncommand="kgit.addCommitPush(event)" label="Add &amp; Commit &amp; Push…"/>
+		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.commit(event)" label="Commit…"/>
+		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.diff(event)" label="Diff"/>
+		<xul:menuitem oncommand="kgit.log(event)" label="Log"/>
+		<xul:menuitem oncommand="kgit.status(event)" label="Status"/>
+		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.revert(event)" label="Revert"/>
+		<xul:menuitem oncommand="kgit.revertClean(event)" label="Revert &amp; Clean"/>
+		<xul:menuitem oncommand="kgit.revertToObject(event)" label="Revert to object…"/>
+		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.push(event)" label="Push"/>
+		<xul:menuitem oncommand="kgit.pull(event)" label="Pull"/>
+		<xul:menuitem oncommand="kgit.checkoutTo(event)" label="Checkout to…"/>
+		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.init(event)" label="Init…"/>
+		<xul:menuitem oncommand="kgit.clone(event)" label="Clone…"/>
+		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.command(event)" label="Liberal git command…"/>
+
+	  </content>
+
+	</binding>
+
+</bindings>
