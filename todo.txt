@@ -3,4 +3,6 @@ add/edit/list tags
 switch
 merge
 overlay icons
-add windows support
+windows support
+better output of messages
+spell check on commits
