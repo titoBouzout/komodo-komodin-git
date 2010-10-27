@@ -294,9 +294,9 @@ function kGit()
 		  }
         }
     }
-    this.checkoutTo = function(event)
+    this.checkoutToObject = function(event)
     {
-        var aMsg = this.prompt('Checkout to…');
+        var aMsg = this.prompt('Checkout to object…');
         if(aMsg != '')
         {
 		  if(this.confirm('Are you sure?'))
