@@ -140,6 +140,28 @@ function kGit()
             this.run(file);
         }
     }
+	this.logExtended = function(event)
+    {
+        var selected = this.getSelectedPaths(event);
+        for(var id in selected)
+        {
+            var file = this.fileCreateTemporal('kGit.sh');
+            var output = this.fileCreateTemporal('kGit.diff');
+            
+            var dir;
+            
+            if(this.fileIsFolder(selected[id]))
+                dir = selected[id];
+            else
+                dir = this.fileDirname(selected[id]);
+            
+            this.temporal['open'][this.temporal['open'].length] = output;
+            
+            this.fileWrite(file, 'cd "'+this.escape(dir)+'" \n echo "log:'+this.escape(selected[id])+'" >> "'+output+'" \n git log -p "'+this.escape(selected[id])+'" >> "'+output+'" \nsleep 1');
+            
+            this.run(file);
+        }
+    }
     this.status = function(event)
     {
         var selected = this.getSelectedPaths(event);

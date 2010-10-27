@@ -21,6 +21,7 @@
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.diff(event)" label="Diff"/>
 		<xul:menuitem oncommand="kgit.log(event)" label="Log"/>
+		<xul:menuitem oncommand="kgit.logExtended(event)" label="Log ( Extended )"/>
 		<xul:menuitem oncommand="kgit.status(event)" label="Status"/>
 		<xul:menuitem oncommand="kgit.blame(event)" label="Blame"/>
 		<xul:menuseparator/>
