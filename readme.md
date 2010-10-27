@@ -81,6 +81,9 @@ GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 Todo:
 http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/todo.txt
 
+Know Bugs:
+No spell checker on commit dialog.
+
 Source-Code:
 http://github.com/titoBouzout/komodin--Komodo-Edit-Git-
 
