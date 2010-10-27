@@ -31,8 +31,12 @@
   
 	  <menupopup id="places-files-popup" onpopupshown="kgit.placesPopupShown(event)">
 		  
-		  <menuseparator/>
-  		  <menu label="Git" class="menu-iconic" image="chrome://kgit/content/icon16.png">
+		  <menuseparator insertafter="placesContextMenu_separatorDelete"/>
+  		  <menu
+				insertafter="placesContextMenu_separatorDelete"
+				label="Git"
+				class="menu-iconic"
+				image="chrome://kgit/content/icon16.png">
 			  <menupopup class="kgit-menupopup-xbl"/>
 		  </menu>
 		  
