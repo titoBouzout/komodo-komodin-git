@@ -208,6 +208,8 @@ function kGit()
     }
     this.revertClean = function(event)
     {
+	  if(this.confirm('Are you sure?'))
+	  {
         var selected = this.getSelectedPaths(event);
 		var file = this.fileCreateTemporal('kGit.sh');
 		var output = this.fileCreateTemporal('kGit.diff');
@@ -237,9 +239,12 @@ function kGit()
 		this.fileWrite(file, commands);
 		
 		this.run(file);
+	  }
     }
     this.revert = function(event)
     {
+	  if(this.confirm('Are you sure?'))
+	  {
         var selected = this.getSelectedPaths(event);
 		var file = this.fileCreateTemporal('kGit.sh');
 		var output = this.fileCreateTemporal('kGit.diff');
@@ -267,12 +272,15 @@ function kGit()
 		this.fileWrite(file, commands);
 		
 		this.run(file);
+	  }
     }
     this.revertToObject = function(event)
     {
         var aMsg = this.prompt('Revert to object…');
         if(aMsg != '')
         {
+		  if(this.confirm('Are you sure?'))
+		  {
             var selected = this.getSelectedPathFolder(event);
             
             var file = this.fileCreateTemporal('kGit.sh');
@@ -283,6 +291,7 @@ function kGit()
             this.fileWrite(file, 'cd "'+this.escape(selected)+'" \ngit revert '+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
             
             this.run(file);
+		  }
         }
     }
     this.checkoutTo = function(event)
@@ -290,6 +299,8 @@ function kGit()
         var aMsg = this.prompt('Checkout to…');
         if(aMsg != '')
         {
+		  if(this.confirm('Are you sure?'))
+		  {
             var selected = this.getSelectedPathFolder(event);
             
             var file = this.fileCreateTemporal('kGit.sh');
@@ -300,6 +311,7 @@ function kGit()
             this.fileWrite(file, 'cd "'+this.escape(selected)+'" \ngit checkout '+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
             
             this.run(file);
+		  }
         }
     }
 
