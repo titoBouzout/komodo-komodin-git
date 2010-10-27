@@ -37,6 +37,9 @@
 		<xul:menuitem oncommand="kgit.init(event)" label="Init…"/>
 		<xul:menuitem oncommand="kgit.clone(event)" label="Clone…"/>
 		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.ignore(event)" label="Add to Git Ignore"/>
+		<xul:menuitem oncommand="kgit.ignoreOpen(event)" label="Open Git Ignore"/>
+		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.command(event)" label="Liberal Git command…"/>
 
 	  </content>

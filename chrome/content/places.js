@@ -65,7 +65,7 @@ function kGit()
 	  if(event.originalTarget.parentNode.parentNode.tagName == 'toolbarbutton')
 	  {
 		var selected = [];
-			selected[0] = this.filePathFromFileURI(this.documentFocusedGetLocation());
+			selected[0] = this.documentFocusedGetLocation();
 	  }
 	  else
 	  {
@@ -500,6 +500,84 @@ function kGit()
             this.run(file);
         }
     }
+	this.ignoreOpen = function(event)
+	{
+	  var selected = this.getSelectedPaths(event);
+	  var aPath;
+	  
+	  for(var id in selected)
+	  {
+		aPath = selected[id];
+		while(!this.fileExists(aPath+'/.git'))
+		{
+		  if(this.fileExists(aPath+'/.gitignore'))
+			break;
+		  if(this.fileDirname(aPath) == aPath)
+			break;
+		  aPath = this.fileDirname(aPath);
+		}
+		if(this.fileExists(aPath+'/.gitignore'))
+		  this.openURI(aPath+'/.gitignore', true);
+	  }
+	}
+	this.ignore = function(event)
+	{
+	  var selected = this.getSelectedPaths(event);
+	  
+	  for(var id in selected)
+	  {
+		if(this.fileIsFolder(selected[id]))
+		  aPath = this.fileDirname(selected[id]);
+		else
+		  aPath = selected[id];
+		  
+		while(!this.fileExists(aPath+'/.git'))
+		{
+		  if(this.fileExists(aPath+'/.gitignore'))
+			break;
+		  if(this.fileDirname(aPath) == aPath)
+			break;
+		  aPath = this.fileDirname(aPath);
+		}
+		
+		if(this.fileExists(aPath+'/.gitignore'))
+		{
+		  var ignore = this.fileRead(aPath+'/.gitignore');
+			  ignore += '\n';
+			  ignore += selected[id].replace(aPath+'/', '');
+		  
+			  ignore = this.arrayUnique(ignore.split('\n')).sort(this.sortLocale).join('\n');
+		}
+		else
+		{
+		  var ignore = selected[id].replace(this.getGitRoot(aPath)+'/', '');
+		}
+		ignore += '\n';
+
+		this.fileWrite(aPath+'/.gitignore', ignore);
+		this.openURI(aPath+'/.gitignore', true);
+	  }
+	}
+	this.getGitRoot = function(aPath)
+	{
+	  while(!this.fileExists(aPath+'/.git'))
+	  {
+		if(this.fileDirname(aPath) == aPath)
+		  break;
+		aPath = this.fileDirname(aPath);
+		if(this.fileExists(aPath+'/.git'))
+		  break;
+	  }
+	  if(this.fileExists(aPath+'/.git'))
+		return aPath;
+	  else
+		return '';
+	}
+	this.openURI = function(aFilePath, newTab)
+	{
+	  if(newTab)
+		ko.open.multipleURIs([aFilePath]);
+	}
 	//empty our temp folder when komodo is closed.
     this.emptyTemp = function()
     {
@@ -877,6 +955,33 @@ function kGit()
 	this.escape = function(aString)
 	{
 	  return aString.replace(/"/g, '\\"');
+	}
+	//removes duplicate values from an array
+	this.arrayUnique = function (anArray)
+	{
+		var tmp = [];
+		for(var id in anArray)
+		{
+			if(!this.inArray(tmp, anArray[id]))
+			{
+				tmp[tmp.length] = anArray[id];
+			}
+		}
+		return tmp;
+	}
+	//checks if a value exists in an array
+	this.inArray = function (anArray, some)
+	{
+		for(var id in anArray)
+		{
+			if(anArray[id]==some)
+				return true;
+		}
+		return false;
+	}
+	this.sortLocale = function(a, b)
+	{
+		return a.localeCompare(b);
 	}
     return this;
 }
