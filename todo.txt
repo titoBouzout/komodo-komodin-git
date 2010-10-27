@@ -6,3 +6,5 @@ overlay icons
 windows support
 better output of messages
 spell check on commits
+ammend
+add files

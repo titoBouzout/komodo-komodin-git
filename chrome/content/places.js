@@ -517,7 +517,7 @@ function kGit()
 		  aPath = this.fileDirname(aPath);
 		}
 		if(this.fileExists(aPath+'/.gitignore'))
-		  this.openURI(aPath+'/.gitignore', true);
+		  this.openURL(aPath+'/.gitignore', true);
 	  }
 	}
 	this.ignore = function(event)
@@ -555,7 +555,7 @@ function kGit()
 		ignore += '\n';
 
 		this.fileWrite(aPath+'/.gitignore', ignore);
-		this.openURI(aPath+'/.gitignore', true);
+		this.openURL(aPath+'/.gitignore', true);
 	  }
 	}
 	this.getGitRoot = function(aPath)
@@ -573,7 +573,7 @@ function kGit()
 	  else
 		return '';
 	}
-	this.openURI = function(aFilePath, newTab)
+	this.openURL = function(aFilePath, newTab)
 	{
 	  if(newTab)
 		ko.open.multipleURIs([aFilePath]);
