@@ -10,6 +10,7 @@
         <em:description>Git to Komodo Edit (Linux only)</em:description>
         <em:creator>Roberto Bouzout (tito)</em:creator>
 		<em:iconURL>chrome://kgit/content/icon.png</em:iconURL>
+		<em:homepageURL>http://community.activestate.com/xpi/komodin-git-places</em:homepageURL>
         <em:targetApplication>
 		  
             <Description>
