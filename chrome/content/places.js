@@ -60,12 +60,12 @@ function kGit()
 	  //places root folder if no selection on the places sidebar
 	  //places root folder if right click on "placesRootButton"
 	  
-    this.getSelectedURIs = function(event)
+    this.getSelectedPaths = function(event)
     {
 	  if(event.originalTarget.parentNode.parentNode.tagName == 'toolbarbutton')
 	  {
 		var selected = [];
-			selected[0] = this.documentFocusedGetLocation().replace(/file\:\/\//, '').replace(/"/g, '\\"');
+			selected[0] = this.filePathFromFileURI(this.documentFocusedGetLocation());
 	  }
 	  else
 	  {
@@ -74,12 +74,12 @@ function kGit()
 		  if(!this.rootButton && selected && selected.length && selected.length > 0)
 		  {
 			for(var id in selected)
-			  selected[id] = selected[id].replace(/file\:\/\//, '').replace(/"/g, '\\"');
+			  selected[id] = this.filePathFromFileURI(selected[id]);
 		  }
 		  else if(ko && ko.places && ko.places.manager && ko.places.manager.currentPlace &&  ko.places.manager.currentPlace != '')
 		  {
 			selected = [];
-			selected[0] = String(ko.places.manager.currentPlace).replace(/file\:\/\//, '').replace(/"/g, '\\"');
+			selected[0] = this.filePathFromFileURI(String(ko.places.manager.currentPlace));
 		  }
 		  else
 		  {
@@ -88,9 +88,9 @@ function kGit()
 	  }
 	  return selected;
     }
-    this.getSelectedURIFolder = function(event)
+    this.getSelectedPathFolder = function(event)
     {
-      var selected = this.getSelectedURIs(event)[0];
+      var selected = this.getSelectedPaths(event)[0];
         if(this.fileIsFolder(selected)){}
         else
             selected = this.fileDirname(selected);
@@ -99,7 +99,7 @@ function kGit()
 
     this.diff = function(event)
     {
-        var selected = this.getSelectedURIs(event);
+        var selected = this.getSelectedPaths(event);
         for(var id in selected)
         {
             var file = this.fileCreateTemporal('kGit.sh');
@@ -114,13 +114,13 @@ function kGit()
             
             this.temporal['open'][this.temporal['open'].length] = output;
             
-            this.fileWrite(file, 'cd "'+dir+'" \ngit diff "'+selected[id]+'" > "'+output+'" \nsleep 1 ');
+            this.fileWrite(file, 'cd "'+this.escape(dir)+'" \ngit diff "'+this.escape(selected[id])+'" > "'+output+'" \nsleep 1 ');
             this.run(file);
         }
     }
     this.log = function(event)
     {
-        var selected = this.getSelectedURIs(event);
+        var selected = this.getSelectedPaths(event);
         for(var id in selected)
         {
             var file = this.fileCreateTemporal('kGit.sh');
@@ -135,14 +135,14 @@ function kGit()
             
             this.temporal['open'][this.temporal['open'].length] = output;
             
-            this.fileWrite(file, 'cd "'+dir+'" \n echo "log:'+selected[id]+'" >> "'+output+'" \n git log "'+selected[id]+'" >> "'+output+'" \nsleep 1');
+            this.fileWrite(file, 'cd "'+this.escape(dir)+'" \n echo "log:'+this.escape(selected[id])+'" >> "'+output+'" \n git log "'+this.escape(selected[id])+'" >> "'+output+'" \nsleep 1');
             
             this.run(file);
         }
     }
     this.status = function(event)
     {
-        var selected = this.getSelectedURIs(event);
+        var selected = this.getSelectedPaths(event);
         for(var id in selected)
         {
             var file = this.fileCreateTemporal('kGit.sh');
@@ -157,14 +157,14 @@ function kGit()
             
             this.temporal['open'][this.temporal['open'].length] = output;
             
-            this.fileWrite(file, 'cd "'+dir+'" \n echo "status:'+selected[id]+'" >> "'+output+'" \n git status "'+selected[id]+'" >> "'+output+'" \nsleep 1 ');
+            this.fileWrite(file, 'cd "'+this.escape(dir)+'" \n echo "status:'+this.escape(selected[id])+'" >> "'+output+'" \n git status "'+this.escape(selected[id])+'" >> "'+output+'" \nsleep 1 ');
             
             this.run(file);
         }
     }
     this.revertClean = function(event)
     {
-        var selected = this.getSelectedURIs(event);
+        var selected = this.getSelectedPaths(event);
 		var file = this.fileCreateTemporal('kGit.sh');
 		var output = this.fileCreateTemporal('kGit.diff');
 		
@@ -178,11 +178,11 @@ function kGit()
             else
                 dir = this.fileDirname(selected[id]);
 				
-			commands += 'cd "'+dir+'" ';
+			commands += 'cd "'+this.escape(dir)+'" ';
 			commands += '\n';
-			commands += 'git checkout -- "'+selected[id]+'" >>"'+output+'" 2>&1';
+			commands += 'git checkout -- "'+this.escape(selected[id])+'" >>"'+output+'" 2>&1';
 			commands += '\n';
-			commands += 'git clean "'+selected[id]+'" -f -d >>"'+output+'" 2>&1';
+			commands += 'git clean "'+this.escape(selected[id])+'" -f -d >>"'+output+'" 2>&1';
 			commands += '\n';
         }
 		commands += 'sleep 1';
@@ -196,7 +196,7 @@ function kGit()
     }
     this.revert = function(event)
     {
-        var selected = this.getSelectedURIs(event);
+        var selected = this.getSelectedPaths(event);
 		var file = this.fileCreateTemporal('kGit.sh');
 		var output = this.fileCreateTemporal('kGit.diff');
 		
@@ -210,9 +210,9 @@ function kGit()
             else
                 dir = this.fileDirname(selected[id]);
 				
-			commands += 'cd "'+dir+'" ';
+			commands += 'cd "'+this.escape(dir)+'" ';
 			commands += '\n';
-			commands += 'git checkout -- "'+selected[id]+'" >>"'+output+'" 2>&1';
+			commands += 'git checkout -- "'+this.escape(selected[id])+'" >>"'+output+'" 2>&1';
 			commands += '\n';
         }
 		commands += 'sleep 1';
@@ -226,34 +226,34 @@ function kGit()
     }
     this.revertToObject = function(event)
     {
-        var aMsg = this.prompt('Revert to object…').replace(/"/g, '\\"');
+        var aMsg = this.prompt('Revert to object…');
         if(aMsg != '')
         {
-            var selected = this.getSelectedURIFolder(event);
+            var selected = this.getSelectedPathFolder(event);
             
             var file = this.fileCreateTemporal('kGit.sh');
             var output = this.fileCreateTemporal('kGit.diff');
             
             this.temporal['open'][this.temporal['open'].length] = output;
             
-            this.fileWrite(file, 'cd "'+selected+'" \ngit revert '+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
+            this.fileWrite(file, 'cd "'+this.escape(selected)+'" \ngit revert '+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
             
             this.run(file);
         }
     }
     this.checkoutTo = function(event)
     {
-        var aMsg = this.prompt('Checkout to…').replace(/"/g, '\\"');
+        var aMsg = this.prompt('Checkout to…');
         if(aMsg != '')
         {
-            var selected = this.getSelectedURIFolder(event);
+            var selected = this.getSelectedPathFolder(event);
             
             var file = this.fileCreateTemporal('kGit.sh');
             var output = this.fileCreateTemporal('kGit.diff');
             
             this.temporal['open'][this.temporal['open'].length] = output;
             
-            this.fileWrite(file, 'cd "'+selected+'" \ngit checkout '+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
+            this.fileWrite(file, 'cd "'+this.escape(selected)+'" \ngit checkout '+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
             
             this.run(file);
         }
@@ -261,44 +261,44 @@ function kGit()
 
     this.push = function(event)
     {
-        var selected = this.getSelectedURIFolder(event);
+        var selected = this.getSelectedPathFolder(event);
 
         var file = this.fileCreateTemporal('kGit.sh');
         var output = this.fileCreateTemporal('kGit.diff');
         
         this.temporal['display'][this.temporal['display'].length] = output;
         
-        this.fileWrite(file, 'cd "'+selected+'" \ngit push >>"'+output+'" 2>&1 \n sleep 1  ');
+        this.fileWrite(file, 'cd "'+this.escape(selected)+'" \ngit push >>"'+output+'" 2>&1 \n sleep 1  ');
         
         this.run(file);
     }
 
     this.init = function(event)
     {
-        var selected = this.getSelectedURIFolder(event);
+        var selected = this.getSelectedPathFolder(event);
 
         var file = this.fileCreateTemporal('kGit.sh');
         var output = this.fileCreateTemporal('kGit.diff');
         
         this.temporal['display'][this.temporal['display'].length] = output;
         
-        this.fileWrite(file, 'cd "'+selected+'" \ngit init >>"'+output+'" 2>&1 \n sleep 1 ');
+        this.fileWrite(file, 'cd "'+this.escape(selected)+'" \ngit init >>"'+output+'" 2>&1 \n sleep 1 ');
         
         this.run(file);
     }
     this.clone = function(event)
     {
-        var aMsg = this.prompt('Enter URL to clone…').replace(/"/g, '\\"');
+        var aMsg = this.prompt('Enter URL to clone…');
         if(aMsg != '')
         {
-            var selected = this.getSelectedURIFolder(event);
+            var selected = this.getSelectedPathFolder(event);
             
             var file = this.fileCreateTemporal('kGit.sh');
             var output = this.fileCreateTemporal('kGit.diff');
             
             this.temporal['display'][this.temporal['display'].length] = output;
             
-            this.fileWrite(file, 'cd "'+selected+'" \ngit clone '+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
+            this.fileWrite(file, 'cd "'+this.escape(selected)+'" \ngit clone '+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
             
             this.run(file);
         }
@@ -306,14 +306,14 @@ function kGit()
 
     this.pull = function(event)
     {
-        var selected = this.getSelectedURIFolder(event);
+        var selected = this.getSelectedPathFolder(event);
 
         var file = this.fileCreateTemporal('kGit.sh');
         var output = this.fileCreateTemporal('kGit.diff');
         
         this.temporal['display'][this.temporal['display'].length] = output;
         
-        this.fileWrite(file, 'cd "'+selected+'" \ngit pull >>"'+output+'" 2>&1 \n sleep 1  ');
+        this.fileWrite(file, 'cd "'+this.escape(selected)+'" \ngit pull >>"'+output+'" 2>&1 \n sleep 1  ');
         
         this.run(file);
 	}
@@ -321,17 +321,17 @@ function kGit()
 	//free input command
     this.command = function(event)
     {
-        var aMsg = this.prompt('[komodin@komodo ./] $ ', 'git ').replace(/"/g, '\\"');
+        var aMsg = this.prompt('[komodin@komodo ./] $ ', 'git ');
         if(aMsg != '')
         {
-		  var selected = this.getSelectedURIFolder(event);
+		  var selected = this.getSelectedPathFolder(event);
 
 		  var file = this.fileCreateTemporal('kGit.sh');
 		  var output = this.fileCreateTemporal('kGit.diff');
 		  
 		  this.temporal['open'][this.temporal['open'].length] = output;
 		  
-		  this.fileWrite(file, 'cd "'+selected+'" \n'+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
+		  this.fileWrite(file, 'cd "'+this.escape(selected)+'" \n'+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
 		  
 		  this.run(file);
 		}
@@ -339,10 +339,10 @@ function kGit()
 
     this.commit = function(event)
     {
-        var aMsg = this.prompt('Enter a commit message…', '', true).replace(/"/g, '\\"');
+        var aMsg = this.prompt('Enter a commit message…', '', true);
         if(aMsg != '')
         {
-            var selected = this.getSelectedURIs(event);
+            var selected = this.getSelectedPaths(event);
 			var file = this.fileCreateTemporal('kGit.sh');
 			var output = this.fileCreateTemporal('kGit.diff');
 			
@@ -355,9 +355,9 @@ function kGit()
                 else
                     dir = this.fileDirname(selected[id]);
 					
-				commands += 'cd "'+dir+'"';
+				commands += 'cd "'+this.escape(dir)+'"';
 				commands += '\n';
-				commands += 'git commit "'+selected[id]+'" -m "'+aMsg+'" >>"'+output+'" 2>&1';
+				commands += 'git commit "'+this.escape(selected[id])+'" -m "'+this.escape(aMsg)+'" >>"'+output+'" 2>&1';
 				commands += '\n';
             }
 			commands += 'sleep 1';
@@ -373,10 +373,10 @@ function kGit()
     
     this.addCommit = function(event)
     {
-        var aMsg = this.prompt('Enter a commit message…', '', true).replace(/"/g, '\\"');
+        var aMsg = this.prompt('Enter a commit message…', '', true);
         if(aMsg != '')
         {
-            var selected = this.getSelectedURIs(event);
+            var selected = this.getSelectedPaths(event);
 			var file = this.fileCreateTemporal('kGit.sh');
 			var output = this.fileCreateTemporal('kGit.diff');
 			
@@ -389,11 +389,11 @@ function kGit()
                 else
                     dir = this.fileDirname(selected[id]);
 					
-				commands += 'cd "'+dir+'"';
+				commands += 'cd "'+this.escape(dir)+'"';
 				commands += '\n';
-				commands += 'git add "'+selected[id]+'" >>"'+output+'" 2>&1';
+				commands += 'git add "'+this.escape(selected[id])+'" >>"'+output+'" 2>&1';
 				commands += '\n';
-				commands += 'git commit "'+selected[id]+'" -m "'+aMsg+'" >>"'+output+'" 2>&1';
+				commands += 'git commit "'+this.escape(selected[id])+'" -m "'+this.escape(aMsg)+'" >>"'+output+'" 2>&1';
 				commands += '\n';
             }
 			commands += 'sleep 1';
@@ -409,10 +409,10 @@ function kGit()
     
     this.addCommitPush = function(event)
     {
-        var aMsg = this.prompt('Enter a commit message…', '', true).replace(/"/g, '\\"');
+        var aMsg = this.prompt('Enter a commit message…', '', true);
         if(aMsg != '')
         {
-            var selected = this.getSelectedURIs(event);
+            var selected = this.getSelectedPaths(event);
 			var file = this.fileCreateTemporal('kGit.sh');
 			var output = this.fileCreateTemporal('kGit.diff');
 			
@@ -425,11 +425,11 @@ function kGit()
                 else
                     dir = this.fileDirname(selected[id]);
 					
-				commands += 'cd "'+dir+'"';
+				commands += 'cd "'+this.escape(dir)+'"';
 				commands += '\n';
-				commands += 'git add "'+selected[id]+'" >>"'+output+'" 2>&1';
+				commands += 'git add "'+this.escape(selected[id])+'" >>"'+output+'" 2>&1';
 				commands += '\n';
-				commands += 'git commit "'+selected[id]+'" -m "'+aMsg+'" >>"'+output+'" 2>&1';
+				commands += 'git commit "'+this.escape(selected[id])+'" -m "'+this.escape(aMsg)+'" >>"'+output+'" 2>&1';
 				commands += '\n';
             }
 			commands += 'git push >>"'+output+'" 2>&1';
@@ -808,7 +808,20 @@ function kGit()
 		var dirname =  aDestination.parent.path;
 		return dirname;
 	}
-    
+    //returns a file path from a file URI
+	this.filePathFromFileURI = function(aURI)
+	{
+	  if(!this.ios)
+		this.ios = Components.classes["@mozilla.org/network/io-service;1"].  
+						getService(Components.interfaces.nsIIOService);
+
+	  return String(this.ios.newURI(aURI, null, null)
+				  .QueryInterface(Components.interfaces.nsIFileURL).file.path);
+	}
+	this.escape = function(aString)
+	{
+	  return aString.replace(/"/g, '\\"');
+	}
     return this;
 }
 
