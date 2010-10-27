@@ -518,6 +518,14 @@ function kGit()
 		}
 		if(this.fileExists(aPath+'/.gitignore'))
 		  this.openURL(aPath+'/.gitignore', true);
+		else
+		{
+		  if(this.confirm('.gitignore file was not found. Do you want to create one?'))
+		  {
+			this.fileWrite(aPath+'/.gitignore', '\n');
+		  	this.openURL(aPath+'/.gitignore', true);
+		  }
+		}
 	  }
 	}
 	this.ignore = function(event)
