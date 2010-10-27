@@ -1,6 +1,6 @@
 add/edit/list branches
 add/edit/list tags
-overlay icons
-add windows support
 switch
 merge
+overlay icons
+add windows support
