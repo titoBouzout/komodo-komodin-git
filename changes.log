@@ -1,0 +1,41 @@
+
+<ul>
+<li>
+1.101027.1 - http://community.activestate.com/files/kGit_1.xpi
+<ul>
+<li>Fixes:
+<li>Properly manages directory and file names by using paths instead of file:// URIs.
+<li>Ask for confirmation on sensible commands.
+<li>Improves:
+<li>log shown as graph in date order.
+<li>Changes git log to git log --stat, to display a little more of information.
+<li>Adds "Open Git Ignore"
+<li>Adds "Add to Git Ignore"
+<li>Adds "Log (extended).
+<li>Adds "Blame" command.
+</ul>
+</li>
+<li>
+1.101026.0 - http://community.activestate.com/files/kGit_0.xpi
+<ul>
+<li>Improves:
+<li>Adds toolbarbutton to apply git actions to focused document.
+<li>The commit dialog is now multiline.
+<li>Works with "root folder" by right clicking the placesRootButton or when there is no files selected.
+<li>Adds icons ( to extension not to overlay )
+<li>Avoids to open a new tab without content. ( for when git is not returning data )
+<li>Adds "Liberal" command to execute whatever you want.
+<li>Komodin temporal files are deleted when komodo is closed.
+<li>Some reorganization on code and names.
+<li>Fixed:
+<li>git "write commands" run now synchronously. ( Many commits at the same time on same repository can block the repository ).
+<li>Some chars on commit messages where no escaped.
+</ul>
+</li>
+<li>
+0.1 - http://community.activestate.com/files/kGit.xpi
+<ul>
+<li>First Release</li>
+</ul>
+</li>
+</ul>
