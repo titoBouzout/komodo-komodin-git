@@ -135,7 +135,7 @@ function kGit()
             
             this.temporal['open'][this.temporal['open'].length] = output;
             
-            this.fileWrite(file, 'cd "'+this.escape(dir)+'" \n echo "log:'+this.escape(selected[id])+'" >> "'+output+'" \n git log "'+this.escape(selected[id])+'" >> "'+output+'" \nsleep 1');
+            this.fileWrite(file, 'cd "'+this.escape(dir)+'" \n echo "log:'+this.escape(selected[id])+'" >> "'+output+'" \n git log --stat "'+this.escape(selected[id])+'" >> "'+output+'" \nsleep 1');
             
             this.run(file);
         }
