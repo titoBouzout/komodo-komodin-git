@@ -7,4 +7,9 @@ windows support
 better output of messages
 spell check on commits
 ammend
+commit all
 add files
+
+/*bellow testing..*/
+
+testing commit -v
