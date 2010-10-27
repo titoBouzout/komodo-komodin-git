@@ -162,6 +162,28 @@ function kGit()
             this.run(file);
         }
     }
+	this.blame = function(event)
+    {
+        var selected = this.getSelectedPaths(event);
+        for(var id in selected)
+        {
+            var file = this.fileCreateTemporal('kGit.sh');
+            var output = this.fileCreateTemporal('kGit.diff');
+            
+            var dir;
+            
+            if(this.fileIsFolder(selected[id]))
+                dir = selected[id];
+            else
+                dir = this.fileDirname(selected[id]);
+            
+            this.temporal['open'][this.temporal['open'].length] = output;
+            
+            this.fileWrite(file, 'cd "'+this.escape(dir)+'" \n echo "blame:'+this.escape(selected[id])+'" >> "'+output+'" \n git blame "'+this.escape(selected[id])+'" >> "'+output+'" \nsleep 1 ');
+            
+            this.run(file);
+        }
+    }
     this.revertClean = function(event)
     {
         var selected = this.getSelectedPaths(event);
