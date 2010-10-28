@@ -503,6 +503,64 @@ function kGit()
             this.run(file);
         }
     }
+	this.add = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  var file = this.fileCreateTemporal('kGit.sh');
+	  var output = this.fileCreateTemporal('kGit.diff');
+	  
+	  var dir;
+	  var commands = '';
+	  for(var id in selected)
+	  {
+		  if(this.fileIsFolder(selected[id]))
+			  dir = selected[id];
+		  else
+			  dir = this.fileDirname(selected[id]);
+			  
+		  commands += 'cd "'+this.escape(dir)+'"';
+		  commands += '\n';
+		  commands += 'git add "'+this.escape(selected[id])+'" >>"'+output+'" 2>&1';
+		  commands += '\n';
+	  }
+	  commands += 'sleep 1';
+	  commands += '\n';
+
+	  this.temporal['open'][this.temporal['open'].length] = output;
+		  
+	  this.fileWrite(file, commands);
+		  
+	  this.run(file);
+    }
+	this.remove = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  var file = this.fileCreateTemporal('kGit.sh');
+	  var output = this.fileCreateTemporal('kGit.diff');
+	  
+	  var dir;
+	  var commands = '';
+	  for(var id in selected)
+	  {
+		  if(this.fileIsFolder(selected[id]))
+			  dir = selected[id];
+		  else
+			  dir = this.fileDirname(selected[id]);
+			  
+		  commands += 'cd "'+this.escape(dir)+'"';
+		  commands += '\n';
+		  commands += 'git rm "'+this.escape(selected[id])+'" >>"'+output+'" 2>&1';
+		  commands += '\n';
+	  }
+	  commands += 'sleep 1';
+	  commands += '\n';
+
+	  this.temporal['open'][this.temporal['open'].length] = output;
+		  
+	  this.fileWrite(file, commands);
+		  
+	  this.run(file);
+    }
 	this.ignoreOpen = function(event)
 	{
 	  var selected = this.getSelectedPaths(event);

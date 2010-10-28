@@ -1,15 +1,15 @@
+Things to not forget
+
 add/edit/list branches
 add/edit/list tags
 switch
 merge
 overlay icons
+
+localization!
+
 windows support
-better output of messages
-spell check on commits
+better output of messages maybe with some preferences
+
 ammend
 commit all
-add files
-
-/*bellow testing..*/
-
-testing commit -v

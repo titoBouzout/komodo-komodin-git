@@ -18,6 +18,7 @@
 		<xul:menuitem oncommand="kgit.addCommitPush(event)" label="Add &amp; Commit &amp; Push…"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.commit(event)" label="Commit…"/>
+
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.diff(event)" label="Diff"/>
 		<xul:menuitem oncommand="kgit.status(event)" label="Status"/>
@@ -29,11 +30,14 @@
 		<xul:menuitem oncommand="kgit.revert(event)" label="Revert"/>
 		<xul:menuitem oncommand="kgit.revertClean(event)" label="Revert &amp; Clean"/>
 		<xul:menuseparator/>
-		<xul:menuitem oncommand="kgit.revertToObject(event)" label="Revert to object…"/>
-		<xul:menuitem oncommand="kgit.checkoutToObject(event)" label="Checkout to object…"/>
+		<xul:menuitem oncommand="kgit.revertToObject(event)" label="Revert to Object…"/>
+		<xul:menuitem oncommand="kgit.checkoutToObject(event)" label="Checkout to Object…"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.push(event)" label="Push"/>
 		<xul:menuitem oncommand="kgit.pull(event)" label="Pull"/>
+		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.add(event)" label="Add"/>
+		<xul:menuitem oncommand="kgit.remove(event)" label="Remove"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.init(event)" label="Init…"/>
 		<xul:menuitem oncommand="kgit.clone(event)" label="Clone…"/>
@@ -41,7 +45,7 @@
 		<xul:menuitem oncommand="kgit.ignore(event)" label="Add to Git Ignore"/>
 		<xul:menuitem oncommand="kgit.ignoreOpen(event)" label="Open Git Ignore"/>
 		<xul:menuseparator/>
-		<xul:menuitem oncommand="kgit.command(event)" label="Liberal Git command…"/>
+		<xul:menuitem oncommand="kgit.command(event)" label="Liberal Git Command…"/>
 
 	  </content>
 
