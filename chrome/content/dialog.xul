@@ -19,6 +19,6 @@
 >
   <vbox flex="1">
 	<label/>
-	<textbox multiline="true" flex="1" height="100%" />
+	<textbox multiline="true" flex="1" height="100%" spellcheck="true"/>
   </vbox>
 </dialog>
