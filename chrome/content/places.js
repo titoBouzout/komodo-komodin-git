@@ -33,7 +33,7 @@ function kGit()
 			  if(this.fileRead(file) != '')
 				ko.open.multipleURIs([file]);
 			  else
-				this.commandOutput('kGit: Nothing to show');
+				ko.statusBar.AddMessage('kGit: Nothing to show', "kgit", 5 * 1000, true);
 	  }
 	  for(var id in this.temporal['display'])
 	  {
@@ -1034,7 +1034,7 @@ function kGit()
 	}
 	this.escape = function(aString)
 	{
-	  return aString.replace(/"/g, '\\"');
+	  return aString.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 	}
 	//removes duplicate values from an array
 	this.arrayUnique = function (anArray)
