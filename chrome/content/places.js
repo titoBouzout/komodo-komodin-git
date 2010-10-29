@@ -59,15 +59,15 @@ function kGit()
 	  //from focused files and/or folders of the places sidebar
 	  //places root folder if no selection on the places sidebar
 	  //places root folder if right click on "placesRootButton"
-	  
+	  //asumes document unless noted different with target attribute of parent parent
     this.getSelectedPaths = function(event)
     {
-	  if(event.originalTarget.parentNode.parentNode.tagName == 'toolbarbutton')
-	  {
-		var selected = [];
-			selected[0] = this.documentFocusedGetLocation();
-	  }
-	  else
+	  if(
+		 event &&
+		 event.originalTarget.parentNode &&
+		 event.originalTarget.parentNode.parentNode &&
+		 event.originalTarget.parentNode.parentNode.hasAttribute('target') &&
+		 event.originalTarget.parentNode.parentNode.getAttribute('target') == 'places')
 	  {
 		  var selected = gPlacesViewMgr.getSelectedURIs();
 
@@ -76,7 +76,7 @@ function kGit()
 			for(var id in selected)
 			  selected[id] = this.filePathFromFileURI(selected[id]);
 		  }
-		  else if(ko && ko.places && ko.places.manager && ko.places.manager.currentPlace &&  ko.places.manager.currentPlace != '')
+		  else if(ko.places && ko.places.manager && ko.places.manager.currentPlace &&  ko.places.manager.currentPlace != '')
 		  {
 			selected = [];
 			selected[0] = this.filePathFromFileURI(String(ko.places.manager.currentPlace));
@@ -85,6 +85,11 @@ function kGit()
 		  {
 			this.error('no path found');
 		  }
+	  }
+	  else
+	  {
+		var selected = [];
+			selected[0] = this.documentFocusedGetLocation();	
 	  }
 	  return selected;
     }
