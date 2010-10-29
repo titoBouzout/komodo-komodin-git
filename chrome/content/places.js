@@ -403,8 +403,7 @@ function kGit()
 		  this.run(file);
 		}
     }
-
-    this.commit = function(event)
+	this.commit = function(event)
     {
         var aMsg = this.prompt('Enter a commit message…', '', true);
         if(aMsg != '')
@@ -437,7 +436,68 @@ function kGit()
             this.run(file);
         }
     }
-    
+    this.commitAll = function(event)
+    {
+        var aMsg = this.prompt('Enter a commit message…', '', true);
+        if(aMsg != '')
+        {
+            var selected = this.getSelectedPaths(event);
+			var file = this.fileCreateTemporal('kGit.sh');
+			var output = this.fileCreateTemporal('kGit.diff');
+
+			var dir;
+			var commands = '';
+            for(var id in selected)
+            {
+                if(this.fileIsFolder(selected[id]))
+                    dir = selected[id];
+                else
+                    dir = this.fileDirname(selected[id]);
+
+				commands += 'cd "'+this.escape(dir)+'"';
+				commands += '\n';
+				commands += 'git commit -a -m "'+this.escape(aMsg)+'" >>"'+output+'" 2>&1';
+				commands += '\n';
+            }
+			commands += 'sleep 1';
+			commands += '\n';
+
+			this.temporal['open'][this.temporal['open'].length] = output;
+                
+	        this.fileWrite(file, commands);
+                
+            this.run(file);
+        }
+    }
+	this.commitAmend = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  var file = this.fileCreateTemporal('kGit.sh');
+	  var output = this.fileCreateTemporal('kGit.diff');
+
+	  var dir;
+	  var commands = '';
+	  for(var id in selected)
+	  {
+		  if(this.fileIsFolder(selected[id]))
+			  dir = selected[id];
+		  else
+			  dir = this.fileDirname(selected[id]);
+
+		  commands += 'cd "'+this.escape(dir)+'"';
+		  commands += '\n';
+		  commands += 'git commit "'+this.escape(selected[id])+'" --amend -C HEAD >>"'+output+'" 2>&1';
+		  commands += '\n';
+	  }
+	  commands += 'sleep 1';
+	  commands += '\n';
+
+	  this.temporal['open'][this.temporal['open'].length] = output;
+		  
+	  this.fileWrite(file, commands);
+		  
+	  this.run(file);
+    }
     this.addCommit = function(event)
     {
         var aMsg = this.prompt('Enter a commit message…', '', true);

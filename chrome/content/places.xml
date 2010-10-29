@@ -18,7 +18,9 @@
 		<xul:menuitem oncommand="kgit.addCommitPush(event)" label="Add &amp; Commit &amp; Push…"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.commit(event)" label="Commit…"/>
-
+		<xul:menuitem oncommand="kgit.commitAmend(event)" label="Commit Amend"/>
+		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.commitAll(event)" label="Commit All…"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.diff(event)" label="Diff"/>
 		<xul:menuitem oncommand="kgit.status(event)" label="Status"/>
