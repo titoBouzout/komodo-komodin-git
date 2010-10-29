@@ -1,37 +1,70 @@
 
 <ul><!-- root node -->
   
+  
+  
+  <li>
+	<b>1.101029.3</b> - http://community.activestate.com/files/kGit_2.xpi
+	<ul>
+	  <li>Fixes:
+	  <ul>
+		<li>Escape \ character on messages and file names.
+		<li>Add spellchecker to commit message.
+		<li>Ask for confirmation on pull and remove.
+		<li>Move Git menu to relevant position.
+	  </ul>
+	  <li>Improves:
+	  <ul>
+		<li>Adds support for Komodo IDE
+		<li>When .gitignore file is not found ask the user to create one.
+		<li>"Nothing to show" messages more integrated (to statusbar)
+		<li>More messages sent to the "command output".
+		<li>Adds "Commit All", "Amend to last commit", "Add files", "Remove files"
+		<li>Git menu is added to: tab context menu, File menu, document context menu
+	  </ul>
+	</ul>
+  </li>
+  
+  
 <li>
 1.101027.1 - http://community.activestate.com/files/kGit_1.xpi
 <ul>
 <li>Fixes:
-<li>Properly manages directory and file names by using paths instead of file:// URIs.
-<li>Ask for confirmation on sensible commands.
+  <ul>
+	<li>Properly manages directory and file names by using paths instead of file:// URIs.
+	<li>Ask for confirmation on sensible commands.
+  </ul>
 <li>Improves:
-<li>log shown as graph in date order.
-<li>Changes git log to git log --stat, to display a little more of information.
-<li>Adds "Open Git Ignore"
-<li>Adds "Add to Git Ignore"
-<li>Adds "Log (extended).
-<li>Adds "Blame" command.
+  <ul>
+	<li>log shown as graph in date order.
+	<li>Changes git log to git log --stat, to display a little more of information.
+	<li>Adds "Open Git Ignore"
+	<li>Adds "Add to Git Ignore"
+	<li>Adds "Log (extended).
+	<li>Adds "Blame" command.
+  </ul>
 </ul>
 </li>
 
 <li>
 1.101026.0 - http://community.activestate.com/files/kGit_0.xpi
 <ul>
-<li>Improves:
-<li>Adds toolbarbutton to apply git actions to focused document.
-<li>The commit dialog is now multiline.
-<li>Works with "root folder" by right clicking the placesRootButton or when there is no files selected.
-<li>Adds icons ( to extension not to overlay )
-<li>Avoids to open a new tab without content. ( for when git is not returning data )
-<li>Adds "Liberal" command to execute whatever you want.
-<li>Komodin temporal files are deleted when komodo is closed.
-<li>Some reorganization on code and names.
+  <li>Improves:
+  <ul >
+	<li>Adds toolbarbutton to apply git actions to focused document.
+	<li>The commit dialog is now multiline.
+	<li>Works with "root folder" by right clicking the placesRootButton or when there is no files selected.
+	<li>Adds icons ( to extension not to overlay )
+	<li>Avoids to open a new tab without content. ( for when git is not returning data )
+	<li>Adds "Liberal" command to execute whatever you want.
+	<li>Komodin temporal files are deleted when komodo is closed.
+	<li>Some reorganization on code and names.
+  </ul>
 <li>Fixed:
-<li>git "write commands" run now synchronously. ( Many commits at the same time on same repository can block the repository ).
-<li>Some chars on commit messages where no escaped.
+<ul >
+  <li>git "write commands" run now synchronously. ( Many commits at the same time on same repository can block the repository ).
+  <li>Some chars on commit messages where no escaped.
+</ul>
 </ul>
 </li>
 

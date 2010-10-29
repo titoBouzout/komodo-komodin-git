@@ -1,4 +1,3 @@
- rm kGit.xpi
- zip -r kGit.xpi *
- komodo kGit.xpi
-
+rm kGit.xpi
+zip -r kGit.xpi *
+komodo kGit.xpi

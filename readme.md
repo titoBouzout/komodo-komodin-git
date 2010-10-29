@@ -102,29 +102,33 @@ A commit is sent for each selected file. It should do: one commit for all select
 Source-Code:<br/>
 http://github.com/titoBouzout/komodin--Komodo-Edit-Git-
 
+All versions Changes:<br/>
+http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.html
+
 Current Version Changes:
 
   <ul>
   <li>
-	<b>1.101027.1</b> - http://community.activestate.com/files/kGit_1.xpi
+	<b>1.101029.3</b> - http://community.activestate.com/files/kGit_2.xpi
 	<ul>
 	  <li>Fixes:
 	  <ul>
-		<li>Properly manages directory and file names by using paths instead of file:// URIs.
-		<li>Ask for confirmation on sensible commands.
+		<li>Escape \ character on messages and file names.
+		<li>Add spellchecker to commit message.
+		<li>Ask for confirmation on pull and remove.
+		<li>Move Git menu to relevant position.
 	  </ul>
 	  <li>Improves:
 	  <ul>
-		<li>log shown as graph in date order.
-		<li>Changes git log to git log --stat, to display a little more of information.
-		<li>Adds "Open Git Ignore"
-		<li>Adds "Add to Git Ignore"
-		<li>Adds "Log (extended).
-		<li>Adds "Blame" command.
+		<li>Adds support for Komodo IDE
+		<li>When .gitignore file is not found ask the user to create one.
+		<li>"Nothing to show" messages more integrated (to statusbar)
+		<li>More messages sent to the "command output".
+		<li>Adds "Commit All", "Amend to last commit", "Add files", "Remove files"
+		<li>Git menu is added to: tab context menu, File menu, document context menu
 	  </ul>
 	</ul>
   </li>
   </ul>
 
-All versions Changes:<br/>
-http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.html
+
