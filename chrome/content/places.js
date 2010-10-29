@@ -31,15 +31,18 @@ function kGit()
 		  var file = String(this.temporal['open'][id]);
 			  delete this.temporal['open'][id];
 			  if(this.fileRead(file) != '')
-				ko.open.multipleURIs([file]);
+				this.openURL(file, true);
 			  else
-				ko.statusBar.AddMessage('kGit: Nothing to show', "kgit", 5 * 1000, true);
+				ko.statusBar.AddMessage('kGit: Nothing to show', "kgit", 7 * 1000, true);
 	  }
 	  for(var id in this.temporal['display'])
 	  {
 		  var file = String(this.temporal['display'][id]);
 			  delete this.temporal['display'][id];
-		  this.commandOutput(this.fileRead(file));
+			  if(this.fileRead(file) != '')
+				this.commandOutput(this.fileRead(file));
+			  else
+				ko.statusBar.AddMessage('kGit: Nothing to show', "kgit", 7 * 1000, true);
 	  }
     }
 	//detects when the user right click the placesRootButton
@@ -242,7 +245,7 @@ function kGit()
 		commands += 'sleep 1';
 		commands += '\n';
 
-		this.temporal['open'][this.temporal['open'].length] = output;
+		this.temporal['display'][this.temporal['display'].length] = output;
 		
 		this.fileWrite(file, commands);
 		
@@ -275,7 +278,7 @@ function kGit()
 		commands += 'sleep 1';
 		commands += '\n';
 
-		this.temporal['open'][this.temporal['open'].length] = output;
+		this.temporal['display'][this.temporal['display'].length] = output;
 		
 		this.fileWrite(file, commands);
 		
@@ -294,7 +297,7 @@ function kGit()
             var file = this.fileCreateTemporal('kGit.sh');
             var output = this.fileCreateTemporal('kGit.diff');
             
-            this.temporal['open'][this.temporal['open'].length] = output;
+            this.temporal['display'][this.temporal['display'].length] = output;
             
             this.fileWrite(file, 'cd "'+this.escape(selected)+'" \ngit revert '+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
             
@@ -314,7 +317,7 @@ function kGit()
             var file = this.fileCreateTemporal('kGit.sh');
             var output = this.fileCreateTemporal('kGit.diff');
             
-            this.temporal['open'][this.temporal['open'].length] = output;
+            this.temporal['display'][this.temporal['display'].length] = output;
             
             this.fileWrite(file, 'cd "'+this.escape(selected)+'" \ngit checkout '+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
             
@@ -396,7 +399,7 @@ function kGit()
 		  var file = this.fileCreateTemporal('kGit.sh');
 		  var output = this.fileCreateTemporal('kGit.diff');
 		  
-		  this.temporal['open'][this.temporal['open'].length] = output;
+		  this.temporal['display'][this.temporal['display'].length] = output;
 		  
 		  this.fileWrite(file, 'cd "'+this.escape(selected)+'" \n'+aMsg+' >>"'+output+'" 2>&1 \n sleep 1 ');
 		  
@@ -429,7 +432,7 @@ function kGit()
 			commands += 'sleep 1';
 			commands += '\n';
 
-			this.temporal['open'][this.temporal['open'].length] = output;
+			this.temporal['display'][this.temporal['display'].length] = output;
                 
 	        this.fileWrite(file, commands);
                 
@@ -462,7 +465,7 @@ function kGit()
 			commands += 'sleep 1';
 			commands += '\n';
 
-			this.temporal['open'][this.temporal['open'].length] = output;
+			this.temporal['display'][this.temporal['display'].length] = output;
                 
 	        this.fileWrite(file, commands);
                 
@@ -492,7 +495,7 @@ function kGit()
 	  commands += 'sleep 1';
 	  commands += '\n';
 
-	  this.temporal['open'][this.temporal['open'].length] = output;
+	  this.temporal['display'][this.temporal['display'].length] = output;
 		  
 	  this.fileWrite(file, commands);
 		  
@@ -526,7 +529,7 @@ function kGit()
 			commands += 'sleep 1';
 			commands += '\n';
 
-			this.temporal['open'][this.temporal['open'].length] = output;
+			this.temporal['display'][this.temporal['display'].length] = output;
                 
 	        this.fileWrite(file, commands);
                 
@@ -564,7 +567,7 @@ function kGit()
 			commands += 'sleep 1';
 			commands += '\n';
 
-			this.temporal['open'][this.temporal['open'].length] = output;
+			this.temporal['display'][this.temporal['display'].length] = output;
                 
 	        this.fileWrite(file, commands);
                 
@@ -594,7 +597,7 @@ function kGit()
 	  commands += 'sleep 1';
 	  commands += '\n';
 
-	  this.temporal['open'][this.temporal['open'].length] = output;
+	  this.temporal['display'][this.temporal['display'].length] = output;
 		  
 	  this.fileWrite(file, commands);
 		  
@@ -625,7 +628,7 @@ function kGit()
 		commands += 'sleep 1';
 		commands += '\n';
   
-		this.temporal['open'][this.temporal['open'].length] = output;
+		this.temporal['display'][this.temporal['display'].length] = output;
 			
 		this.fileWrite(file, commands);
 			
@@ -1043,7 +1046,7 @@ function kGit()
         return aData;
 	}
  	//writes content to a file
-	this.fileWrite= function(aFilePath, aData)
+	this.fileWrite = function(aFilePath, aData)
 	{
 		try
 		{
