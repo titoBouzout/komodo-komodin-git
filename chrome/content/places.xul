@@ -11,7 +11,7 @@
  <script src="chrome://kgit/content/places.js" type="application/x-javascript"/>
 
 	/*toolbarbutton*/
-	
+
 	  <toolbaritem id="standardToolbar">
 		 <toolbarseparator/>
 		 <toolbarbutton
@@ -36,7 +36,56 @@
 				insertafter="placesContextMenu_separatorDelete"
 				label="Git"
 				class="menu-iconic"
-				image="chrome://kgit/content/icon16.png">
+				image="chrome://kgit/content/icon16.png"
+				target="places">
+			  <menupopup class="kgit-menupopup-xbl"/>
+		  </menu>
+		  
+	  </menupopup>
+	  
+ 	/*document context menu*/
+  
+	  <menupopup id="editorContextMenu">
+		  
+		  <menuseparator insertafter="editor-context-sep-properties"/>
+  		  <menu
+				insertafter="editor-context-sep-properties"
+				label="Git"
+				class="menu-iconic"
+				image="chrome://kgit/content/icon16.png"
+		  >
+			  <menupopup class="kgit-menupopup-xbl"/>
+		  </menu>
+		  
+	  </menupopup>
+	  
+  	/*tab context menu*/
+  
+	  <menupopup id="tabContextMenu">
+		  
+		  <menuseparator insertafter="buffertab-context-sep-properties"/>
+  		  <menu
+				insertafter="buffertab-context-sep-properties"
+				label="Git"
+				class="menu-iconic"
+				image="chrome://kgit/content/icon16.png"
+		  >
+			  <menupopup class="kgit-menupopup-xbl"/>
+		  </menu>
+		  
+	  </menupopup>
+	  
+   	/*file menu*/
+  
+	  <menupopup id="popup_file">
+		  
+		  <menuseparator insertafter="file_print_menuseparator"/>
+  		  <menu
+				insertafter="file_print_menuseparator"
+				label="Git"
+				class="menu-iconic"
+				image="chrome://kgit/content/icon16.png"
+		  >
 			  <menupopup class="kgit-menupopup-xbl"/>
 		  </menu>
 		  
