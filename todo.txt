@@ -11,6 +11,7 @@ overlay icons
 localization!
 
 windows support
+
 better output of messages maybe with some preferences
 
 A commit is sent for each selected file, it should do:
