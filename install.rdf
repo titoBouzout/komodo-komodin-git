@@ -7,13 +7,12 @@
         <em:id>tito@kgit</em:id>
         <em:name>Komodin</em:name>
         <em:version>1.101027.1</em:version>
-        <em:description>Git to Komodo Edit (Linux only)</em:description>
+        <em:description>Adds Git commands to Komodo Edit and enhance Git commands on Komodo IDE (Linux and Mac OSX only)</em:description>
         <em:creator>Roberto Bouzout (tito)</em:creator>
 		<em:iconURL>chrome://kgit/content/icon.png</em:iconURL>
 		<em:homepageURL>http://community.activestate.com/xpi/komodin-git-places</em:homepageURL>
 		<em:updateInfoURL>http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.log</em:updateInfoURL>
         <em:targetApplication>
-		  
             <Description>
                 <!-- Komodo Edit's uuid -->
                 <em:id>{b1042fb5-9e9c-11db-b107-000d935d3368}</em:id>
