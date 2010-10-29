@@ -1,4 +1,4 @@
-Use this extension on Linux or Mac OSX to add Git commands to Komodo Edit
+Use this extension on Linux or Mac to add Git commands to Komodo.
 
 Introduction:
 
@@ -12,7 +12,8 @@ I were using Dreamweaver on WinXP and TortoiseGit. Since my switch to Linux I'm 
 Usage:
 
 <blockquote>
-Right click on multiple/single files/folders of the "places" sidebar, or from the toolbarbutton to apply commands to focused document.
+Right click on multiple/single files/folders of the "places" sidebar, or from the toolbarbutton to apply commands to focused document. There is also a git submenu on document and tab context menu.
+
 </blockquote><br/>
 
 Available commands:
@@ -27,7 +28,12 @@ Available commands:
 
       Commit
           o git commit "/selected/paths/files/or/and/folders" -m "promptMessage"
-
+      Commit Amend
+          o git commit "/selected/paths/files/or/and/folders" --amend -C HEAD
+		  
+      Commit All
+          o git commit -a -m "promptMessage"
+		  
       Diff
           o git diff "/selected/paths/files/or/and/folders"
       Status
