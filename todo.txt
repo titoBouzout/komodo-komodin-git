@@ -2,8 +2,10 @@ Things to not forget
 
 add/edit/list branches
 add/edit/list tags
+
 switch
 merge
+
 overlay icons
 
 localization!
@@ -11,8 +13,5 @@ localization!
 windows support
 better output of messages maybe with some preferences
 
-ammend
-commit all
-
-commit sent one commit for each selected file, it should should commit one for
-each distint repository.
+A commit is sent for each selected file, it should do:
+one commit for all selected files for each repository.
