@@ -12,7 +12,9 @@ I were using Dreamweaver on WinXP and TortoiseGit. Since my switch to Linux I'm 
 Usage:
 
 <blockquote>
-Right click on multiple/single files/folders of the "places" sidebar, or from the toolbarbutton to apply commands to focused document. There is also a git submenu on document and tab context menu.
+Right click on multiple/single files/folders of the "places" sidebar to apply commands on selected files.
+
+To apply commands to focused document use the toolbarbutton. There is also a git submenu on document and tab context menu.
 
 </blockquote><br/>
 
@@ -94,7 +96,8 @@ Todo:<br/>
 http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/todo.txt
 
 Know Bugs:<br/>
-A commit is sent for each selected file, it should do: one commit for all selected files for each repository.
+A commit is sent for each selected file. It should do: one commit for all selected files for each repository. <em>(Places tree can have opened many folders of more than one repository.)
+</em>
 
 Source-Code:<br/>
 http://github.com/titoBouzout/komodin--Komodo-Edit-Git-
