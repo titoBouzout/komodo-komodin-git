@@ -118,4 +118,4 @@ Current Version Changes:
   </ul>
 
 All versions Changes:
-http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.log
+http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.html
