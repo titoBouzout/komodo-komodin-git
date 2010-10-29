@@ -660,6 +660,7 @@ function kGit()
 		}
 	  }
 	}
+	//adds selected files to gitignore on close parent gitignore.
 	this.ignore = function(event)
 	{
 	  var selected = this.getSelectedPaths(event);
