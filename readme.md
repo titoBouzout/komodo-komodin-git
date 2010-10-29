@@ -1,11 +1,11 @@
-Use this extension on Linux to add Git commands to Komodo Edit (again: Linux)
+Use this extension on Linux or Mac OSX to add Git commands to Komodo Edit
 
 Introduction:
 
 <blockquote>
 I'm new to Linux, Git, Komodo and extensions. 
 
-I were using Dreamweaver on WinXP and TortoiseGit. Since my switch to Linux I'm  using Komodo Edit and I missed Git integration (<em><a href="http://www.activestate.com/komodo-ide/features">Komodo IDE</a> provides Git integration and a lot of more features</em>).
+I were using Dreamweaver on WinXP and TortoiseGit. Since my switch to Linux I'm using Komodo Edit and I missed Git integration (<em><a href="http://www.activestate.com/komodo-ide/features">Komodo IDE</a> provides Git integration and a lot of more features</em>).
  I have some experience with Mozilla Extensions then I decided to add this. If you see some bug please let me know.
 </blockquote>
 
@@ -13,7 +13,7 @@ Usage:
 
 <blockquote>
 Right click on multiple/single files/folders of the "places" sidebar, or from the toolbarbutton to apply commands to focused document.
-</blockquote>
+</blockquote><br/>
 
 Available commands:
 <pre>
@@ -79,18 +79,18 @@ To execute a Git command this add-on creates temporal shell scripts. On my fedor
 The add-on runs the scripts asynchronously /bin/sh "/tmp/kGit/kGit-[1-n].sh".
 
 The output is redirected to "/tmp/kGit/kGit-[1-n].diff" and "on command complete" the file is opened in a new komodo tab, which shows the output with pretty colours.
-</blockquote>
+</blockquote><br/>
 
-License:
+License:<br/>
 GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
-Todo:
+Todo:<br/>
 http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/todo.txt
 
-Know Bugs:
-No spell checker on commit dialog.
+Know Bugs:<br/>
+A commit is sent for each selected file, it should do: one commit for all selected files for each repository.
 
-Source-Code:
+Source-Code:<br/>
 http://github.com/titoBouzout/komodin--Komodo-Edit-Git-
 
 Current Version Changes:
@@ -117,5 +117,5 @@ Current Version Changes:
   </li>
   </ul>
 
-All versions Changes:
+All versions Changes:<br/>
 http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.html
