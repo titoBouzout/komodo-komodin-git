@@ -11,6 +11,7 @@
         <em:creator>Roberto Bouzout (tito)</em:creator>
 		<em:iconURL>chrome://kgit/content/icon.png</em:iconURL>
 		<em:homepageURL>http://community.activestate.com/xpi/komodin-git-places</em:homepageURL>
+		<em:updateInfoURL>http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.log</em:updateInfoURL>
         <em:targetApplication>
 		  
             <Description>
