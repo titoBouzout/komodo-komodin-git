@@ -5,17 +5,16 @@ Introduction:
 <blockquote>
 I'm new to Linux, Git, Komodo and extensions. 
 
-I were using Dreamweaver on WinXP and TortoiseGit. Since my switch to Linux I'm  using Komodo edit and I missed Git integration (<em><a href="http://www.activestate.com/komodo-ide/features">Komodo IDE</a> provides Git integration and a lot of more features</em>).
+I were using Dreamweaver on WinXP and TortoiseGit. Since my switch to Linux I'm  using Komodo Edit and I missed Git integration (<em><a href="http://www.activestate.com/komodo-ide/features">Komodo IDE</a> provides Git integration and a lot of more features</em>).
  I have some experience with Mozilla Extensions then I decided to add this. If you see some bug please let me know.
 </blockquote>
-The extension..
 
 Usage:
+
 <blockquote>
 Right click on multiple/single files/folders of the "places" sidebar, or from the toolbarbutton to apply commands to focused document.
-
-Select from the the Git menu a command...
 </blockquote>
+
 Available commands:
 <pre>
       Add & Commit
@@ -39,7 +38,7 @@ Available commands:
       Log ( Extended )
           o git log -p "/selected/paths/files/or/and/folders"
       Blame
-          o git blame "/selected/paths/files/or/and/folders"
+          o git blame "/selected/paths/files/NOT/folders"
 
       Revert
           o git checkout -- "/selected/paths/files/or/and/folders"
@@ -57,6 +56,11 @@ Available commands:
       Pull
           o git pull
 
+      Add
+          o git add "/selected/paths/files/or/and/folders"
+      Remove
+          o git rm "/selected/paths/files/or/and/folders"
+		  
       Init
           o git init
       Clone
@@ -64,6 +68,8 @@ Available commands:
 
       Add to Git Ignore
       Open Git Ignore
+	  
+	  Liberal Git Command
 </pre>
 
 Internals:
