@@ -10,7 +10,7 @@
  
  <script src="chrome://kgit/content/places.js" type="application/x-javascript"/>
 
-	/*toolbarbutton*/
+	<!-- toolbarbutton-->
 
 	  <toolbaritem id="standardToolbar">
 		 <toolbarseparator/>
@@ -27,7 +27,7 @@
 		 </toolbarbutton>
 	   </toolbaritem>
 	 
-	/*places context menu*/
+	<!-- places context menu-->
   
 	  <menupopup id="places-files-popup" onpopupshown="kgit.placesPopupShown(event)">
 		  
@@ -43,7 +43,7 @@
 		  
 	  </menupopup>
 	  
- 	/*document context menu*/
+ 	<!-- document context menu-->
   
 	  <menupopup id="editorContextMenu">
 		  
@@ -59,7 +59,7 @@
 		  
 	  </menupopup>
 	  
-  	/*tab context menu*/
+  	<!-- tab context menu -->
   
 	  <menupopup id="tabContextMenu">
 		  
@@ -75,7 +75,7 @@
 		  
 	  </menupopup>
 	  
-   	/*file menu*/
+   	<!--file menu-->
   
 	  <menupopup id="popup_file">
 		  
