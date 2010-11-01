@@ -1089,6 +1089,8 @@ function kGit()
     //returns a file path from a file URI
 	this.filePathFromFileURI = function(aURI)
 	{
+	  if(aURI.indexOf('file:') !== 0)
+		return aURI;
 	  if(!this.ios)
 		this.ios = Components.classes["@mozilla.org/network/io-service;1"].  
 						getService(Components.interfaces.nsIIOService);
