@@ -1,14 +1,5 @@
 Use this extension on Linux or Mac to add Git commands to Komodo.
 
-Introduction:
-
-<blockquote>
-I'm new to Linux, Git, Komodo and extensions. 
-
-I were using Dreamweaver on WinXP and TortoiseGit. Since my switch to Linux I'm using Komodo Edit and I missed Git integration (<em><a href="http://www.activestate.com/komodo-ide/features">Komodo IDE</a> provides Git integration and a lot of more features</em>).
- I have some experience with Mozilla Extensions then I decided to add this. If you see some bug please let me know.
-</blockquote>
-
 Usage:
 
 <blockquote>
@@ -20,64 +11,64 @@ To apply commands to focused document use the toolbarbutton. There is also a git
 
 Available commands:
 <pre>
-      Add & Commit
-          o git add "/selected/paths/files/or/and/folders"
-          o git commit "/selected/paths/files/or/and/folders" -m "promptMessage"
-      Add & Commit & Push
-          o git add "/selected/paths/files/or/and/folders"
-          o git commit "/selected/paths/files/or/and/folders" -m "promptMessage"
-          o git push
+Add & Commit
+  o git add "/selected/paths/files/or/and/folders"
+  o git commit "/selected/paths/files/or/and/folders" -m "promptMessage"
+Add & Commit & Push
+  o git add "/selected/paths/files/or/and/folders"
+  o git commit "/selected/paths/files/or/and/folders" -m "promptMessage"
+  o git push
 
-      Commit
-          o git commit "/selected/paths/files/or/and/folders" -m "promptMessage"
-      Commit Amend
-          o git commit "/selected/paths/files/or/and/folders" --amend -C HEAD
-		  
-      Commit All
-          o git commit -a -m "promptMessage"
-		  
-      Diff
-          o git diff "/selected/paths/files/or/and/folders"
-      Status
-          o git status "/selected/paths/files/or/and/folders"
+Commit
+  o git commit "/selected/paths/files/or/and/folders" -m "promptMessage"
+Commit Amend
+  o git commit "/selected/paths/files/or/and/folders" --amend -C HEAD
+  
+Commit All
+  o git commit -a -m "promptMessage"
+  
+Diff
+  o git diff "/selected/paths/files/or/and/folders"
+Status
+  o git status "/selected/paths/files/or/and/folders"
 
-      Log
-          o git log --stat --graph --date-order "/selected/paths/files/or/and/folders"   
-      Log ( Extended )
-          o git log -p "/selected/paths/files/or/and/folders"
-      Blame
-          o git blame "/selected/paths/files/NOT/folders"
+Log
+  o git log --stat --graph --date-order "/selected/paths/files/or/and/folders"   
+Log ( Extended )
+  o git log -p "/selected/paths/files/or/and/folders"
+Blame
+  o git blame "/selected/paths/files/NOT/folders"
 
-      Revert
-          o git checkout -- "/selected/paths/files/or/and/folders"
-      Revert & Clean
-          o git checkout -- "/selected/paths/files/or/and/folders"
-          o git clean "/selected/paths/files/or/and/folders" -f -d
+Revert
+  o git checkout -- "/selected/paths/files/or/and/folders"
+Revert & Clean
+  o git checkout -- "/selected/paths/files/or/and/folders"
+  o git clean "/selected/paths/files/or/and/folders" -f -d
 
-      Revert to object
-          o git revert promptMessage
-      Checkout to object
-          o git checkout promptMessage
+Revert to object
+  o git revert promptMessage
+Checkout to object
+  o git checkout promptMessage
 
-      Push
-          o git push
-      Pull
-          o git pull
+Push
+  o git push
+Pull
+  o git pull
 
-      Add
-          o git add "/selected/paths/files/or/and/folders"
-      Remove
-          o git rm "/selected/paths/files/or/and/folders"
-		  
-      Init
-          o git init
-      Clone
-          o git clone promptMessage
+Add
+  o git add "/selected/paths/files/or/and/folders"
+Remove
+  o git rm "/selected/paths/files/or/and/folders"
+  
+Init
+  o git init
+Clone
+  o git clone promptMessage
 
-      Add to Git Ignore
-      Open Git Ignore
-	  
-	  Liberal Git Command
+Add to Git Ignore
+Open Git Ignore
+
+Liberal Git Command
 </pre>
 
 Internals:
@@ -107,28 +98,26 @@ http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.html
 
 Current Version Changes:
 
-  <ul>
-  <li>
-	<b>1.101029.3</b> - http://community.activestate.com/files/kGit_2.xpi
-	<ul>
-	  <li>Fixes:
-	  <ul>
-		<li>Escape \ character on messages and file names.
-		<li>Add spellchecker to commit message.
-		<li>Ask for confirmation on pull and remove.
-		<li>Move Git menu to relevant position.
-	  </ul>
-	  <li>Improves:
-	  <ul>
-		<li>Adds support for Komodo IDE
-		<li>When .gitignore file is not found ask the user to create one.
-		<li>"Nothing to show" messages more integrated (to statusbar)
-		<li>More messages sent to the "command output".
-		<li>Adds "Commit All", "Amend to last commit", "Add files", "Remove files"
-		<li>Git menu is added to: tab context menu, File menu, document context menu
-	  </ul>
-	</ul>
-  </li>
-  </ul>
-
-
+<ul>
+<li>
+<b>1.101029.3</b> - http://community.activestate.com/files/kGit_2.xpi
+<ul>
+<li>Fixes:
+<ul>
+<li>Escape \ character on messages and file names.
+<li>Add spellchecker to commit message.
+<li>Ask for confirmation on pull and remove.
+<li>Move Git menu to relevant position.
+</ul>
+<li>Improves:
+<ul>
+<li>Adds support for Komodo IDE
+<li>When .gitignore file is not found ask the user to create one.
+<li>"Nothing to show" messages more integrated (to statusbar)
+<li>More messages sent to the "command output".
+<li>Adds "Commit All", "Amend to last commit", "Add files", "Remove files"
+<li>Git menu is added to: tab context menu, File menu, document context menu
+</ul>
+</ul>
+</li>
+</ul>
