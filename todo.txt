@@ -6,13 +6,15 @@ add/edit/list tags
 switch
 merge
 
+patchs
+
 overlay icons
 
 localization!
 
 windows support
 
-better output of messages maybe with some preferences
-
 A commit is sent for each selected file, it should do:
 one commit for all selected files for each repository.
+
+log should have a limit

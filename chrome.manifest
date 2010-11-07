@@ -1,2 +1,2 @@
 content kgit chrome/content/
-overlay chrome://komodo/content/komodo.xul chrome://kgit/content/places.xul
+overlay chrome://komodo/content/komodo.xul chrome://kgit/content/kgit.xul
