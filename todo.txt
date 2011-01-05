@@ -1,20 +1,33 @@
 Things to not forget
+  
+  BUGS:
+  
+	there is no overlay icons
+	
+	localization!
+	
+	windows support...
+	
+	  Open git ignore is not working.
+	  Add to git ignore is not working
+	  There is problem with the file names returned by mozilla.
+	  
+	A commit is sent for each selected file, it should do:
+	one commit for all selected files for each repository.
+	
+	log should have a limit
+	
+	if it is a unix link resolve the link
+	
+	know bugs must be a link to this file
+  
+  TODO:
+	
+	add/edit/list branches
+	add/edit/list tags
+	
+	switch
+	merge
+	
+	patchs
 
-add/edit/list branches
-add/edit/list tags
-
-switch
-merge
-
-patchs
-
-overlay icons
-
-localization!
-
-windows support
-
-A commit is sent for each selected file, it should do:
-one commit for all selected files for each repository.
-
-log should have a limit
