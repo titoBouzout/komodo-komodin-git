@@ -10,37 +10,60 @@ function kGit()
     this.run = function(aScriptPath)
     {
         var file = Components.classes["@mozilla.org/file/local;1"]
-                     .createInstance(Components.interfaces.nsILocalFile);   
-             file.initWithPath("/");
-             file.append("bin");
-             file.append("sh");
+                     .createInstance(Components.interfaces.nsILocalFile);
+			//if *nix
+			try{
+			  file.initWithPath("/");
+			  file.append("bin");
+			  file.append("sh");
+			  
+			  var argv = [aScriptPath];
+			}
+			catch(e)
+			{
+			  //if windows
+			  file.initWithPath("C:\\cygwin");
+			  file.append("bin");
+			  file.append("bash.exe");
+			  
+			  this.fileWrite(aScriptPath, this.fileRead(aScriptPath).replace(/\\/g, '/').replace(/(.)\:\//g, '/cygdrive/$1/'));
+			  
+			  var argv = ['--login', aScriptPath];
+			  
+			  //ko.run.runEncodedCommand(window, 'c:/cygwin/bin/bash --login "'+aScriptPath+'"', this.observe);
+
+			 /* ko.run.runCommand(window, 'bash --login "'+aScriptPath+'"', 	
+								'c:/cygwin/bin/',false,false,false,false,false,false,false,false,false,false
+								, this.observe);*/
+			}
 
         var process = Components.classes["@mozilla.org/process/util;1"]
                          .createInstance(Components.interfaces.nsIProcess2);
              process.init(file);
 
-        var argv = [aScriptPath];
+        
 
         process.runAsync(argv, argv.length, this, false);
     }
 	//observe execution of a shell script
     this.observe = function(aSubject, aTopic, aData)
 	{
-	  for(var id in this.temporal['open'])
+
+	  for(var id in kgit.temporal['open'])
 	  {
-		  var file = String(this.temporal['open'][id]);
-			  delete this.temporal['open'][id];
-			  if(this.fileRead(file) != '')
-				this.openURL(file, true);
+		  var file = String(kgit.temporal['open'][id]);
+			  delete kgit.temporal['open'][id];
+			  if(kgit.fileRead(file) != '')
+				kgit.openURL(file, true);
 			  else
 				ko.statusBar.AddMessage('kGit: Nothing to show', "kgit", 7 * 1000, true);
 	  }
-	  for(var id in this.temporal['display'])
+	  for(var id in kgit.temporal['display'])
 	  {
-		  var file = String(this.temporal['display'][id]);
-			  delete this.temporal['display'][id];
-			  if(this.fileRead(file) != '')
-				this.commandOutput(this.fileRead(file));
+		  var file = String(kgit.temporal['display'][id]);
+			  delete kgit.temporal['display'][id];
+			  if(kgit.fileRead(file) != '')
+				kgit.commandOutput(kgit.fileRead(file));
 			  else
 				ko.statusBar.AddMessage('kGit: Nothing to show', "kgit", 7 * 1000, true);
 	  }
@@ -92,7 +115,7 @@ function kGit()
 	  else
 	  {
 		var selected = [];
-			selected[0] = this.documentFocusedGetLocation();	
+			selected[0] = this.documentFocusedGetLocation();
 	  }
 	  return selected;
     }
@@ -1002,6 +1025,7 @@ function kGit()
     //returns true if a file exists
 	this.fileExists = function(aFilePath)
 	{
+	  try{
         var aFile = Components.classes["@mozilla.org/file/local;1"]
                         .createInstance(Components.interfaces.nsILocalFile);
             aFile.initWithPath(aFilePath);
@@ -1010,6 +1034,11 @@ function kGit()
                 return true;
             else
                 return false;
+	  }
+	  catch(e)
+	  {
+		return false;
+	  }
     }
     //returns true if a path is a folder
 	this.fileIsFolder = function(aFilePath)
@@ -1050,6 +1079,7 @@ function kGit()
 	{
 		try
 		{
+		  aData = String(aData).trim();
 		//write the content to the file
 			var aFile = Components.classes["@mozilla.org/file/local;1"]
 							.createInstance(Components.interfaces.nsILocalFile);
