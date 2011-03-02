@@ -10,11 +10,7 @@ Things to not forget
 	  it should do: one commit for all selected files for each repository.
 	  (Places tree can have opened many folders of more than one repository.)
 	
-	log should have a limit
-	
 	if it is a unix link resolve the link
-	
-	know bugs must be a link to this file
   
   TODO:
 	

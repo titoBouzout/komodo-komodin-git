@@ -792,6 +792,33 @@ function kGit()
 		  
 	  this.run(file);
 	}
+	this.gitK = function(event)
+	{
+	  var selected = this.getSelectedPaths(event);
+	  var file = this.fileCreateTemporal('kGit.sh');
+	  var output = this.fileCreateTemporal('kGit.diff');
+	  
+	  var dir;
+	  var commands = '';
+	  for(var id in selected)
+	  {
+		  if(this.fileIsFolder(selected[id]))
+			  dir = selected[id];
+		  else
+			  dir = this.fileDirname(selected[id]);
+
+		  commands += 'cd "'+this.escape(dir)+'"';
+		  commands += '\n';
+		  commands += 'gitk';
+		  commands += '\n';
+	  }
+
+	  this.temporal['display'][this.temporal['display'].length] = output;
+		  
+	  this.fileWrite(file, commands);
+		  
+	  this.run(file);
+	}
 	this.openURL = function(aFilePath, newTab)
 	{
 	  if(newTab)

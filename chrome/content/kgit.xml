@@ -49,6 +49,7 @@
 		<xul:menuitem oncommand="kgit.ignoreOpen(event)" label="Open Git Ignore"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.gitGUI(event)" label="Git GUI…"/>
+		<xul:menuitem oncommand="kgit.gitK(event)" label="Gitk…"/>
 		<xul:menuitem oncommand="kgit.command(event)" label="Liberal Git Command…"/>
 
 	  </content>
