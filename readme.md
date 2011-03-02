@@ -70,8 +70,9 @@ Clone
 Add to Git Ignore
 Open Git Ignore
 
-Liberal Git Command
 Git GUI
+Gitk
+Liberal Git Command
 </pre>
 
 Internals:
