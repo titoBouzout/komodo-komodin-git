@@ -26,7 +26,8 @@
 		<xul:menuitem oncommand="kgit.status(event)" label="Status"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.log(event)" label="Log"/>
-		<xul:menuitem oncommand="kgit.logExtended(event)" label="Log ( Extended )"/>
+		<xul:menuitem oncommand="kgit.logExtended(event)" label="Log ( Extended, last 30)"/>
+		<xul:menuitem oncommand="kgit.logFull(event)" label="Log ( Full )"/>
 		<xul:menuitem oncommand="kgit.blame(event)" label="Blame"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.revert(event)" label="Revert"/>
@@ -47,6 +48,7 @@
 		<xul:menuitem oncommand="kgit.ignore(event)" label="Add to Git Ignore"/>
 		<xul:menuitem oncommand="kgit.ignoreOpen(event)" label="Open Git Ignore"/>
 		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.gitGUI(event)" label="Git GUI…"/>
 		<xul:menuitem oncommand="kgit.command(event)" label="Liberal Git Command…"/>
 
 	  </content>

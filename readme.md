@@ -35,6 +35,8 @@ Status
 Log
   o git log --stat --graph --date-order "/selected/paths/files/or/and/folders"   
 Log ( Extended )
+  o git log -p "/selected/paths/files/or/and/folders" -n 30
+Log ( Full )
   o git log -p "/selected/paths/files/or/and/folders"
 Blame
   o git blame "/selected/paths/files/NOT/folders"
@@ -69,6 +71,7 @@ Add to Git Ignore
 Open Git Ignore
 
 Liberal Git Command
+Git GUI
 </pre>
 
 Internals:
@@ -83,41 +86,33 @@ The output is redirected to "/tmp/kGit/kGit-[1-n].diff" and "on command complete
 License:<br/>
 GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
-Todo:<br/>
-http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/todo.txt
-
-Know Bugs:<br/>
-A commit is sent for each selected file. It should do: one commit for all selected files for each repository. <em>(Places tree can have opened many folders of more than one repository.)
-</em>
+Todo & know bugs:<br/>
+https://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/todo.txt
 
 Source-Code:<br/>
-http://github.com/titoBouzout/komodin--Komodo-Edit-Git-
+https://github.com/titoBouzout/komodin--Komodo-Edit-Git-
 
 All versions Changes:<br/>
-http://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.html
+https://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.html
 
 Current Version Changes:
 
 <ul>
-<li>
-<b>1.101029.3</b> - http://community.activestate.com/files/kGit_2.xpi
-<ul>
-<li>Fixes:
-<ul>
-<li>Escape \ character on messages and file names.
-<li>Add spellchecker to commit message.
-<li>Ask for confirmation on pull and remove.
-<li>Move Git menu to relevant position.
-</ul>
-<li>Improves:
-<ul>
-<li>Adds support for Komodo IDE
-<li>When .gitignore file is not found ask the user to create one.
-<li>"Nothing to show" messages more integrated (to statusbar)
-<li>More messages sent to the "command output".
-<li>Adds "Commit All", "Amend to last commit", "Add files", "Remove files"
-<li>Git menu is added to: tab context menu, File menu, document context menu
-</ul>
-</ul>
-</li>
+
+  <li>
+	<b>1.110302.4</b> - http://community.activestate.com/files/kGit_3.xpi
+	<ul>
+	  <li>Fixes for windows:
+	  <ul>
+		<li>Open git ignore is not working.
+		<li>Add to git ignore is not working
+	  </ul>
+	  <li>Improves:
+	  <ul>
+		<li>Adds command "git gui"
+		<li>Partial patch for windows. (It assumes cygwin is installed on C:/cygwin/)
+	  </ul>
+	</ul>
+  </li>
+
 </ul>

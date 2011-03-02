@@ -39,16 +39,13 @@ function kGit()
 
         var process = Components.classes["@mozilla.org/process/util;1"]
                          .createInstance(Components.interfaces.nsIProcess2);
-             process.init(file);
-
-        
-
-        process.runAsync(argv, argv.length, this, false);
+            process.init(file);
+			 
+			process.runAsync(argv, argv.length, this, false);
     }
 	//observe execution of a shell script
     this.observe = function(aSubject, aTopic, aData)
 	{
-
 	  for(var id in kgit.temporal['open'])
 	  {
 		  var file = String(kgit.temporal['open'][id]);
@@ -173,25 +170,47 @@ function kGit()
     }
 	this.logExtended = function(event)
     {
-        var selected = this.getSelectedPaths(event);
-        for(var id in selected)
-        {
-            var file = this.fileCreateTemporal('kGit.sh');
-            var output = this.fileCreateTemporal('kGit.diff');
-            
-            var dir;
-            
-            if(this.fileIsFolder(selected[id]))
-                dir = selected[id];
-            else
-                dir = this.fileDirname(selected[id]);
-            
-            this.temporal['open'][this.temporal['open'].length] = output;
-            
-            this.fileWrite(file, 'cd "'+this.escape(dir)+'" \n echo "log:'+this.escape(selected[id])+'" >> "'+output+'" \n git log -p "'+this.escape(selected[id])+'" >> "'+output+'" \nsleep 1');
-            
-            this.run(file);
-        }
+	  var selected = this.getSelectedPaths(event);
+	  for(var id in selected)
+	  {
+		  var file = this.fileCreateTemporal('kGit.sh');
+		  var output = this.fileCreateTemporal('kGit.diff');
+		  
+		  var dir;
+		  
+		  if(this.fileIsFolder(selected[id]))
+			  dir = selected[id];
+		  else
+			  dir = this.fileDirname(selected[id]);
+		  
+		  this.temporal['open'][this.temporal['open'].length] = output;
+		  
+		  this.fileWrite(file, 'cd "'+this.escape(dir)+'" \n echo "log:'+this.escape(selected[id])+'" >> "'+output+'" \n git log -n 30 -p "'+this.escape(selected[id])+'" >> "'+output+'" \nsleep 1');
+		  
+		  this.run(file);
+	  }
+    }
+	this.logFull = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  for(var id in selected)
+	  {
+		  var file = this.fileCreateTemporal('kGit.sh');
+		  var output = this.fileCreateTemporal('kGit.diff');
+		  
+		  var dir;
+		  
+		  if(this.fileIsFolder(selected[id]))
+			  dir = selected[id];
+		  else
+			  dir = this.fileDirname(selected[id]);
+		  
+		  this.temporal['open'][this.temporal['open'].length] = output;
+		  
+		  this.fileWrite(file, 'cd "'+this.escape(dir)+'" \n echo "log:'+this.escape(selected[id])+'" >> "'+output+'" \n git log -p "'+this.escape(selected[id])+'" >> "'+output+'" \nsleep 1');
+		  
+		  this.run(file);
+	  }
     }
     this.status = function(event)
     {
@@ -666,22 +685,28 @@ function kGit()
 	  for(var id in selected)
 	  {
 		aPath = selected[id];
-		while(!this.fileExists(aPath+'/.git'))
+
+		while(!this.fileExists(aPath+this.__DS+'.git'+this.__DS))
 		{
-		  if(this.fileExists(aPath+'/.gitignore'))
+
+		  if(this.fileExists(aPath+this.__DS+'.gitignore'))
 			break;
 		  if(this.fileDirname(aPath) == aPath)
 			break;
 		  aPath = this.fileDirname(aPath);
 		}
-		if(this.fileExists(aPath+'/.gitignore'))
-		  this.openURL(aPath+'/.gitignore', true);
+		if(this.fileExists(aPath+this.__DS+'.gitignore'))
+		{
+
+		  this.openURL(aPath+this.__DS+'.gitignore', true);
+		}
 		else
 		{
+
 		  if(this.confirm('.gitignore file was not found. Do you want to create one?'))
 		  {
-			this.fileWrite(aPath+'/.gitignore', '\n');
-		  	this.openURL(aPath+'/.gitignore', true);
+			this.fileWrite(aPath+this.__DS+'.gitignore', '\n');
+		  	this.openURL(aPath+this.__DS+'.gitignore', true);
 		  }
 		}
 	  }
@@ -698,47 +723,74 @@ function kGit()
 		else
 		  aPath = selected[id];
 		  
-		while(!this.fileExists(aPath+'/.git'))
+		while(!this.fileExists(aPath+this.__DS+'.git'+this.__DS))
 		{
-		  if(this.fileExists(aPath+'/.gitignore'))
+		  if(this.fileExists(aPath+this.__DS+'.gitignore'))
 			break;
 		  if(this.fileDirname(aPath) == aPath)
 			break;
 		  aPath = this.fileDirname(aPath);
 		}
 		
-		if(this.fileExists(aPath+'/.gitignore'))
+		if(this.fileExists(aPath+this.__DS+'.gitignore'))
 		{
-		  var ignore = this.fileRead(aPath+'/.gitignore');
+		  var ignore = this.fileRead(aPath+this.__DS+'.gitignore');
 			  ignore += '\n';
-			  ignore += selected[id].replace(aPath+'/', '');
+			  ignore += selected[id].replace(aPath+this.__DS, '');
 		  
 			  ignore = this.arrayUnique(ignore.split('\n')).sort(this.sortLocale).join('\n');
 		}
 		else
 		{
-		  var ignore = selected[id].replace(this.getGitRoot(aPath)+'/', '');
+		  var ignore = selected[id].replace(this.getGitRoot(aPath)+this.__DS, '');
 		}
 		ignore += '\n';
 
-		this.fileWrite(aPath+'/.gitignore', ignore);
-		this.openURL(aPath+'/.gitignore', true);
+		this.fileWrite(aPath+this.__DS+'.gitignore', ignore);
+		this.openURL(aPath+this.__DS+'.gitignore', true);
 	  }
 	}
 	this.getGitRoot = function(aPath)
 	{
-	  while(!this.fileExists(aPath+'/.git'))
+	  while(!this.fileExists(aPath+this.__DS+'.git'+this.__DS))
 	  {
 		if(this.fileDirname(aPath) == aPath)
 		  break;
 		aPath = this.fileDirname(aPath);
-		if(this.fileExists(aPath+'/.git'))
+		if(this.fileExists(aPath+this.__DS+'.git'+this.__DS))
 		  break;
 	  }
-	  if(this.fileExists(aPath+'/.git'))
+	  if(this.fileExists(aPath+this.__DS+'.git'+this.__DS))
 		return aPath;
 	  else
 		return '';
+	}
+	this.gitGUI = function(event)
+	{
+	  var selected = this.getSelectedPaths(event);
+	  var file = this.fileCreateTemporal('kGit.sh');
+	  var output = this.fileCreateTemporal('kGit.diff');
+	  
+	  var dir;
+	  var commands = '';
+	  for(var id in selected)
+	  {
+		  if(this.fileIsFolder(selected[id]))
+			  dir = selected[id];
+		  else
+			  dir = this.fileDirname(selected[id]);
+
+		  commands += 'cd "'+this.escape(dir)+'"';
+		  commands += '\n';
+		  commands += 'git gui';
+		  commands += '\n';
+	  }
+
+	  this.temporal['display'][this.temporal['display'].length] = output;
+		  
+	  this.fileWrite(file, commands);
+		  
+	  this.run(file);
 	}
 	this.openURL = function(aFilePath, newTab)
 	{
@@ -1159,6 +1211,27 @@ function kGit()
 	{
 		return a.localeCompare(b);
 	}
+	this.initExtension = function()
+	{
+	  var file = Components.classes["@mozilla.org/file/local;1"]
+					.createInstance(Components.interfaces.nsILocalFile);
+	   //if *nix
+	   try{
+		  file.initWithPath("/");
+		  file.append("bin");
+		  file.append("sh");
+		  
+		  this.__DS = '/';
+		  
+	   } catch(e) {
+		
+		 this.__DS = '\\';
+		 
+	   }
+	   delete file;
+	}
+	
+	this.initExtension();
     return this;
 }
 

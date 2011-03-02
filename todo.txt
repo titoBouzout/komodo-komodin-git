@@ -6,14 +6,9 @@ Things to not forget
 	
 	localization!
 	
-	windows support...
-	
-	  Open git ignore is not working.
-	  Add to git ignore is not working
-	  There is problem with the file names returned by mozilla.
-	  
-	A commit is sent for each selected file, it should do:
-	one commit for all selected files for each repository.
+	A commit is sent for each selected file:
+	  it should do: one commit for all selected files for each repository.
+	  (Places tree can have opened many folders of more than one repository.)
 	
 	log should have a limit
 	
@@ -30,4 +25,3 @@ Things to not forget
 	merge
 	
 	patchs
-
