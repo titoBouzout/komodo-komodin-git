@@ -80,6 +80,51 @@ Gitk
 Liberal Git Command
 </pre>
 
+Enabling Icons Overlay:
+<blockquote>
+Locate and Backup the file: /ActiveState Komodo Edit 6/lib/mozilla/extensions/places@activestate.com/components/koPlaceTreeView.py
+
+Backup!
+
+Ok, now open the file and make the following changes:
+
+Under "import uriparse"
+Write: "import hashlib"
+
+Should be:
+"
+...
+import uriparse
+import hashlib
+...
+"
+
+Then locate the function "_buildCellProperties" and replace it with : 
+<python>
+    def _buildCellProperties(self, rowNode):
+        properties = []
+        if not self.safe_isLocal():
+            return properties
+        koFileObject = rowNode.koFile
+        if not koFileObject:
+            return properties
+        koFileObject = UnwrapObject(koFileObject)
+        m = hashlib.md5()
+        m.update(koFileObject.path.replace('\\', '/'))
+        properties.append('k'+m.hexdigest())#the css selector need start with a letter
+        if koFileObject.isReadOnly:
+            properties.append("isReadOnly")
+
+        return properties
+</python>
+
+Start and close komodo two times..
+
+If the places sidebar is not loading, look if there is a syntax error into the file. ( "Tabs at the begging of each line should be spaces" )
+
+Done!
+</blockquote>
+
 Internals:
 <blockquote>
 To execute a Git command this add-on creates temporal shell scripts. On my fedora installation these are under /tmp/kGit/kGit-[1-n].sh
@@ -106,7 +151,7 @@ Changes From Latest Version:
 <ul>
 
   <li>
-	<b>1.110414.6</b> - http://community.activestate.com/files/kGit_5.xpi
+	<b>1.110414.6</b> - http://community.activestate.com/files/kGit_4.xpi
 	<ul>
 	  <li>Improves:
 	  <ul>
@@ -116,7 +161,7 @@ Changes From Latest Version:
   </li>
   
   <li>
-	<b>1.110414.5</b> - http://community.activestate.com/files/kGit_4.xpi
+	<b>1.110414.5</b>
 	<ul>
 	  <li>Fixes:
 	  <ul>
