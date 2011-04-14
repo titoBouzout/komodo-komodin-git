@@ -1,4 +1,4 @@
-Use this extension on Linux or Mac to add Git commands to Komodo.
+Use this extension to add Git commands to Komodo.
 
 Usage:
 
@@ -23,14 +23,15 @@ Commit
   o git commit "/selected/paths/files/or/and/folders" -m "promptMessage"
 Commit Amend
   o git commit "/selected/paths/files/or/and/folders" --amend -C HEAD
-  
 Commit All
   o git commit -a -m "promptMessage"
+Undo Last Commit
+  o git reset --soft HEAD^
   
 Diff
   o git diff "/selected/paths/files/or/and/folders"
 Status
-  o git status "/selected/paths/files/or/and/folders"
+  o git status --untracked-files=all "/selected/paths/files/or/and/folders"
 
 Log
   o git log --stat --graph --date-order "/selected/paths/files/or/and/folders"   
@@ -46,6 +47,8 @@ Revert
 Revert & Clean
   o git checkout -- "/selected/paths/files/or/and/folders"
   o git clean "/selected/paths/files/or/and/folders" -f -d
+Checkout Files To object
+  o git checkout promptMessage "/selected/paths/files/or/and/folders"
 
 Revert to object
   o git revert promptMessage
@@ -60,7 +63,9 @@ Pull
 Add
   o git add "/selected/paths/files/or/and/folders"
 Remove
-  o git rm "/selected/paths/files/or/and/folders"
+  o git rm -r -f "/selected/paths/files/or/and/folders"
+Remove Keep Local
+  o git rm -r --cached "/selected/paths/files/or/and/folders"
   
 Init
   o git init
@@ -101,19 +106,19 @@ Current Version Changes:
 <ul>
 
   <li>
-	<b>1.110302.4</b> - http://community.activestate.com/files/kGit_3.xpi
+	<b>1.110414.5</b> - http://community.activestate.com/files/kGit_4.xpi
 	<ul>
 	  <li>Fixes:
 	  <ul>
-		<li>Open git ignore is not working.
-		<li>Add to git ignore is not working.
-		<li>Log extended have a limit of 30 items.
-		<li>Log full show all changes on selected files.
+		<li>"add" and "rm" commands now recursive
 	  </ul>
 	  <li>Improves:
 	  <ul>
-		<li>Adds command "git gui" and "gitk"
-		<li>Partial patch for windows. (It assumes cygwin is installed on C:/cygwin/)
+		<li>Works with "Windows", with just Git installed /Will prompt for git installation directory/
+		<li>Adds "Checkout Files to Object" (git checkout abcdef selectedFiles)
+		<li>Adds "Remove Keep Local"
+		<li>Status shows all untracked files /not only directories/
+		<li>Adds "Undo Last Commit" command ( git reset --soft HEAD^ )
 	  </ul>
 	</ul>
   </li>

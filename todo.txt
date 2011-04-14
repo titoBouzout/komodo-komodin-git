@@ -1,14 +1,8 @@
 Things to not forget
   
   BUGS:
-  
-	there is no overlay icons
 	
 	localization!
-	
-	A commit is sent for each selected file:
-	  it should do: one commit for all selected files for each repository.
-	  (Places tree can have opened many folders of more than one repository.)
 	
 	if it is a unix link resolve the link
   
@@ -17,7 +11,7 @@ Things to not forget
 	add/edit/list branches
 	add/edit/list tags
 	
-	switch
-	merge
+	easy switch
+	easy merge
 	
-	patchs
+	stash

@@ -19,8 +19,8 @@
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.commit(event)" label="Commit…"/>
 		<xul:menuitem oncommand="kgit.commitAmend(event)" label="Commit Amend"/>
-		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.commitAll(event)" label="Commit All…"/>
+		<xul:menuitem oncommand="kgit.undoLastCommit(event)" label="Undo Last Commit"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.diff(event)" label="Diff"/>
 		<xul:menuitem oncommand="kgit.status(event)" label="Status"/>
@@ -32,6 +32,7 @@
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.revert(event)" label="Revert"/>
 		<xul:menuitem oncommand="kgit.revertClean(event)" label="Revert &amp; Clean"/>
+		<xul:menuitem oncommand="kgit.checkoutFilesToObject(event)" label="Checkout Files to Object…"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.revertToObject(event)" label="Revert to Object…"/>
 		<xul:menuitem oncommand="kgit.checkoutToObject(event)" label="Checkout to Object…"/>
@@ -41,6 +42,7 @@
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.add(event)" label="Add"/>
 		<xul:menuitem oncommand="kgit.remove(event)" label="Remove"/>
+		<xul:menuitem oncommand="kgit.removeKeepLocal(event)" label="Remove Keep Local"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.init(event)" label="Init…"/>
 		<xul:menuitem oncommand="kgit.clone(event)" label="Clone…"/>
