@@ -123,6 +123,11 @@ Start and close komodo two times..
 If the places sidebar is not loading, look if there is a syntax error into the file. ( "Tabs at the begging of each line should be spaces" )
 
 Done!
+
+NOTES:
+ - No changed files will show as is ( normal komodo icons )
+ - The "look for changes" executes every 5 seconds.
+ 
 </blockquote>
 
 Internals:
