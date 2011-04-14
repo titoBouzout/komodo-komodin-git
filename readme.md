@@ -101,10 +101,20 @@ https://github.com/titoBouzout/komodin--Komodo-Edit-Git-
 All versions Changes:<br/>
 https://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.html
 
-Current Version Changes:
+Changes From Latest Version:
 
 <ul>
 
+  <li>
+	<b>1.110414.6</b> - http://community.activestate.com/files/kGit_5.xpi
+	<ul>
+	  <li>Improves:
+	  <ul>
+		<li>Experimental icons overlay ( needs hack to places extension ) Please See intructions into komodin thread forum http://support.activestate.com/xpi/komodin-git-places
+	  </ul>
+	</ul>
+  </li>
+  
   <li>
 	<b>1.110414.5</b> - http://community.activestate.com/files/kGit_4.xpi
 	<ul>
