@@ -6,13 +6,10 @@ function kGit()
 	//runs a shell script
     this.run = function(aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox)
     {
-		var runSvc = Components.classes["@activestate.com/koRunService;1"]
-						.createInstance(Components.interfaces.koIRunService);
-		
 		//if *nix
 		if(this.__DS == '/')
 		{
-		  var process = runSvc.RunAndNotify(
+		  var process =  this.runSvc.RunAndNotify(
 											'sh '+this.escape(aScriptPath)+'',
 											'/bin',
 											'',
@@ -24,7 +21,7 @@ function kGit()
 			this.initExtension();
 			
 		  //if windows
-		  var process = runSvc.RunAndNotify(
+		  var process =  this.runSvc.RunAndNotify(
 											'bash.exe --login "'+this.escape(aScriptPath)+'"',
 											this.gitPath+'\\bin\\',
 											'',
@@ -1064,6 +1061,10 @@ function kGit()
 		  }
 		}
 		
+		if(this.lastCSS == css)
+		  return;
+		
+		this.lastCSS = css;
 		
 		//alert(css);
 		this.fileWrite(obj.outputFile+'.css', this.arrayUnique(css.split('\n')).join('\n'));
@@ -1527,6 +1528,12 @@ function kGit()
 	}
 	this.initExtension = function()
 	{
+	  
+	  this.runSvc = Components.classes["@activestate.com/koRunService;1"]
+						.createInstance(Components.interfaces.koIRunService);
+	  
+	  this.lastCSS = '';
+	  
 	  var file = Components.classes["@mozilla.org/file/local;1"]
 					.createInstance(Components.interfaces.nsILocalFile);
 	   //if *nix
@@ -1568,8 +1575,6 @@ function kGit()
 	{
 	  try
 	  {
-		this.runSvc = Components.classes["@activestate.com/koRunService;1"]
-						.createInstance(Components.interfaces.koIRunService);
 		
 		this.iconsObj = this.getPaths(this.filePathFromFileURI(String(this.getPlacesPath())));
 		this.iconsLastCommmand ='';
@@ -1598,26 +1603,70 @@ function kGit()
 		this.fileWrite(iconsObj.sh, commands);
 	  this.iconsLastCommmand = commands;
 
-	  //if *nix
-	  if(this.__DS == '/')
-	  {
-		var process = this.runSvc.RunAndNotify(
-										  'sh '+this.escape(iconsObj.sh)+'',
-										  '/bin',
-										  '',
-										  '');
-	  }
-	  else
-	  {
-		//if windows
-		var process = this.runSvc.RunAndNotify(
-										  'bash.exe --login "'+this.escape(iconsObj.sh)+'"',
-										  this.gitPath+'\\bin\\',
-										  '',
-										  '');
-	  }
-	  var retval = process.wait(-1);
-	  this.iconsSet(iconsObj, process.getStdout());
+		var backgroundThread = {};
+			backgroundThread.iconsObj = iconsObj;
+			backgroundThread.run  = function()
+			{
+				try {
+				 
+				  if(kgit.__DS == '/')
+				  {
+					var process = kgit.runSvc.RunAndNotify(
+													  'sh '+kgit.escape(this.iconsObj.sh)+'',
+													  '/bin',
+													  '',
+													  '');
+				  }
+				  else
+				  {
+					//if windows
+					var process = kgit.runSvc.RunAndNotify(
+													  'bash.exe --login "'+kgit.escape(this.iconsObj.sh)+'"',
+													  kgit.gitPath+'\\bin\\',
+													  '',
+													  '');
+				  }
+				  var retval = process.wait(-1);
+				  
+				  var mainThread = {};
+					  mainThread.iconsObj = this.iconsObj;
+					  mainThread.stdout = process.getStdout();
+					  mainThread.run = function() {
+						  try {
+							kgit.iconsSet(this.iconsObj, this.stdout)
+						  }
+						  catch(e){
+							Components.utils.reportError(e);
+						  }
+						}
+					  mainThread.QueryInterface = function(iid) {
+
+						if (iid.equals(Components.interfaces.nsIRunnable) ||
+							iid.equals(Components.interfaces.nsISupports)) {
+								return this;
+						}
+						throw Components.results.NS_ERROR_NO_INTERFACE;
+					  }
+					  var main = Components.classes["@mozilla.org/thread-manager;1"].getService().mainThread;
+						  main.dispatch(mainThread, Components.interfaces.nsIThread.DISPATCH_NORMAL);
+				  
+				  
+				} catch(e) {
+				  Components.utils.reportError(e);
+				}
+			  }
+			  backgroundThread.QueryInterface  = function(iid) {
+				if (iid.equals(Components.interfaces.nsIRunnable) ||
+					iid.equals(Components.interfaces.nsISupports)) {
+						return this;
+				}
+				throw Components.results.NS_ERROR_NO_INTERFACE;
+			  }
+			
+		
+		var thread = Components.classes["@mozilla.org/thread-manager;1"]
+								.getService().newThread(0);
+			thread.dispatch(backgroundThread, Components.interfaces.nsIThread.DISPATCH_NORMAL);
 	}
 	this.initExtension();
 	
