@@ -154,7 +154,17 @@ https://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.htm
 Changes From Latest Version:
 
 <ul>
-
+  
+  <li>
+	<b>1.110419.7</b> - http://community.activestate.com/files/kGit_5.xpi
+	<ul>
+	  <li>Improves:
+	  <ul>
+		<li> The "git status" for the icons overlay now runs the process into a background thread.
+	  </ul>
+	</ul>
+  </li>
+  
   <li>
 	<b>1.110414.6</b> - http://community.activestate.com/files/kGit_4.xpi
 	<ul>
