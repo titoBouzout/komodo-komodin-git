@@ -57,8 +57,11 @@ Checkout to object
 
 Push
   o git push
+  
 Pull
   o git pull
+Fetch
+  o git fetch
 
 Add
   o git add "/selected/paths/files/or/and/folders"
@@ -156,7 +159,19 @@ Changes From Latest Version:
 <ul>
   
   <li>
-	<b>1.110419.7</b> - http://community.activestate.com/files/kGit_5.xpi
+	<b>1.110419.8</b> - http://community.activestate.com/files/kGit_5.xpi
+	<ul>
+	  <li>Improves:
+	  <ul>
+		<li>Adds "conflicted" files to icons overlay.
+		<li>"liberal git command" opens result in new tab.
+		<li>Adds "fetch" command.
+	  </ul>
+	</ul>
+  </li>
+
+  <li>
+	<b>1.110419.7</b>
 	<ul>
 	  <li>Improves:
 	  <ul>

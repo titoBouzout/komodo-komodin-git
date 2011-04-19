@@ -55,7 +55,7 @@ function kGit()
 		  this.alert('Error:\n'+stderr);
     }
 	//executes a shell script in a window ( allows user iteraction )
-	this.execute = function(aScriptPath, aOutputPath)
+	this.execute = function(aScriptPath, aOutputPath, inNewTab)
 	{
 	  var file = Components.classes["@mozilla.org/file/local;1"]
 				  .createInstance(Components.interfaces.nsILocalFile);
@@ -84,7 +84,20 @@ function kGit()
 				   .createInstance(Components.interfaces.nsIProcess2);
 		  process.init(file);
 		   
-		  process.runAsync(argv, argv.length, {observe: function(aSubject, aTopic, aData){ if(!aOutputPath) {}else { kgit.notification(kgit.fileRead(aOutputPath)); }}}, false);
+		  process.runAsync(argv, argv.length,
+						  {
+							observe: function(aSubject, aTopic, aData)
+							{
+							  if(!aOutputPath){}
+							  else
+							  {
+								if(!inNewTab)
+								  kgit.notification(kgit.fileRead(aOutputPath));
+								else
+								  kgit.openURL(aOutputPath, true);
+							  }
+							}
+						  }, false);
 	}
 
 	//detects when the user right click the placesRootButton
@@ -446,6 +459,19 @@ function kGit()
 	  }
 	}
 	
+	this.fetch = function(event)
+    {
+	  if(this.confirm('Are you sure?'))
+	  {
+        var selected = this.getSelectedPathFolder(event);
+		var obj = this.getPaths(selected);
+        
+        this.fileWrite(obj.sh, 'cd '+obj.cwd+' \ngit fetch >>'+obj.output+' 2>&1 \n ');
+        
+        this.execute(obj.sh, obj.outputFile);
+	  }
+	}
+	
 	//free input command
     this.command = function(event)
     {
@@ -457,7 +483,7 @@ function kGit()
 	  {
 		this.fileWrite(obj.sh, 'cd '+obj.cwdSelected+' \n'+aMsg+' >>'+obj.output+' 2>&1');
 		
-		this.execute(obj.sh, obj.outputFile);
+		this.execute(obj.sh, obj.outputFile, true);
 	  }
     }
 	this.commit = function(event)
@@ -966,10 +992,21 @@ function kGit()
 			}
 		}
 	  
-	  /* deleted files */
+	  /* conflicts */
 	  
+		aString = aString
+					.split('both deleted').join('unmerged')
+					.split('added by us').join('unmerged')
+					.split('deleted by them').join('unmerged')
+					.split('added by them').join('unmerged')
+					.split('deleted by us').join('unmerged')
+					.split('both added').join('unmerged')
+					.split('both modified').join('unmerged');
+					
 		aString = aString.split('#');
 		
+	  /* deleted files */
+	  
 		for(var id in aString)
 		{
 		  if(aString[id].indexOf('deleted: ') != -1)
@@ -1029,6 +1066,37 @@ function kGit()
 			}
 		  }
 		}
+		
+	  /* unmerged */
+
+		for(var id in aString)
+		{
+		  if(aString[id].indexOf('unmerged:') != -1)
+		  {
+			rootFile = obj.git+this.__DS;
+			
+			file = ((aString[id].split('unmerged: ')[1]).split('/').join(this.__DS).split('\\').join(this.__DS)).trim().split(this.__DS);
+			var files = [];
+				files[files.length] = rootFile;
+			for(var id in file)
+			{
+			  rootFile += file[id];
+			  files[files.length] = rootFile;
+			  rootFile += this.__DS;
+			 // files[files.length] = rootFile;
+			}
+			for(var file in files)
+			{//alert(this.pathToNix(files[file]))
+			  hash = 'k'+this.md5(this.pathToNix(files[file]))
+			  //hash = files[file].split('/').join('_').split('\\').join('_').split(':').join('_').split('.').join('_');
+			  //alert(this.pathToNix(file));
+			  if(this.fileIsFolder(files[file]))
+				css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__) {  list-style-image : url("chrome://kgit/content/icons/folder-closed_conflict.png") !important;}'.replace('__FILE__', hash)+'\n';
+			  else
+				css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__) {  list-style-image : url("chrome://kgit/content/icons/file_icon_conflict.png") !important;}'.replace('__FILE__', hash)+'\n';
+			}
+		  }
+		}
 	  
 	  /* modified files */
 	  
@@ -1072,14 +1140,10 @@ function kGit()
 					.classes["@mozilla.org/network/io-service;1"]
 					.getService(Components.interfaces.nsIIOService)
 					.newURI('file://'+obj.outputFile+'.css', null, null);
-				
-		var sss = Components
-					  .classes["@mozilla.org/content/style-sheet-service;1"]
-					  .getService(Components.interfaces.nsIStyleSheetService);
 					  
-		if(sss.sheetRegistered(uri, sss.AGENT_SHEET))
-		  sss.unregisterSheet(uri, sss.AGENT_SHEET);
-		sss.loadAndRegisterSheet(uri, sss.AGENT_SHEET);
+		if(this.sss.sheetRegistered(uri, this.sss.AGENT_SHEET))
+		  this.sss.unregisterSheet(uri, this.sss.AGENT_SHEET);
+		this.sss.loadAndRegisterSheet(uri, this.sss.AGENT_SHEET);
 		
 		setTimeout( function(){
 		 // ko.places.viewMgr.tree.treeBoxObject.clearStyleAndImageCaches();
@@ -1091,28 +1155,6 @@ function kGit()
 		//ko.places.viewMgr.updateView();
 		//gPlacesViewMgr.view.refreshFullTreeView();
 		//ko.places.projects.manager.refresh();
-		/*
-		  status:D:/www/extensiondevelopment.org/_em/kGit/chrome/icons/testing
-		  # On branch master
-		  # Changes to be committed:
-		  #   (use "git reset HEAD <file>..." to unstage)
-		  #
-		  #	new file:   added
-		  #	deleted:    deleted
-		  #
-		  # Changes not staged for commit:
-		  #   (use "git add <file>..." to update what will be committed)
-		  #   (use "git checkout -- <file>..." to discard changes in working directory)
-		  #
-		  #	modified:   .gitignore
-		  #	modified:   modified
-		  #
-		  # Untracked files:
-		  #   (use "git add <file>..." to include in what will be committed)
-		  #
-		  #	deleted
-		  #	unversioned
-		*/
 	}
 
 /* UTILS */
@@ -1531,7 +1573,10 @@ function kGit()
 	  
 	  this.runSvc = Components.classes["@activestate.com/koRunService;1"]
 						.createInstance(Components.interfaces.koIRunService);
-	  
+	  this.sss = Components
+					  .classes["@mozilla.org/content/style-sheet-service;1"]
+					  .getService(Components.interfaces.nsIStyleSheetService);
+					  
 	  this.lastCSS = '';
 	  
 	  var file = Components.classes["@mozilla.org/file/local;1"]

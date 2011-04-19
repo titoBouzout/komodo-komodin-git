@@ -38,7 +38,9 @@
 		<xul:menuitem oncommand="kgit.checkoutToObject(event)" label="Checkout to Object…"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.push(event)" label="Push"/>
+		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.pull(event)" label="Pull"/>
+		<xul:menuitem oncommand="kgit.fetch(event)" label="Fetch"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.add(event)" label="Add"/>
 		<xul:menuitem oncommand="kgit.remove(event)" label="Remove"/>
