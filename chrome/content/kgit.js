@@ -1342,7 +1342,7 @@ function kGit()
 	  }
 	  catch(e)
 	  {
-		alert(aFilePath);
+		return false;
 	  }
     }
     //returns true if a path is a folder
@@ -1575,12 +1575,14 @@ function kGit()
 	{
 	  try
 	  {
-		
 		this.iconsObj = this.getPaths(this.filePathFromFileURI(String(this.getPlacesPath())));
 		this.iconsLastCommmand ='';
   
 		if(!this.gitPathSet && this.__DS != '/')
+		{
+		  setTimeout(function(){ kgit.iconsLoader()}, 5000);
 		  return;
+		}
 		setInterval(function(){ try{kgit.iconsUpdate();}catch(e){} }, 5000);
 	  }
 	  catch(e){}
