@@ -886,11 +886,6 @@ function kGit()
 		  
 	  this.execute(obj.sh);
 	}
-	this.openURL = function(aFilePath, newTab)
-	{
-	  if(newTab)
-		ko.open.multipleURIs([aFilePath]);
-	}
 	//empty our temp folder when komodo is closed.
     this.emptyTemp = function()
     {
@@ -912,6 +907,11 @@ function kGit()
 
 /* UTILS */
 
+	this.openURL = function(aFilePath, newTab)
+	{
+	  if(newTab)
+		ko.open.multipleURIs([aFilePath]);
+	}
 	this.documentFocusedGetLocation = function()
 	{
 	  return this.documentGetLocation(this.documentGetFocused());
@@ -1261,7 +1261,7 @@ function kGit()
 		{
 			if(!this.inArray(tmp, anArray[id]))
 			{
-				tmp[tmp.length] = anArray[id];
+			  tmp[tmp.length] = anArray[id];
 			}
 		}
 		return tmp;
@@ -1410,7 +1410,7 @@ function kGit()
 					{
 					  commands += 'cd "'+kgit.escape(paths[id])+'"';
 					  commands += '\n';
-					  commands += 'echo KGITPATH'+paths[id]+'KGITPATH';
+					  commands += 'echo "KGITPATH'+paths[id]+'KGITPATH"';
 					  commands += '\n';
 					  commands += 'echo `git status --untracked-files=all`';
 					  commands += '\n';
@@ -1444,14 +1444,16 @@ function kGit()
 
 				  var file, hash, css = '', rootPath, aString, aGitPath;
 				  
-				  aStatusContent = aStatusContent.split('KGITPATH');
 				  //css += stdout;
+				  //css += aStatusContent;
+				  
+				  aStatusContent = aStatusContent.split('KGITPATH');
+
 				  for(var i=1;i<aStatusContent.length;i++)
 				  {
 					aGitPath = aStatusContent[i].split('/').join(kgit.__DS);
 					i++;
 					aString = aStatusContent[i] || '';
-					//css += aString;
 					aString = aString
 					  .split('nothing added to commit').join('#')
 					  .split('no changes added to commit').join('#')
@@ -1496,18 +1498,18 @@ function kGit()
 				  
 					if(aString.indexOf('Untracked files:') != -1)
 					{
-						var untrucked = (aString.split('Untracked files:')[1]).split('#');
-							untrucked[0] = '';
-							untrucked[1] = '';
-						for(var id in untrucked)
+						var untracked = (aString.split('Untracked files:')[1]).split('#');
+							untracked[0] = '';
+							untracked[1] = '';
+						for(var id in untracked)
 						{
-						  if(untrucked[id] == '')
+						  if(untracked[id] == '')
 							continue;
 							
-						  untrucked[id] = untrucked[id].replace(/^\//, '');
+						  untracked[id] = untracked[id].replace(/^\//, '');
 						  rootFile = aGitPath;
 						  
-						  file = (untrucked[id].split('/').join(kgit.__DS).split('\\').join(kgit.__DS)).trim().split(kgit.__DS);
+						  file = (untracked[id].split('/').join(kgit.__DS).split('\\').join(kgit.__DS)).trim().split(kgit.__DS);
 						  var files = [];
 							  files[files.length] = rootFile;
 						  rootFile += kgit.__DS
