@@ -6,7 +6,7 @@
     <Description about="urn:mozilla:install-manifest">
         <em:id>tito@kgit</em:id>
         <em:name>Komodin</em:name>
-        <em:version>1.110419.8</em:version>
+        <em:version>1.110421.9</em:version>
         <em:description>Adds Git commands to Komodo Edit and enhance Git commands on Komodo IDE</em:description>
         <em:creator>Roberto Bouzout (tito)</em:creator>
 		<em:iconURL>chrome://kgit/content/icon.png</em:iconURL>

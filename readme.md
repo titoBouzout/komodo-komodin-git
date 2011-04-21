@@ -1,4 +1,4 @@
-Use this extension to add Git commands to Komodo.
+Adds Git commands to Komodo Edit and enhance Git commands on Komodo IDE. Also adds icons overlay to Komodo Edit.
 
 Usage:
 
@@ -158,6 +158,21 @@ Changes From Latest Version:
 
 <ul>
   
+  <li>
+	<b>1.110421.9</b> - http://community.activestate.com/files/kGit_6.xpi
+	<ul>
+	  <li>Fix:
+	  <ul>
+		<li>Direcotires with special characters now show icons properly
+	  </ul>
+	  <li>Improves:
+	  <ul>
+		<li>Show icons for all the repositories under the current places sidebar
+		<li>Renames icons to short CSS size.
+	  </ul>
+	</ul>
+  </li>
+	  
   <li>
 	<b>1.110419.8</b> - http://community.activestate.com/files/kGit_5.xpi
 	<ul>
