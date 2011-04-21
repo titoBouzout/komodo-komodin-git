@@ -413,7 +413,7 @@ function kGit()
 	  {
 		commands += 'cd '+id+'';
 		commands += '\n';
-		commands += 'git push >>'+obj.output+' 2>&1';
+		commands += 'git push --progress >>'+obj.output+' 2>&1';
 		commands += '\n';
 	  }
 
@@ -659,7 +659,7 @@ function kGit()
 		  commands += '\n';
 		  commands += 'git commit '+repositories[id].join(' ')+' -m "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
 		  commands += '\n';
-		  commands += 'git push >>'+obj.output+' 2>&1';
+		  commands += 'git push --progress >>'+obj.output+' 2>&1';
 		  commands += '\n';
 		}
   
