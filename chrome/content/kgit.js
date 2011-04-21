@@ -1439,7 +1439,7 @@ function kGit()
 													  '');
 				  }
 				  retval = process.wait(-1);
-				  
+
 				  var aStatusContent = process.getStdout();
 
 				  var file, hash, css = '', rootPath, aString, aGitPath;
