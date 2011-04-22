@@ -427,6 +427,7 @@ function kGit()
         }
     }
 	//TODO: allow to push to different remotes/branches
+	//TODO: show progress metter.
     this.push = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -462,8 +463,10 @@ function kGit()
 	  this.fileWrite(obj.sh, 'cd '+obj.cwdSelected+' \ngit init >>'+obj.output+' 2>&1');
 	  
 	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.iconsCleanCacheReposotories();
     }
-	//TODO: move all to the parent directory and remove the folder that a clone creates 
+	//TODO: move all to the parent directory and remove the folder that a clone creates
+	//TODO: show progress metter.
     this.clone = function(event)
     {
 	  var aMsg = this.prompt('Enter URL to clone…');
@@ -476,9 +479,11 @@ function kGit()
 		this.fileWrite(obj.sh, 'cd '+obj.cwdSelected+' \ngit clone '+aMsg+' >>'+obj.output+' 2>&1');
 		
 		this.execute(obj.sh, obj.outputFile);
+		this.iconsCleanCacheReposotories();
 	  }
     }
 	//TODO: allow to pull from different remotes/branches
+	//TODO: show progress metter.
     this.pull = function(event)
     {
 	  if(this.confirm('Are you sure?'))
@@ -492,6 +497,7 @@ function kGit()
 	  }
 	}
 	//TODO: allow to fetch from different remotes/branches
+	//TODO: show progress metter.
 	this.fetch = function(event)
     {
 	  if(this.confirm('Are you sure?'))
@@ -949,6 +955,7 @@ function kGit()
 		else
 		{
 		  file.remove(true);
+		  kgit.fileCreateTemporal('nada.txt', '');
 		}
 		delete file;
 	}
@@ -1372,7 +1379,7 @@ function kGit()
 	  var data = this.converter.convertToByteArray(aString, result);
 	  if(!this.ch)
 		this.ch = Components.classes["@mozilla.org/security/hash;1"]
-						 .createInstance(Components.interfaces.nsICryptoHash);
+						  .createInstance(Components.interfaces.nsICryptoHash);
 	  this.ch.init(this.ch.MD5);
 	  this.ch.update(data, data.length);
 	  var hash = this.ch.finish(false);
@@ -1398,7 +1405,10 @@ function kGit()
 	{
 	  return ("0" + charCode.toString(16)).slice(-2);
 	}
-
+	this.error = function(aString)
+	{
+	  setTimeout(function(){ throw new Error('kGit : ' + aString);}, 0);
+	}
   /* icons */
   
 	this.iconsLoader = function()
@@ -1417,6 +1427,7 @@ function kGit()
 		  this.iconsObj = this.getPaths(this.filePathFromFileURI(String(this.getPlacesPath())));
 		  this.iconsLastCommmand ='';
 		  this.iconsReposotoriesCache = [];
+		  this.iconsReposotoriesCacheTime = new Date();
 		  this.iconsLastCSS = '';
 		  this.iconsURI = Components
 							.classes["@mozilla.org/network/io-service;1"]
@@ -1437,6 +1448,34 @@ function kGit()
 		setTimeout(function(){ kgit.iconsLoader();}, 1000);
 	  }
 	}
+    this.iconsSet = function(aCSS)
+    {
+	  if(this.iconsLastCSS == aCSS)
+	  {
+		this.iconsRunning = false;
+		return;
+	  }
+	  
+	  this.iconsLastCSS = aCSS;
+	  
+	  this.fileWrite(this.iconsObj.outputFile+'.css', this.arrayUnique(aCSS.split('\n')).join('\n'));
+					
+	  if(this.sss.sheetRegistered(this.iconsURI, this.sss.AGENT_SHEET))
+		this.sss.unregisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
+	  this.sss.loadAndRegisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
+	  
+	  setTimeout( function(){
+		gPlacesViewMgr.view.refreshFullTreeView();
+	  }, 10);
+	  ko.places.viewMgr.tree.treeBoxObject.clearStyleAndImageCaches();
+	  
+	  this.iconsRunning = false;
+	}
+	this.iconsCleanCacheReposotories = function()
+	{
+	  this.iconsReposotoriesCacheTime = new Date();
+	  this.iconsReposotoriesCache = [];
+	}
 	this.iconsUpdateCall = function()
 	{
 	  if(this.iconsRunning || !this.iconsOn){}
@@ -1450,8 +1489,18 @@ function kGit()
 	}
 	this.iconsUpdate = function()
 	{
+	  if(this.iconsRunning)
+		return;
 	  this.iconsRunning = true;
 	  
+	  //clean cache of repositories every xx minutes
+	  var now = new Date();
+	  if(Math.floor((now-this.iconsReposotoriesCacheTime)/60000) > 10)
+	  {
+		this.iconsReposotoriesCacheTime = now;
+		this.iconsReposotoriesCache = [];
+	  }
+			
 	  var iconsObj = this.getPaths(this.getPlacesPath(), true);
 
 	  iconsObj.sh = this.iconsObj.sh;
@@ -1463,37 +1512,49 @@ function kGit()
 			{
 				try {
 				  
-				  var process, retval, commands = '', paths, stdout = '';
+				  var process, retval, commands = '', paths, stdout = '', timeout;
 				  
-				  try
+				  if(!kgit.iconsReposotoriesCache[this.iconsObj.git])
 				  {
-					if(kgit.__DS == '/')
+					try
 					{
-					  process = kgit.runSvc.RunAndNotify(
-														'find -name hooks',
-														this.iconsObj.git,
-														'',
-														'');  
-					  retval = process.wait(-1);
-					  stdout = process.getStdout();
-					  stdout = stdout.split('./').join(this.iconsObj.git+'/');
+					  if(kgit.__DS == '/')
+					  {
+						process = kgit.runSvcIcons.RunAndNotify(
+														  'find -name hooks',
+														  this.iconsObj.git,
+														  '',
+														  '');
+						timeout = setTimeout(function(){ Components.utils.reportError('killed');process.kill(true);kgit.iconsReposotoriesCache[kgit.iconsObj.git] = ''; }, 3500);
+						retval = process.wait(-1);
+						clearTimeout(timeout);
+						stdout = process.getStdout();
+						stdout = stdout.split('./').join(this.iconsObj.git+'/');
+					  }
+					  else
+					  {
+						//if windows
+						process = kgit.runSvcIcons.RunAndNotify(
+														  'dir /S /B hooks',
+														  this.iconsObj.git,
+														  '',
+														  '');
+						timeout = setTimeout(function(){ Components.utils.reportError('killed');process.kill(true);kgit.iconsReposotoriesCache[kgit.iconsObj.git] = ''; }, 3500);
+						retval = process.wait(-1);
+						clearTimeout(timeout);
+						stdout = process.getStdout();
+					  }
+					  kgit.iconsReposotoriesCache[this.iconsObj.git] = stdout || '';
 					}
-					else
+					catch(e)
 					{
-					  //if windows
-					  process = kgit.runSvc.RunAndNotify(
-														'dir /S /B hooks',
-														this.iconsObj.git,
-														'',
-														'');
-					  retval = process.wait(-1);
-					  stdout = process.getStdout();
+					  Components.utils.reportError(e);
+					  try{ Components.utils.reportError('killed');process.kill(true);}catch(e){Components.utils.reportError(e);}
 					}
-
 				  }
-				  catch(e)
+				  else
 				  {
-					
+					stdout = kgit.iconsReposotoriesCache[this.iconsObj.git];
 				  }
 
 				  paths = stdout.split('\n');
@@ -1523,7 +1584,7 @@ function kGit()
 				 
 				  if(kgit.__DS == '/')
 				  {
-					process = kgit.runSvc.RunAndNotify(
+					process = kgit.runSvcIcons.RunAndNotify(
 													  'sh '+kgit.escape(this.iconsObj.sh)+'',
 													  '/bin',
 													  '',
@@ -1534,7 +1595,7 @@ function kGit()
 					if(!kgit.gitPathSet)
 					  kgit.initExtension();
 					//if windows
-					process = kgit.runSvc.RunAndNotify(
+					process = kgit.runSvcIcons.RunAndNotify(
 													  'bash.exe --login "'+kgit.escape(this.iconsObj.sh)+'"',
 													  kgit.gitPath+'\\bin\\',
 													  '',
@@ -1781,6 +1842,7 @@ function kGit()
 							kgit.iconsSet(this.css)
 						  }
 						  catch(e){
+							kgit.iconsRunning = false;
 							Components.utils.reportError(e);
 						  }
 					  }
@@ -1797,6 +1859,7 @@ function kGit()
 				  
 				  
 				} catch(e) {
+				  kgit.iconsRunning = false;
 				  Components.utils.reportError(e);
 				}
 			  }
@@ -1814,35 +1877,14 @@ function kGit()
 			thread.dispatch(backgroundThread, Components.interfaces.nsIThread.DISPATCH_NORMAL);
 	}
 	
-    this.iconsSet = function(aCSS)
-    {
-	  if(this.iconsLastCSS == aCSS)
-	  {
-		this.iconsRunning = false;
-		return;
-	  }
-	  
-	  this.iconsLastCSS = aCSS;
-	  
-	  this.fileWrite(this.iconsObj.outputFile+'.css', this.arrayUnique(aCSS.split('\n')).join('\n'));
-					
-	  if(this.sss.sheetRegistered(this.iconsURI, this.sss.AGENT_SHEET))
-		this.sss.unregisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
-	  this.sss.loadAndRegisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
-	  
-	  setTimeout( function(){
-		gPlacesViewMgr.view.refreshFullTreeView();
-	  }, 10);
-	  ko.places.viewMgr.tree.treeBoxObject.clearStyleAndImageCaches();
-	  
-	  this.iconsRunning = false;
-	}
-	
 /* start up */
 
 	this.initExtension = function()
 	{
 	  this.runSvc = Components
+						.classes["@activestate.com/koRunService;1"]
+						.createInstance(Components.interfaces.koIRunService);
+	  this.runSvcIcons = Components
 						.classes["@activestate.com/koRunService;1"]
 						.createInstance(Components.interfaces.koIRunService);
 	  this.sss = Components
