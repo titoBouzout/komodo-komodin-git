@@ -184,7 +184,7 @@ function kGit()
     }
 	this.getPlacesPath = function()
 	{
-	  return this.filePathFromFileURI(String(ko.places.manager.currentPlace))
+	  return String(ko.places.manager.currentPlace);
 	}
     this.getSelectedPathFolder = function(event)
     {
@@ -514,7 +514,7 @@ function kGit()
 		var selected = this.getSelectedPathFolder(event);
 		var obj = this.getPaths(selected);
 		
-		this.fileWrite(obj.sh, 'cd '+obj.cwdSelected+' \ngit clone '+aMsg+' >>'+obj.output+' 2>&1');
+		this.fileWrite(obj.sh, 'cd '+obj.cwdSelected+' \ngit clone '+aMsg+' ./ >>'+obj.output+' 2>&1');
 		
 		this.execute(obj.sh, obj.outputFile);
 		this.iconsCleanCacheReposotories();
@@ -1759,7 +1759,7 @@ function kGit()
 		{
 		  this.iconsRunning = false;
 		  this.iconsOn = true;
-		  this.iconsObj = this.getPaths(this.filePathFromFileURI(String(this.getPlacesPath())));
+		  this.iconsObj = this.getPaths(this.filePathFromFileURI(this.getPlacesPath()));
 		  this.iconsLastCommmand ='';
 		  this.iconsReposotoriesCache = [];
 		  this.iconsReposotoriesCacheTime = new Date();
@@ -1768,6 +1768,25 @@ function kGit()
 							.classes["@mozilla.org/network/io-service;1"]
 							.getService(Components.interfaces.nsIIOService)
 							.newURI('file://'+this.iconsObj.outputFile+'.css', null, null);
+		  
+		  //check for changes on current place.
+		  if(!this.iconsLastFocusedPlacesPathTimer)
+		  {
+			this.iconsLastFocusedPlacesPath = this.getPlacesPath();
+			this.iconsLastFocusedPlacesPathTimer = Components
+													  .classes["@mozilla.org/timer;1"]
+													  .createInstance(Components.interfaces.nsITimer);
+			this.iconsLastFocusedPlacesPathTimer.init({
+				observe: function(aSubject, aTopic, aData) {
+				  if(kgit.iconsLastFocusedPlacesPath != kgit.getPlacesPath())
+				  {
+					kgit.iconsLastFocusedPlacesPath = kgit.getPlacesPath();
+					kgit.iconsUpdateCall();
+				  }
+				}
+			  }, 1000, Components.interfaces.nsITimer.TYPE_REPEATING_PRECISE);
+		  }
+		  
 		  try{kgit.iconsUpdate();}catch(e){}
 		  
 		  if(this.iconsInterval)
@@ -1836,7 +1855,7 @@ function kGit()
 		this.iconsReposotoriesCache = [];
 	  }
 			
-	  var iconsObj = this.getPaths(this.getPlacesPath(), true);
+	  var iconsObj = this.getPaths(this.filePathFromFileURI(this.getPlacesPath()), true);
 
 	  iconsObj.sh = this.iconsObj.sh;
 	  iconsObj.outputFile = this.iconsObj.outputFile;
