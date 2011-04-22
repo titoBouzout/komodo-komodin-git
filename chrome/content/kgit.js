@@ -152,8 +152,9 @@ function kGit()
 		  ||
 		  ( //click on submenu
 			event.originalTarget.parentNode.parentNode.parentNode &&
-			event.originalTarget.parentNode.parentNode.parentNode.hasAttribute('target') &&
-			event.originalTarget.parentNode.parentNode.parentNode.getAttribute('target') == 'places'
+			event.originalTarget.parentNode.parentNode.parentNode.parentNode &&
+			event.originalTarget.parentNode.parentNode.parentNode.parentNode.hasAttribute('target') &&
+			event.originalTarget.parentNode.parentNode.parentNode.parentNode.getAttribute('target') == 'places'
 		  )
 		 )
 		)
@@ -258,7 +259,7 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 				  
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff '+obj.selected+' > '+obj.output+'\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff HEAD '+obj.selected+' > '+obj.output+'\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
