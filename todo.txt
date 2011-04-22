@@ -5,7 +5,11 @@ Things to not forget
 	localization!
 	
 	if it is a unix link resolve the link
-  
+	
+	parsing of gitignore is not really looking for gitignore rules, it looks for file paths instead of the "gitignored expressions"
+	
+	On windows there is a problem of encoding on some UTF8 path names.
+	
   TODO:
 	
 	add/edit/list branches
@@ -15,3 +19,7 @@ Things to not forget
 	easy merge
 	
 	stash
+	
+	allow to minimize the commit dialog..
+  
+  	When switching places path, call to "iconsUpdateCall" quickly to show instant icons instead of waiting for the time interval
