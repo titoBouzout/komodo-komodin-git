@@ -4,7 +4,7 @@ function kGit()
 	this.rootButton = false;
 	
 	//runs a shell script
-    this.run = function(aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox)
+    this.run = function(aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox, aReturnOutput)
     {
 		this.loadingSet();
 		
@@ -45,7 +45,7 @@ function kGit()
 		  else
 			ko.statusBar.AddMessage('kGit: Nothing to show', "kgit", 7 * 1000, true);
 		}
-		else
+		else if(!aReturnOutput)
 		{
 		  if(this.fileRead(aOutputPath) != '')
 			this.commandOutput(this.fileRead(aOutputPath));
@@ -60,8 +60,15 @@ function kGit()
 		  else
 			this.alert('Error:\n'+stderr);
 		}
+
+		if(aReturnOutput)
+		  var stdout = process.getStdout();
+		  
 		this.loadingRemove();
 		delete process, retval, stderr, aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox;
+		
+		if(aReturnOutput)
+		  return stdout;
     }
 	//executes a shell script in a window ( allows user iteraction )
 	this.execute = function(aScriptPath, aOutputPath, inNewTab)
@@ -113,7 +120,6 @@ function kGit()
 		
 		delete file, aScriptPath;
 	}
-
 	//detects when the user right click the placesRootButton
 	this.placesPopupShown = function(event)
 	{
@@ -451,7 +457,34 @@ function kGit()
 	  {
 		commands += 'cd '+id+'';
 		commands += '\n';
-		commands += 'git push >>'+obj.output+' 2>&1';
+		commands += 'git push --tags >>'+obj.output+' 2>&1';
+		commands += '\n';
+	  }
+
+	  this.fileWrite(obj.sh, commands);
+	  
+	  this.execute(obj.sh, obj.outputFile);
+    }
+	//TODO: show progress metter.
+    this.pushToOriginMasterMaster = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  var commands = '';
+	  var repositories = [];
+	  
+	  for(var id in selected)
+	  {
+		var obj = this.getPaths(selected[id]);
+		if(!repositories[obj.cwd])
+		  repositories[obj.cwd] = [];
+		repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
+	  }
+	  
+	  for(var id in repositories)
+	  {
+		commands += 'cd '+id+'';
+		commands += '\n';
+		commands += 'git push --tags "origin" master:master >>'+obj.output+' 2>&1';
 		commands += '\n';
 	  }
 
@@ -710,7 +743,7 @@ function kGit()
 		  commands += '\n';
 		  commands += 'git commit '+repositories[id].join(' ')+' -m "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
 		  commands += '\n';
-		  commands += 'git push >>'+obj.output+' 2>&1';
+		  commands += 'git push --tags >>'+obj.output+' 2>&1';
 		  commands += '\n';
 		}
   
@@ -807,6 +840,261 @@ function kGit()
 		this.iconsUpdateCall();
 	  }
     }
+	this.tagAdd = function(event)
+    {
+	  var aMsg = this.prompt('Enter tag name to add…', '');
+	  if(aMsg != '')
+	  {
+		var selected = this.getSelectedPaths(event);
+		var commands = '';
+		var repositories = [];
+		
+		for(var id in selected)
+		{
+		  var obj = this.getPaths(selected[id]);
+		  if(!repositories[obj.cwd])
+			repositories[obj.cwd] = [];
+		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
+		}
+		
+		for(var id in repositories)
+		{
+		  commands += 'cd '+id+'';
+		  commands += '\n';
+		  commands += 'git tag "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
+		  commands += '\n';
+		}
+  
+		this.fileWrite(obj.sh, commands);
+		
+		this.run(obj.sh, obj.outputFile, false, true);
+	  }
+    }
+	this.tagRemove = function(event)
+    {
+	  var aMsg = this.prompt('Enter tag name to remove…', '');
+	  if(aMsg != '')
+	  {
+		var selected = this.getSelectedPaths(event);
+		var commands = '';
+		var repositories = [];
+		
+		for(var id in selected)
+		{
+		  var obj = this.getPaths(selected[id]);
+		  if(!repositories[obj.cwd])
+			repositories[obj.cwd] = [];
+		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
+		}
+		
+		for(var id in repositories)
+		{
+		  commands += 'cd '+id+'';
+		  commands += '\n';
+		  commands += 'git tag -d "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
+		  commands += '\n';
+		}
+  
+		this.fileWrite(obj.sh, commands);
+		
+		this.run(obj.sh, obj.outputFile, false, true);
+	  }
+    }
+	this.tagAuto = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  var commands = '';
+	  var repositories = [];
+	  
+	  for(var id in selected)
+	  {
+		var obj = this.getPaths(selected[id]);
+		if(!repositories[obj.cwd])
+		  repositories[obj.cwd] = [];
+		repositories[obj.cwd][repositories[obj.cwd].length] = obj.git;
+	  }
+	  var version;
+	  for(var id in repositories)
+	  {
+		version = 0;
+		if(this.fileExists(repositories[id][0]+this.__DS+'.gittagversion'))
+		  version = parseInt(this.fileRead(repositories[id][0]+this.__DS+'.gittagversion'))+1;
+		this.fileWrite(repositories[id][0]+this.__DS+'.gittagversion', version);
+		
+		commands += 'cd '+id+'';
+		commands += '\n';
+		commands += 'git tag "'+this.escape(this.now()+'.'+version)+'" >>'+obj.output+' 2>&1';
+		commands += '\n';
+	  }
+
+	  this.fileWrite(obj.sh, commands);
+	  
+	  this.run(obj.sh, obj.outputFile, false, true);
+    }
+	this.tagList = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  var commands = '';
+	  var repositories = [];
+	  
+	  for(var id in selected)
+	  {
+		var obj = this.getPaths(selected[id]);
+		if(!repositories[obj.cwd])
+		  repositories[obj.cwd] = [];
+		repositories[obj.cwd][repositories[obj.cwd].length] = obj.git;
+	  }
+	  for(var id in repositories)
+	  {
+		commands += 'cd '+id+'';
+		commands += '\n';
+		commands += 'git tag -l >>'+obj.output+' 2>&1';
+		commands += '\n';
+	  }
+
+	  this.fileWrite(obj.sh, commands);
+	  
+	  this.run(obj.sh, obj.outputFile, true, false);
+    }
+	this.tagBetweenTheTwoLatestTagsLog = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  var commands = '';
+	  var repositories = [];
+	  
+	  for(var id in selected)
+	  {
+		var obj = this.getPaths(selected[id]);
+		if(!repositories[obj.cwd])
+		  repositories[obj.cwd] = [];
+		repositories[obj.cwd][repositories[obj.cwd].length] = obj.git;
+	  }
+	  for(var id in repositories)
+	  {
+		repositories[id] = this.tagsGetFromRepoPathEscaped(id);
+	  }
+	  for(var id in repositories)
+	  {
+		commands += 'cd '+id+'';
+		commands += '\n';
+		commands += 'git log "'+repositories[id][(repositories[id].length)-1]+'" "'+repositories[id][(repositories[id].length)-2]+'" >>'+obj.output+' 2>&1';
+		commands += '\n';
+	  }
+
+	  this.fileWrite(obj.sh, commands);
+	  
+	  this.run(obj.sh, obj.outputFile, true, false);
+    }
+	this.tagBetweenTheTwoLatestTagsDiff = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  var commands = '';
+	  var repositories = [];
+	  
+	  for(var id in selected)
+	  {
+		var obj = this.getPaths(selected[id]);
+		if(!repositories[obj.cwd])
+		  repositories[obj.cwd] = [];
+		repositories[obj.cwd][repositories[obj.cwd].length] = obj.git;
+	  }
+	  for(var id in repositories)
+	  {
+		repositories[id] = this.tagsGetFromRepoPathEscaped(id);
+	  }
+	  for(var id in repositories)
+	  {
+		commands += 'cd '+id+'';
+		commands += '\n';
+		commands += 'git diff "'+repositories[id][(repositories[id].length)-2]+'" "'+repositories[id][(repositories[id].length)-1]+'" >>'+obj.output+' 2>&1';
+		commands += '\n';
+	  }
+
+	  this.fileWrite(obj.sh, commands);
+	  
+	  this.run(obj.sh, obj.outputFile, true, false);
+    }
+	
+	this.tagFromLatestTagLog = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  var commands = '';
+	  var repositories = [];
+	  
+	  for(var id in selected)
+	  {
+		var obj = this.getPaths(selected[id]);
+		if(!repositories[obj.cwd])
+		  repositories[obj.cwd] = [];
+		repositories[obj.cwd][repositories[obj.cwd].length] = obj.git;
+	  }
+	  for(var id in repositories)
+	  {
+		repositories[id] = this.tagsGetFromRepoPathEscaped(id);
+	  }
+	  for(var id in repositories)
+	  {
+		commands += 'cd '+id+'';
+		commands += '\n';
+		commands += 'git log "'+repositories[id][(repositories[id].length)-1]+'" >>'+obj.output+' 2>&1';
+		commands += '\n';
+	  }
+
+	  this.fileWrite(obj.sh, commands);
+	  
+	  this.run(obj.sh, obj.outputFile, true, false);
+    }
+	this.tagFromLatestTagDiff = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  var commands = '';
+	  var repositories = [];
+	  
+	  for(var id in selected)
+	  {
+		var obj = this.getPaths(selected[id]);
+		if(!repositories[obj.cwd])
+		  repositories[obj.cwd] = [];
+		repositories[obj.cwd][repositories[obj.cwd].length] = obj.git;
+	  }
+	  for(var id in repositories)
+	  {
+		repositories[id] = this.tagsGetFromRepoPathEscaped(id);
+	  }
+	  for(var id in repositories)
+	  {
+		commands += 'cd '+id+'';
+		commands += '\n';
+		commands += 'git log "'+repositories[id][(repositories[id].length)-1]+'" >>'+obj.output+' 2>&1';
+		commands += '\n';
+	  }
+
+	  this.fileWrite(obj.sh, commands);
+	  
+	  this.run(obj.sh, obj.outputFile, true, false);
+    }
+	
+	this.tagsGetFromRepoPathEscaped = function(aRepoPathEscaped)
+	{
+	  var sh = this.fileCreateTemporal('kGit.sh', '');
+	  
+		var commandsTags = 'cd '+aRepoPathEscaped+'';	
+			commandsTags += '\n';
+			commandsTags += 'echo `git tag -l`';
+			commandsTags += '\n';
+		this.fileWrite(sh, commandsTags);
+	  
+		var tags = this.run(sh, sh+'.diff', false, false, true).split('\n');
+			tags.shift();
+			tags.shift();
+			tags.shift();
+			tags.shift();
+			tags.shift();
+			tags = tags.join('');
+			tags = tags.split(' ');
+		return tags;
+	}
+	
 	this.ignoreOpen = function(event)
 	{
 	  var selected = this.getSelectedPaths(event);
@@ -967,7 +1255,13 @@ function kGit()
 	}
 
 /* UTILS */
-
+	this.now = function()
+	{
+	  var date = new Date();
+	  return String(date.getFullYear())[2] + ''+String(date.getFullYear())[3] + '' + 
+		  (date.getMonth() < 9 ? '0' : '') + (date.getMonth()+1) + '' +
+		  (date.getDate() < 10 ? '0' : '') + ''+ date.getDate() + '';
+	}
 	this.openURL = function(aFilePath, newTab)
 	{
 	  if(newTab)
