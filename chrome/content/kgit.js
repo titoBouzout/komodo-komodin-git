@@ -929,13 +929,12 @@ function kGit()
 		  repositories[obj.cwd] = [];
 		repositories[obj.cwd][repositories[obj.cwd].length] = obj.git;
 	  }
-	  var version;
+	  
 	  for(var id in repositories)
 	  {
-		version = 0;
-		if(this.fileExists(repositories[id][0]+this.__DS+'.gittagversion'))
-		  version = parseInt(this.fileRead(repositories[id][0]+this.__DS+'.gittagversion'))+1;
-		this.fileWrite(repositories[id][0]+this.__DS+'.gittagversion', version);
+		var version = this.repositoryPreference(repositories[id][0], 'version') || 0;
+			version++;
+		this.repositoryPreference(repositories[id][0], 'version', version);
 		
 		commands += 'cd '+id+'';
 		commands += '\n';
@@ -2212,7 +2211,22 @@ function kGit()
 								.getService().newThread(0);
 			thread.dispatch(backgroundThread, Components.interfaces.nsIThread.DISPATCH_NORMAL);
 	}
-	
+	this.repositoryPreference = function(aRepository, aName, aValue)
+	{
+	  var obj = {};
+	  if(this.fileExists(aRepository+this.__DS+'.gitkomodin'))
+		obj = JSON.parse(this.fileRead(aRepository+this.__DS+'.gitkomodin'));
+	  if(typeof(aValue) == 'undefined')
+	  {
+		obj[aName];
+	  }
+	  else
+	  {
+		obj[aName] = aValue;
+		this.fileWrite(aRepository+this.__DS+'.gitkomodin', JSON.stringify(obj));
+	  }
+	  return obj[aName];
+	}
 /* start up */
 
 	this.initExtension = function()
