@@ -1389,7 +1389,7 @@ function kGit()
 	  
 	  // convert the binary hash data to a hex string.
 	  var s = [this.toHexString(hash.charCodeAt(i)) for (i in hash)].join("");
-	  if(this.__DS == '/')
+	  if(this.__DS == '/' || !this.applicationVersion6)
 	  {
 		return s;
 	  }
@@ -1936,7 +1936,8 @@ function kGit()
 		  else
 			this.gitPathSet = true;
 	  }
-	  
+	  this.applicationVersion6 = (parseInt(Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo).version) == 6);
+	
 	  //empty the temporal folder on exit.
 	  this.observerService = Components
 							  .classes["@mozilla.org/observer-service;1"]
