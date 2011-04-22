@@ -1,9 +1,3 @@
-
-#kgit-toolbarbutton
-{
-  list-style-image: url(chrome://kgit/content/icon16.png);
-}
-
 .kgit-menupopup-xbl
 {
     -moz-binding:url('chrome://kgit/content/kgit.xml#kgit-menupopup-xbl');

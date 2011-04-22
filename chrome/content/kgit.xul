@@ -17,11 +17,12 @@
 		 <toolbarbutton
 			 id="kgit-toolbarbutton"
 			 label="Komodin"
-			 tooltiptext="Executes a Git Command on Focused Tab"
+			 tooltiptext="Executes Git Commands on Current Document"
 			 buttonstyle="pictures"
 			 type="button"
 			 persist="buttonstyle"
 			 oncommand="this.firstChild.openPopup(this, 'after_start')"
+			 image="chrome://kgit/content/icon16.png"
 		   >
 		   <menupopup class="kgit-menupopup-xbl"/>
 		 </toolbarbutton>
@@ -33,8 +34,10 @@
 		  
 		  <menuseparator insertafter="placesContextMenu_separatorDelete"/>
   		  <menu
+				id="kgit-places-file-popup"
 				insertafter="placesContextMenu_separatorDelete"
 				label="Git"
+				tooltiptext="Executes Git Commands on Selected Items"
 				class="menu-iconic"
 				image="chrome://kgit/content/icon16.png"
 				target="places">
@@ -49,8 +52,10 @@
 		  
 		  <menuseparator insertafter="editor-context-sep-properties"/>
   		  <menu
+				id="kgit-document-context-menu"
 				insertafter="editor-context-sep-properties"
 				label="Git"
+				tooltiptext="Executes Git Commands on Current Document"
 				class="menu-iconic"
 				image="chrome://kgit/content/icon16.png"
 		  >
@@ -65,8 +70,10 @@
 		  
 		  <menuseparator insertafter="buffertab-context-sep-properties"/>
   		  <menu
+				id="kgit-tab-context-menu"
 				insertafter="buffertab-context-sep-properties"
 				label="Git"
+				tooltiptext="Executes Git Commands on Current Document"
 				class="menu-iconic"
 				image="chrome://kgit/content/icon16.png"
 		  >
@@ -81,8 +88,10 @@
 		  
 		  <menuseparator insertafter="file_print_menuseparator"/>
   		  <menu
+				id="kgit-menu-bar-file"
 				insertafter="file_print_menuseparator"
 				label="Git"
+				tooltiptext="Executes Git Commands on Current Document"
 				class="menu-iconic"
 				image="chrome://kgit/content/icon16.png"
 		  >

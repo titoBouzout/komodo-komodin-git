@@ -6,6 +6,8 @@ function kGit()
 	//runs a shell script
     this.run = function(aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox)
     {
+		this.loadingSet();
+		
 		//if *nix
 		if(this.__DS == '/')
 		{
@@ -58,12 +60,14 @@ function kGit()
 		  else
 			this.alert('Error:\n'+stderr);
 		}
-		  
+		this.loadingRemove();
 		delete process, retval, stderr, aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox;
     }
 	//executes a shell script in a window ( allows user iteraction )
 	this.execute = function(aScriptPath, aOutputPath, inNewTab)
 	{
+	  this.loadingSet();
+	  
 	  var file = Components.classes["@mozilla.org/file/local;1"]
 				  .createInstance(Components.interfaces.nsILocalFile);
 	  
@@ -103,6 +107,7 @@ function kGit()
 								else
 								  kgit.openURL(aOutputPath, true);
 							  }
+							  kgit.loadingRemove();
 							}
 						  }, false);
 		
@@ -1421,6 +1426,22 @@ function kGit()
 	  if(item.parentNode.parentNode.state)
 		item.parentNode.parentNode.hidePopup();
 	  event.stopPropagation();
+	}
+	this.loadingSet = function()
+	{
+	  document.getElementById('kgit-toolbarbutton').setAttribute('image', 'chrome://kgit/content/loading.png');
+	  document.getElementById('kgit-places-file-popup').setAttribute('image', 'chrome://kgit/content/loading.png');
+	  document.getElementById('kgit-document-context-menu').setAttribute('image', 'chrome://kgit/content/loading.png');
+	  document.getElementById('kgit-tab-context-menu').setAttribute('image', 'chrome://kgit/content/loading.png');
+	  document.getElementById('kgit-menu-bar-file').setAttribute('image', 'chrome://kgit/content/loading.png');
+	}
+	this.loadingRemove = function()
+	{
+	  document.getElementById('kgit-toolbarbutton').setAttribute('image', 'chrome://kgit/content/icon16.png');
+	  document.getElementById('kgit-places-file-popup').setAttribute('image', 'chrome://kgit/content/icon16.png');
+	  document.getElementById('kgit-document-context-menu').setAttribute('image', 'chrome://kgit/content/icon16.png');
+	  document.getElementById('kgit-tab-context-menu').setAttribute('image', 'chrome://kgit/content/icon16.png');
+	  document.getElementById('kgit-menu-bar-file').setAttribute('image', 'chrome://kgit/content/icon16.png');
 	}
   /* icons */
   
