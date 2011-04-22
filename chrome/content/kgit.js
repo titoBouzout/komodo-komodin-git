@@ -52,7 +52,12 @@ function kGit()
 		}
 		var stderr = process.getStderr();
 		if(stderr && stderr != '')
-		  this.alert('Error:\n'+stderr);
+		{
+		  if(stderr.indexOf('Not a git repository (or any of the parent directories): .git') != -1)
+			ko.statusBar.AddMessage('kGit: File/Folder not in a git repository', "kgit", 7 * 1000, true);
+		  else
+			this.alert('Error:\n'+stderr);
+		}
 		  
 		delete process, retval, stderr, aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox;
     }
@@ -128,8 +133,19 @@ function kGit()
 		 event &&
 		 event.originalTarget.parentNode &&
 		 event.originalTarget.parentNode.parentNode &&
-		 event.originalTarget.parentNode.parentNode.hasAttribute('target') &&
-		 event.originalTarget.parentNode.parentNode.getAttribute('target') == 'places')
+		 (
+		  ( //click on menu
+			event.originalTarget.parentNode.parentNode.hasAttribute('target') &&
+			event.originalTarget.parentNode.parentNode.getAttribute('target') == 'places'
+		  )
+		  ||
+		  ( //click on submenu
+			event.originalTarget.parentNode.parentNode.parentNode &&
+			event.originalTarget.parentNode.parentNode.parentNode.hasAttribute('target') &&
+			event.originalTarget.parentNode.parentNode.parentNode.getAttribute('target') == 'places'
+		  )
+		 )
+		)
 	  {
 		  var selected = gPlacesViewMgr.getSelectedURIs();
 
@@ -222,6 +238,7 @@ function kGit()
 		  
 		  return obj;
 	}
+	//TODO allow user to use an external program such winmerge.
     this.diff = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -319,6 +336,7 @@ function kGit()
 		this.fileWrite(obj.sh, commands);
 		
 		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
 	  }
     }
     this.revert = function(event)
@@ -342,39 +360,42 @@ function kGit()
 		this.fileWrite(obj.sh, commands);
 		
 		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
 	  }
     }
     this.revertToObject = function(event)
     {
-        var aMsg = this.prompt('Revert to object…');
-        if(aMsg != '')
-        {
-		  if(this.confirm('Are you sure?'))
-		  {
-			var selected = this.getSelectedPathFolder(event);
-			var obj = this.getPaths(selected);
-			
-			this.fileWrite(obj.sh, 'cd '+obj.cwd+' \ngit revert '+aMsg+' >>'+obj.output+' 2>&1 \n');
-			
-			this.run(obj.sh, obj.outputFile, false, true);
-		  }
-        }
+	  var aMsg = this.prompt('Revert to object…');
+	  if(aMsg != '')
+	  {
+		if(this.confirm('Are you sure?'))
+		{
+		  var selected = this.getSelectedPathFolder(event);
+		  var obj = this.getPaths(selected);
+		  
+		  this.fileWrite(obj.sh, 'cd '+obj.cwd+' \ngit revert '+aMsg+' >>'+obj.output+' 2>&1 \n');
+		  
+		  this.run(obj.sh, obj.outputFile, false, true);
+		  this.iconsUpdateCall();
+		}
+	  }
     }
     this.checkoutToObject = function(event)
     {
-        var aMsg = this.prompt('Checkout to object…');
-        if(aMsg != '')
-        {
-		  if(this.confirm('Are you sure?'))
-		  {
-            var selected = this.getSelectedPathFolder(event);
-            var obj = this.getPaths(selected);
-            
-            this.fileWrite(obj.sh, 'cd '+obj.cwd+' \ngit checkout '+aMsg+' >>'+obj.output+' 2>&1 \n ');
-            
-            this.run(obj.sh, obj.outputFile, false, true);
-		  }
-        }
+	  var aMsg = this.prompt('Checkout to object…');
+	  if(aMsg != '')
+	  {
+		if(this.confirm('Are you sure?'))
+		{
+		  var selected = this.getSelectedPathFolder(event);
+		  var obj = this.getPaths(selected);
+		  
+		  this.fileWrite(obj.sh, 'cd '+obj.cwd+' \ngit checkout '+aMsg+' >>'+obj.output+' 2>&1 \n ');
+		  
+		  this.run(obj.sh, obj.outputFile, false, true);
+		  this.iconsUpdateCall();
+		}
+	  }
     }
     this.checkoutFilesToObject = function(event)
     {
@@ -395,6 +416,7 @@ function kGit()
 			this.fileWrite(obj.sh, commands);
             
             this.run(obj.sh, obj.outputFile, false, true);
+			this.iconsUpdateCall();
 		  }
         }
     }
@@ -518,6 +540,7 @@ function kGit()
 		this.fileWrite(obj.sh, commands);
 		
 		this.run(obj.sh, obj.outputFile, false, true);
+	  	this.iconsUpdateCall();
 	  }
     }
     this.commitAll = function(event)
@@ -548,6 +571,7 @@ function kGit()
 		this.fileWrite(obj.sh, commands);
 		
 		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
 	  }
     }
 	this.commitAmend = function(event)
@@ -575,6 +599,7 @@ function kGit()
 	  this.fileWrite(obj.sh, commands);
 	  
 	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.iconsUpdateCall();
     }
 	this.undoLastCommit = function(event)
 	{
@@ -603,6 +628,7 @@ function kGit()
 		this.fileWrite(obj.sh, commands);
 		
 		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
 	  }
 	}
     this.addCommit = function(event)
@@ -635,6 +661,7 @@ function kGit()
 		this.fileWrite(obj.sh, commands);
 		
 		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
 	  }
     }
     
@@ -670,6 +697,7 @@ function kGit()
 		this.fileWrite(obj.sh, commands);
 		
 		this.execute(obj.sh, obj.outputFile);
+		this.iconsUpdateCall();
 	  }
     }
 	this.add = function(event)
@@ -697,6 +725,7 @@ function kGit()
 	  this.fileWrite(obj.sh, commands);
 	  
 	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.iconsUpdateCall();
     }
 	this.removeKeepLocal = function(event)
     {
@@ -725,6 +754,7 @@ function kGit()
 		this.fileWrite(obj.sh, commands);
 		
 		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
 	  }
     }
 	this.remove = function(event)
@@ -754,6 +784,7 @@ function kGit()
 		this.fileWrite(obj.sh, commands);
 		
 		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
 	  }
     }
 	this.ignoreOpen = function(event)
@@ -831,6 +862,7 @@ function kGit()
 		this.fileWrite(aPath+this.__DS+'.gitignore', ignore);
 		this.openURL(aPath+this.__DS+'.gitignore', true);
 	  }
+  	  this.iconsUpdateCall();
 	}
 	this.getGitRoot = function(aPath)
 	{
@@ -1358,6 +1390,7 @@ function kGit()
   
 	this.iconsLoader = function()
 	{
+	  this.iconsOn = false;
 	  try
 	  {
 		if(!this.gitPathSet && this.__DS != '/')
@@ -1366,6 +1399,8 @@ function kGit()
 		}
 		else
 		{
+		  this.iconsRunning = false;
+		  this.iconsOn = true;
 		  this.iconsObj = this.getPaths(this.filePathFromFileURI(String(this.getPlacesPath())));
 		  this.iconsLastCommmand ='';
 		  this.iconsReposotoriesCache = [];
@@ -1389,8 +1424,21 @@ function kGit()
 		setTimeout(function(){ kgit.iconsLoader();}, 1000);
 	  }
 	}
+	this.iconsUpdateCall = function()
+	{
+	  if(this.iconsRunning || !this.iconsOn){}
+	  else
+	  {
+		if(this.iconsInterval)
+		  clearInterval(this.iconsInterval);
+		this.iconsUpdate();
+		this.iconsInterval = setInterval(function(){ try{kgit.iconsUpdate();}catch(e){} }, 7000);
+	  }
+	}
 	this.iconsUpdate = function()
 	{
+	  this.iconsRunning = true;
+	  
 	  var iconsObj = this.getPaths(this.getPlacesPath(), true);
 
 	  iconsObj.sh = this.iconsObj.sh;
@@ -1754,21 +1802,26 @@ function kGit()
 	
     this.iconsSet = function(aCSS)
     {
-		if(this.iconsLastCSS == aCSS)
-		  return;
-		
-		this.iconsLastCSS = aCSS;
-		
-		this.fileWrite(this.iconsObj.outputFile+'.css', this.arrayUnique(aCSS.split('\n')).join('\n'));
-					  
-		if(this.sss.sheetRegistered(this.iconsURI, this.sss.AGENT_SHEET))
-		  this.sss.unregisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
-		this.sss.loadAndRegisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
-		
-		setTimeout( function(){
-		  gPlacesViewMgr.view.refreshFullTreeView();
-		}, 10);
-		ko.places.viewMgr.tree.treeBoxObject.clearStyleAndImageCaches();
+	  if(this.iconsLastCSS == aCSS)
+	  {
+		this.iconsRunning = false;
+		return;
+	  }
+	  
+	  this.iconsLastCSS = aCSS;
+	  
+	  this.fileWrite(this.iconsObj.outputFile+'.css', this.arrayUnique(aCSS.split('\n')).join('\n'));
+					
+	  if(this.sss.sheetRegistered(this.iconsURI, this.sss.AGENT_SHEET))
+		this.sss.unregisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
+	  this.sss.loadAndRegisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
+	  
+	  setTimeout( function(){
+		gPlacesViewMgr.view.refreshFullTreeView();
+	  }, 10);
+	  ko.places.viewMgr.tree.treeBoxObject.clearStyleAndImageCaches();
+	  
+	  this.iconsRunning = false;
 	}
 	
 /* start up */
