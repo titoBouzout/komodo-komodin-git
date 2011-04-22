@@ -238,7 +238,8 @@ function kGit()
 		  
 		  return obj;
 	}
-	//TODO allow user to use an external program such winmerge.
+	//TODO allow user to use an external program for example winmerge.
+	//TODO allow user to see the diff with a commit/branch/tag
     this.diff = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -313,6 +314,7 @@ function kGit()
 		}
 	  }
     }
+	//TODO: allow user to revert to specific commit/branch/tag
     this.revertClean = function(event)
     {
 	  if(this.confirm('Are you sure?'))
@@ -339,6 +341,7 @@ function kGit()
 		this.iconsUpdateCall();
 	  }
     }
+	//TODO: allow user to revert to specific commit/branch/tag
     this.revert = function(event)
     {
 	  if(this.confirm('Are you sure?'))
@@ -363,6 +366,7 @@ function kGit()
 		this.iconsUpdateCall();
 	  }
     }
+	//TODO: allow user to revert to specific commit/branch/tag
     this.revertToObject = function(event)
     {
 	  var aMsg = this.prompt('Revert to object…');
@@ -380,6 +384,7 @@ function kGit()
 		}
 	  }
     }
+	//TODO: allow user to checkout to specific commit/branch/tag
     this.checkoutToObject = function(event)
     {
 	  var aMsg = this.prompt('Checkout to object…');
@@ -397,6 +402,7 @@ function kGit()
 		}
 	  }
     }
+	//TODO: allow user to checkout to specific commit/branch/tag
     this.checkoutFilesToObject = function(event)
     {
         var aMsg = this.prompt('Checkout files to object…');
@@ -420,7 +426,7 @@ function kGit()
 		  }
         }
     }
-
+	//TODO: allow to push to different remotes/branches
     this.push = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -457,6 +463,7 @@ function kGit()
 	  
 	  this.run(obj.sh, obj.outputFile, false, true);
     }
+	//TODO: move all to the parent directory and remove the folder that a clone creates 
     this.clone = function(event)
     {
 	  var aMsg = this.prompt('Enter URL to clone…');
@@ -471,7 +478,7 @@ function kGit()
 		this.execute(obj.sh, obj.outputFile);
 	  }
     }
-
+	//TODO: allow to pull from different remotes/branches
     this.pull = function(event)
     {
 	  if(this.confirm('Are you sure?'))
@@ -484,7 +491,7 @@ function kGit()
         this.execute(obj.sh, obj.outputFile);
 	  }
 	}
-	
+	//TODO: allow to fetch from different remotes/branches
 	this.fetch = function(event)
     {
 	  if(this.confirm('Are you sure?'))
@@ -497,7 +504,6 @@ function kGit()
         this.execute(obj.sh, obj.outputFile);
 	  }
 	}
-	
 	//free input command
     this.command = function(event)
     {
@@ -512,6 +518,7 @@ function kGit()
 		this.execute(obj.sh, obj.outputFile, true);
 	  }
     }
+	//TODO: show "Changes to be committed".
 	this.commit = function(event)
     {
 	  var aMsg = this.prompt('Enter a commit message…', '', true);
@@ -543,6 +550,7 @@ function kGit()
 	  	this.iconsUpdateCall();
 	  }
     }
+	//TODO: show "Changes to be committed".
     this.commitAll = function(event)
     {
 	  var aMsg = this.prompt('Enter a commit message…', '', true);
@@ -631,6 +639,7 @@ function kGit()
 		this.iconsUpdateCall();
 	  }
 	}
+	//TODO: show added files and "Changes to be committed".
     this.addCommit = function(event)
     {
 	  var aMsg = this.prompt('Enter a commit message…', '', true);
@@ -664,7 +673,7 @@ function kGit()
 		this.iconsUpdateCall();
 	  }
     }
-    
+	//TODO: show added files and "Changes to be committed".
     this.addCommitPush = function(event)
     {
 	  var aMsg = this.prompt('Enter a commit message…', '', true);
@@ -886,6 +895,7 @@ function kGit()
 		  dir.shift();
 	  return dir.join('');
 	}
+	//TODO: open "git gui" without a terminal
 	this.gitGUI = function(event)
 	{
 	  var selected = this.getSelectedPaths(event);
@@ -904,6 +914,7 @@ function kGit()
 		  
 	  this.execute(obj.sh);
 	}
+	//TODO: open "gitk" without a terminal
 	this.gitK = function(event)
 	{
 	  var selected = this.getSelectedPaths(event);
@@ -1012,6 +1023,7 @@ function kGit()
 	}
 
     //shows a custom prompt
+	//TODO: allow to "minimize" the dialog
 	this.prompt = function(aString, aDefault, multiline)
 	{
 		if(!aDefault)
@@ -1081,6 +1093,7 @@ function kGit()
 
 		prompts.alert(null, "kGit", aString);
 	}
+	//TODO: allow to select the text and copy.
 	this.notification = function(aString)
 	{
 	  if(!aString || aString=='')
@@ -1590,6 +1603,7 @@ function kGit()
 				  
  
 					/* ignored files */
+					//TODO: properly parse gitignore to show "paths that match"
 					if(kgit.fileExists(aGitPath+kgit.__DS+'.gitignore'))
 					{
 					  aTemp = kgit.fileRead(aGitPath+kgit.__DS+'.gitignore');
