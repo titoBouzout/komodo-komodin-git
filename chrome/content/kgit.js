@@ -565,9 +565,9 @@ function kGit()
 	//TODO: show "Changes to be committed".
 	this.commit = function(event)
     {
-	  var aMsg = this.prompt('Enter a commit message…', '', true);
-	  if(aMsg != '')
+	  if(event.aMsg && event.aMsg != '')
 	  {
+		var aMsg = event.aMsg;
 		var selected = this.getSelectedPaths(event);
 		var commands = '';
 		var repositories = [];
@@ -593,13 +593,17 @@ function kGit()
 		this.run(obj.sh, obj.outputFile, false, true);
 	  	this.iconsUpdateCall();
 	  }
+	  else
+	  {
+		this.prompt('Enter a commit message…', '', true, function(event){ kgit.commit(event)}, event);
+	  }
     }
 	//TODO: show "Changes to be committed".
     this.commitAll = function(event)
     {
-	  var aMsg = this.prompt('Enter a commit message…', '', true);
-	  if(aMsg != '')
+	  if(event.aMsg && event.aMsg != '')
 	  {
+		var aMsg = event.aMsg;
 		var selected = this.getSelectedPaths(event);
 		var commands = '';
 		var repositories = [];
@@ -624,6 +628,10 @@ function kGit()
 		
 		this.run(obj.sh, obj.outputFile, false, true);
 		this.iconsUpdateCall();
+	  }
+	  else
+	  {
+		this.prompt('Enter a commit message…', '', true, function(event){ kgit.commitAll(event)}, event);
 	  }
     }
 	this.commitAmend = function(event)
@@ -686,9 +694,9 @@ function kGit()
 	//TODO: show added files and "Changes to be committed".
     this.addCommit = function(event)
     {
-	  var aMsg = this.prompt('Enter a commit message…', '', true);
-	  if(aMsg != '')
+	  if(event.aMsg && event.aMsg != '')
 	  {
+		var aMsg = event.aMsg;
 		var selected = this.getSelectedPaths(event);
 		var commands = '';
 		var repositories = [];
@@ -716,13 +724,17 @@ function kGit()
 		this.run(obj.sh, obj.outputFile, false, true);
 		this.iconsUpdateCall();
 	  }
+	  else
+	  {
+		this.prompt('Enter a commit message…', '', true, function(event){ kgit.addCommit(event)}, event);
+	  }
     }
 	//TODO: show added files and "Changes to be committed".
     this.addCommitPush = function(event)
     {
-	  var aMsg = this.prompt('Enter a commit message…', '', true);
-	  if(aMsg != '')
+	  if(event.aMsg && event.aMsg != '')
 	  {
+		var aMsg = event.aMsg;
 		var selected = this.getSelectedPaths(event);
 		var commands = '';
 		var repositories = [];
@@ -751,6 +763,10 @@ function kGit()
 		
 		this.execute(obj.sh, obj.outputFile);
 		this.iconsUpdateCall();
+	  }
+	  else
+	  {
+		this.prompt('Enter a commit message…', '', true, function(event){ kgit.addCommitPush(event)}, event);
 	  }
     }
 	this.add = function(event)
@@ -1331,7 +1347,7 @@ function kGit()
 
     //shows a custom prompt
 	//TODO: allow to "minimize" the dialog
-	this.prompt = function(aString, aDefault, multiline)
+	this.prompt = function(aString, aDefault, multiline, aFunction, aParams)
 	{
 		if(!aDefault)
 			aDefault = '';
@@ -1357,24 +1373,16 @@ function kGit()
 		  var r = {};
 			  r.title = "kGit";
 			  r.label = aString;
+			  r.aParams = aParams;
+			  r.aFunction = aFunction;
 			  
-		  var win =  window.openDialog('chrome://kgit/content/dialog.xul',
-										  null,
-										  'chrome, dialog, modal, resizable=yes, centerscreen',
-										  r);
-		 
-		  if(!r.value)
-			var value = '';
-		  else
-			var value = r.value;
-		  
-		  win = null;
-		  r = null;
-		  
-		  delete win;
-		  delete r;
-		
-		  return value;
+			var watcher = Components.classes["@mozilla.org/embedcomp/window-watcher;1"]
+										.getService(Components.interfaces.nsIWindowWatcher);
+				watcher.openWindow(null,
+								   'chrome://kgit/content/dialog.xul',
+								   null,
+								   'chrome,centerscreen,resizable=yes,dialog=no,alwaysRaised=yes',
+								   {'wrappedJSObject': r});
 		}
 	}
 	//cast an object toString avoids null errors

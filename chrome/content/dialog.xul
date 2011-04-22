@@ -4,17 +4,18 @@
 <dialog
 		title="kGit"
         buttons="accept,cancel"
-        width = "500"
-        height = "340"
-        xmlns = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        width="500"
+        height="340"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         ondialogaccept="
-		  var r = window.arguments[0];
-		  r.value = document.getElementsByTagName('textbox')[0].value;
-		  return;"
-        ondialogcancel="return;"
+		  var r = window.arguments[0].wrappedJSObject;
+		  r.aParams.aMsg = document.getElementsByTagName('textbox')[0].value;
+		  r.aFunction(r.aParams);
+		"
+        oncancel="return;"
 		onload="
-		  document.getElementsByTagName('label')[0].setAttribute('value', window.arguments[0].label);
-		  this.title = window.arguments[0].title;
+		  document.getElementsByTagName('label')[0].setAttribute('value', window.arguments[0].wrappedJSObject.label);
+		  this.title = window.arguments[0].wrappedJSObject.title;
 		"
 >
   <vbox flex="1">
