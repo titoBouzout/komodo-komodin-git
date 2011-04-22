@@ -1,4 +1,5 @@
 Adds Git commands to Komodo Edit and enhance Git commands on Komodo IDE. Also adds icons overlay to Komodo Edit.
+<img src="http://dl.dropbox.com/u/9303546/komodo/kGit/screenshot.png" style="float:right"/>
 
 Usage:
 
@@ -83,7 +84,9 @@ Gitk
 Liberal Git Command
 </pre>
 
-Enabling Icons Overlay:
+Enabling Icons Overlay (KOMODO EDIT ONLY!!!!):
+Properly formated explanation at : http://community.activestate.com/xpi/komodin-git-places 
+
 <blockquote>
 Locate and Backup the file: /ActiveState Komodo Edit 6/lib/mozilla/extensions/places@activestate.com/components/koPlaceTreeView.py
 
@@ -102,7 +105,8 @@ import hashlib
 ...
 "
 
-Then locate the function "_buildCellProperties" and replace it with : 
+Then locate the function "_buildCellProperties" and replace it with :
+NOTE: KOMODO EDIT ONLY!!
 <python>
     def _buildCellProperties(self, rowNode):
         properties = []
@@ -127,9 +131,11 @@ If the places sidebar is not loading, look if there is a syntax error into the f
 
 Done!
 
+NOTE: If there is some error just restore your backup and restart komodo two times.
+
 NOTES:
- - No changed files will show as is ( normal komodo icons )
- - The "look for changes" executes every 5 seconds.
+ - Unmodified files will shows as is ( normal komodo icons )
+ - The "look for changes" executes every 7 seconds.
  
 </blockquote>
 
@@ -139,7 +145,7 @@ To execute a Git command this add-on creates temporal shell scripts. On my fedor
 
 The add-on runs the scripts asynchronously /bin/sh "/tmp/kGit/kGit-[1-n].sh".
 
-The output is redirected to "/tmp/kGit/kGit-[1-n].diff" and "on command complete" the file is opened in a new komodo tab, which shows the output with pretty colours.
+The output is redirected to "/tmp/kGit/kGit-[1-n].diff" and "on command complete" the file is opened in a new komodo tab, which shows the output with pretty colors.
 </blockquote><br/>
 
 License:<br/>
@@ -159,66 +165,26 @@ Changes From Latest Version:
 <ul>
   
   <li>
+	<b>1.110422.10</b> - http://community.activestate.com/files/kGit_7.xpi
+	<ul>
+	  <li>Fix:
+	  <ul>
+		<li>Ignored files take preferences (on icons) over untracked files.
+	  </ul>
+	</ul>
+  </li>
+	    
+  <li>
 	<b>1.110421.9</b> - http://community.activestate.com/files/kGit_6.xpi
 	<ul>
 	  <li>Fix:
 	  <ul>
-		<li>Direcotires with special characters now show icons properly
+		<li>Directories with special characters now show icons properly
 	  </ul>
 	  <li>Improves:
 	  <ul>
 		<li>Show icons for all the repositories under the current places sidebar
 		<li>Renames icons to short CSS size.
-	  </ul>
-	</ul>
-  </li>
-	  
-  <li>
-	<b>1.110419.8</b> - http://community.activestate.com/files/kGit_5.xpi
-	<ul>
-	  <li>Improves:
-	  <ul>
-		<li>Adds "conflicted" files to icons overlay.
-		<li>"liberal git command" opens result in new tab.
-		<li>Adds "fetch" command.
-	  </ul>
-	</ul>
-  </li>
-
-  <li>
-	<b>1.110419.7</b>
-	<ul>
-	  <li>Improves:
-	  <ul>
-		<li> The "git status" for the icons overlay now runs the process into a background thread.
-	  </ul>
-	</ul>
-  </li>
-  
-  <li>
-	<b>1.110414.6</b> - http://community.activestate.com/files/kGit_4.xpi
-	<ul>
-	  <li>Improves:
-	  <ul>
-		<li>Experimental icons overlay ( needs hack to places extension ) Please See intructions into komodin thread forum http://support.activestate.com/xpi/komodin-git-places
-	  </ul>
-	</ul>
-  </li>
-  
-  <li>
-	<b>1.110414.5</b>
-	<ul>
-	  <li>Fixes:
-	  <ul>
-		<li>"add" and "rm" commands now recursive
-	  </ul>
-	  <li>Improves:
-	  <ul>
-		<li>Works with "Windows", with just Git installed /Will prompt for git installation directory/
-		<li>Adds "Checkout Files to Object" (git checkout abcdef selectedFiles)
-		<li>Adds "Remove Keep Local"
-		<li>Status shows all untracked files /not only directories/
-		<li>Adds "Undo Last Commit" command ( git reset --soft HEAD^ )
 	  </ul>
 	</ul>
   </li>
