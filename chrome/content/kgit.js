@@ -1458,41 +1458,7 @@ function kGit()
 					  .split('nothing added to commit').join('#')
 					  .split('no changes added to commit').join('#')
 					  .split('but untracked files').join('#');
-					  
-					/* ignored files */
-					if(kgit.fileExists(aGitPath+kgit.__DS+'.gitignore'))
-					{
-					  var ignored = kgit.fileRead(aGitPath+kgit.__DS+'.gitignore');
-					  if(ignored != '')
-					  {
-						  ignored = ignored.split('\n');
-						  for(var id in ignored)
-						  {
-							ignored[id] = ignored[id].replace(/^\//, '').replace(/\/$/, '');
-							rootFile = aGitPath;
-							
-							file = (ignored[id].split('/').join(kgit.__DS).split('\\').join(kgit.__DS)).trim().split(kgit.__DS);
-							var files = [];
-								files[files.length] = rootFile;
-							rootFile +=kgit.__DS
-							for(var id in file)
-							{
-							  rootFile += file[id];
-							  files[files.length] = rootFile;
-							  rootFile += kgit.__DS;
-							}
-							for(var file in files)
-							{
-							  hash = 'k'+kgit.md5(kgit.pathToNix(files[file]))
-							  if(kgit.fileIsFolder(files[file]))
-								css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__){list-style-image:url("chrome://kgit/content/i/d_i.png") !important;}'.replace('__FILE__', hash)+'\n';
-							  else
-								css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__){list-style-image:url("chrome://kgit/content/i/f_i.png") !important;}'.replace('__FILE__', hash)+'\n';
-							  //css += '/*'+kgit.pathToNix(files[file])+'*/\n'
-							}
-						  }
-					  }
-					}
+					 
 				  
 				  /* untracked files */
 				  
@@ -1531,6 +1497,42 @@ function kGit()
 						}
 					}
 				  
+ 
+					/* ignored files */
+					if(kgit.fileExists(aGitPath+kgit.__DS+'.gitignore'))
+					{
+					  var ignored = kgit.fileRead(aGitPath+kgit.__DS+'.gitignore');
+					  if(ignored != '')
+					  {
+						  ignored = ignored.split('\n');
+						  for(var id in ignored)
+						  {
+							ignored[id] = ignored[id].replace(/^\//, '').replace(/\/$/, '');
+							rootFile = aGitPath;
+							
+							file = (ignored[id].split('/').join(kgit.__DS).split('\\').join(kgit.__DS)).trim().split(kgit.__DS);
+							var files = [];
+								files[files.length] = rootFile;
+							rootFile +=kgit.__DS
+							for(var id in file)
+							{
+							  rootFile += file[id];
+							  files[files.length] = rootFile;
+							  rootFile += kgit.__DS;
+							}
+							for(var file in files)
+							{
+							  hash = 'k'+kgit.md5(kgit.pathToNix(files[file]))
+							  if(kgit.fileIsFolder(files[file]))
+								css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__){list-style-image:url("chrome://kgit/content/i/d_i.png") !important;}'.replace('__FILE__', hash)+'\n';
+							  else
+								css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__){list-style-image:url("chrome://kgit/content/i/f_i.png") !important;}'.replace('__FILE__', hash)+'\n';
+							  //css += '/*'+kgit.pathToNix(files[file])+'*/\n'
+							}
+						  }
+					  }
+					}
+					
 				  /* conflicts */
 				  
 					aString = aString
@@ -1769,12 +1771,17 @@ function kGit()
 		  else
 			this.gitPathSet = true;
 	   }
+	   this.iconsLoader();
+	}
+	this.loadExtension = function(event)
+	{
+	  event.currentTarget.removeEventListener('load', kgit.loadExtension, false)
+	  kgit.initExtension();
 	}
     return this;
 }
 
 var kgit = new kGit();
-	kgit.initExtension();
-	kgit.iconsLoader();
-	
+
+addEventListener('load', kgit.loadExtension, false);
 addEventListener('unload', kgit.emptyTemp, false);
