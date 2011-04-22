@@ -53,6 +53,8 @@ function kGit()
 		var stderr = process.getStderr();
 		if(stderr && stderr != '')
 		  this.alert('Error:\n'+stderr);
+		  
+		delete process, retval, stderr, aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox;
     }
 	//executes a shell script in a window ( allows user iteraction )
 	this.execute = function(aScriptPath, aOutputPath, inNewTab)
@@ -98,6 +100,8 @@ function kGit()
 							  }
 							}
 						  }, false);
+		
+		delete file, aScriptPath;
 	}
 
 	//detects when the user right click the placesRootButton
@@ -903,6 +907,7 @@ function kGit()
 		{
 		  file.remove(true);
 		}
+		delete file;
 	}
 
 /* UTILS */
@@ -1119,6 +1124,8 @@ function kGit()
 		
 		var path =  file.path;
 		
+		delete file, WriteStream, why_not_a_simple_fopen_fwrite;
+		
 		return path;
 	}
     //returns true if a file exists
@@ -1131,12 +1138,19 @@ function kGit()
 		  aFile.initWithPath(aFilePath);
 
 		  if(aFile.exists())
-			  return true;
+		  {
+			delete aFile;
+			return true;
+		  }
 		  else
-			  return false;
+		  {
+			delete aFile;
+			return false;
+		  }
 	  }
 	  catch(e)
 	  {
+		delete aFile;
 		return false;
 	  }
     }
@@ -1150,12 +1164,19 @@ function kGit()
             aFile.initWithPath(aFilePath);
 
             if(aFile.exists() && aFile.isDirectory())
-                return true;
+			{
+			  delete aFile;
+              return true;
+			}
             else
-                return false;
+			{
+			  delete aFile;
+              return false;
+			}
 	  }
 	  catch(e)
 	  {
+		delete aFile;
 		return false;
 	  }
     }
@@ -1179,6 +1200,8 @@ function kGit()
         is.close();
         sis.close();
         
+		delete aFile, converter, is, sis;
+		
         return aData;
 	}
  	//writes content to a file
@@ -1206,11 +1229,15 @@ function kGit()
 			WriteStream.close();
 			var path = aFile.path;
 			
+			delete aFile, WriteStream, why_not_a_simple_fopen_fwrite;
+			
 			return path;
 		}
 		catch(e)
 		{
-			this.error('Can\'t write to the file "'+aFilePath+'"\nBrowser says: '+e);
+		  delete aFile, WriteStream, why_not_a_simple_fopen_fwrite;
+		  
+		  this.error('Can\'t write to the file "'+aFilePath+'"\nBrowser says: '+e);
 		}
 	}
  	//returns the dirname of a file
@@ -1223,10 +1250,15 @@ function kGit()
 			aDestination.initWithPath(aFilePath);
 
 		var dirname =  aDestination.parent.path;
+		
+		delete aDestination;
+		
 		return dirname;
 	  }
 	  catch(e)
 	  {
+		delete aDestination;
+		
 		if(this.fileIsFolder(aFilePath))
 		  return aFilePath;
 		else
@@ -1441,8 +1473,10 @@ function kGit()
 				  retval = process.wait(-1);
 
 				  var aStatusContent = process.getStdout();
-
-				  var file, hash, css = '', rootPath, aString, aGitPath;
+				  
+				  delete process, retval, commands, stdout, paths; 
+				  
+				  var file, hash, css = '', rootPath, aString, aGitPath, aTemp;
 				  
 				  //css += stdout;
 				  //css += aStatusContent;
@@ -1464,18 +1498,18 @@ function kGit()
 				  
 					if(aString.indexOf('Untracked files:') != -1)
 					{
-						var untracked = (aString.split('Untracked files:')[1]).split('#');
-							untracked[0] = '';
-							untracked[1] = '';
-						for(var id in untracked)
+						aTemp = (aString.split('Untracked files:')[1]).split('#');
+						aTemp[0] = '';
+						aTemp[1] = '';
+						for(var id in aTemp)
 						{
-						  if(untracked[id] == '')
+						  if(aTemp[id] == '')
 							continue;
 							
-						  untracked[id] = untracked[id].replace(/^\//, '');
+						  aTemp[id] = aTemp[id].replace(/^\//, '');
 						  rootFile = aGitPath;
 						  
-						  file = (untracked[id].split('/').join(kgit.__DS).split('\\').join(kgit.__DS)).trim().split(kgit.__DS);
+						  file = (aTemp[id].split('/').join(kgit.__DS).split('\\').join(kgit.__DS)).trim().split(kgit.__DS);
 						  var files = [];
 							  files[files.length] = rootFile;
 						  rootFile += kgit.__DS
@@ -1501,16 +1535,16 @@ function kGit()
 					/* ignored files */
 					if(kgit.fileExists(aGitPath+kgit.__DS+'.gitignore'))
 					{
-					  var ignored = kgit.fileRead(aGitPath+kgit.__DS+'.gitignore');
-					  if(ignored != '')
+					  aTemp = kgit.fileRead(aGitPath+kgit.__DS+'.gitignore');
+					  if(aTemp != '')
 					  {
-						  ignored = ignored.split('\n');
-						  for(var id in ignored)
+						  aTemp = aTemp.split('\n');
+						  for(var id in aTemp)
 						  {
-							ignored[id] = ignored[id].replace(/^\//, '').replace(/\/$/, '');
+							aTemp[id] = aTemp[id].replace(/^\//, '').replace(/\/$/, '');
 							rootFile = aGitPath;
 							
-							file = (ignored[id].split('/').join(kgit.__DS).split('\\').join(kgit.__DS)).trim().split(kgit.__DS);
+							file = (aTemp[id].split('/').join(kgit.__DS).split('\\').join(kgit.__DS)).trim().split(kgit.__DS);
 							var files = [];
 								files[files.length] = rootFile;
 							rootFile +=kgit.__DS
@@ -1666,6 +1700,9 @@ function kGit()
 					  }
 					}
 				  }
+				  
+				  delete aStatusContent, file, hash, rootPath, aString, aGitPath, aTemp;
+				  
 				  var mainThread = {};
 					  mainThread.css = css;
 					  mainThread.run = function() {
@@ -1729,12 +1766,14 @@ function kGit()
 
 	this.initExtension = function()
 	{
-	  this.runSvc = Components.classes["@activestate.com/koRunService;1"]
+	  this.runSvc = Components
+						.classes["@activestate.com/koRunService;1"]
 						.createInstance(Components.interfaces.koIRunService);
 	  this.sss = Components
 					  .classes["@mozilla.org/content/style-sheet-service;1"]
 					  .getService(Components.interfaces.nsIStyleSheetService);
-	  var file = Components.classes["@mozilla.org/file/local;1"]
+	  var file = Components
+					.classes["@mozilla.org/file/local;1"]
 					.createInstance(Components.interfaces.nsILocalFile);
 	   //if *nix
 	   try{
@@ -1749,7 +1788,8 @@ function kGit()
 		 this.__DS = '\\';
 		 
 		 //ask for git dir
-		  var prefsService = Components.classes['@mozilla.org/preferences-service;1']
+		  var prefsService = Components
+								.classes['@mozilla.org/preferences-service;1']
 								.getService(Components.interfaces.nsIPrefService);
 			  prefsService.QueryInterface(Components.interfaces.nsIPrefBranch2);
 			  
