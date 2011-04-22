@@ -838,6 +838,7 @@ function kGit()
 	this.ignore = function(event)
 	{
 	  var selected = this.getSelectedPaths(event);
+	  var aPath;
 	  
 	  for(var id in selected)
 	  {
