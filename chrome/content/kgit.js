@@ -1036,7 +1036,7 @@ function kGit()
 	  {
 		commands += 'cd '+id+'';
 		commands += '\n';
-		commands += 'git log "'+repositories[id][(repositories[id].length)-1]+'" >>'+obj.output+' 2>&1';
+		commands += 'git log ..."'+repositories[id][(repositories[id].length)-1]+'" >>'+obj.output+' 2>&1';
 		commands += '\n';
 	  }
 
