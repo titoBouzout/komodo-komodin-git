@@ -1360,25 +1360,32 @@ function kGit()
 	{
 	  try
 	  {
-		this.iconsObj = this.getPaths(this.filePathFromFileURI(String(this.getPlacesPath())));
-		this.iconsLastCommmand ='';
-		this.iconsReposotoriesCache = [];
-		this.iconsLastCSS = '';
-		this.iconsURI = Components
-						  .classes["@mozilla.org/network/io-service;1"]
-						  .getService(Components.interfaces.nsIIOService)
-						  .newURI('file://'+this.iconsObj.outputFile+'.css', null, null);
-					  
 		if(!this.gitPathSet && this.__DS != '/')
+		{
 		  setTimeout(function(){ kgit.iconsLoader();}, 1000);
+		}
 		else
 		{
+		  this.iconsObj = this.getPaths(this.filePathFromFileURI(String(this.getPlacesPath())));
+		  this.iconsLastCommmand ='';
+		  this.iconsReposotoriesCache = [];
+		  this.iconsLastCSS = '';
+		  this.iconsURI = Components
+							.classes["@mozilla.org/network/io-service;1"]
+							.getService(Components.interfaces.nsIIOService)
+							.newURI('file://'+this.iconsObj.outputFile+'.css', null, null);
 		  try{kgit.iconsUpdate();}catch(e){}
-		  setInterval(function(){ try{kgit.iconsUpdate();}catch(e){} }, 7000);
+		  
+		  if(this.iconsInterval)
+			clearInterval(this.iconsInterval);
+			
+		  this.iconsInterval = setInterval(function(){ try{kgit.iconsUpdate();}catch(e){} }, 7000);
 		}
 	  }
 	  catch(e)
 	  {
+		if(this.iconsInterval)
+		  clearInterval(this.iconsInterval);
 		setTimeout(function(){ kgit.iconsLoader();}, 1000);
 	  }
 	}
@@ -1463,6 +1470,8 @@ function kGit()
 				  }
 				  else
 				  {
+					if(!kgit.gitPathSet)
+					  kgit.initExtension();
 					//if windows
 					process = kgit.runSvc.RunAndNotify(
 													  'bash.exe --login "'+kgit.escape(this.iconsObj.sh)+'"',
@@ -1817,8 +1826,16 @@ function kGit()
 			this.gitPathSet = false;
 		  else
 			this.gitPathSet = true;
-	   }
-	   this.iconsLoader();
+	  }
+	  
+	  //empty the temporal folder on exit.
+	  this.observerService = Components
+							  .classes["@mozilla.org/observer-service;1"]
+							  .getService(Components.interfaces.nsIObserverService);
+	  this.obseverServiceListener = {observe: function(aSubject, aTopic, aData){ kgit.emptyTemp();}};
+	  this.observerService.addObserver(this.obseverServiceListener, "quit-application-granted", false);
+
+	  this.iconsLoader();
 	}
 	this.loadExtension = function(event)
 	{
@@ -1831,4 +1848,3 @@ function kGit()
 var kgit = new kGit();
 
 addEventListener('load', kgit.loadExtension, false);
-addEventListener('unload', kgit.emptyTemp, false);
