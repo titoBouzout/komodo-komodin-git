@@ -1051,7 +1051,7 @@ function kGit()
 	  {
 		commands += 'cd '+id+'';
 		commands += '\n';
-		commands += 'git log ..."'+repositories[id][(repositories[id].length)-1]+'" >>'+obj.output+' 2>&1';
+		commands += 'git log "'+repositories[id][(repositories[id].length)-1]+'".. >>'+obj.output+' 2>&1';
 		commands += '\n';
 	  }
 
@@ -1080,7 +1080,7 @@ function kGit()
 	  {
 		commands += 'cd '+id+'';
 		commands += '\n';
-		commands += 'git diff "'+repositories[id][(repositories[id].length)-1]+'" >>'+obj.output+' 2>&1';
+		commands += 'git diff "'+repositories[id][(repositories[id].length)-1]+'".. >>'+obj.output+' 2>&1';
 		commands += '\n';
 	  }
 
