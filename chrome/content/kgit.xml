@@ -31,6 +31,21 @@
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.blame(event)" label="Blame"/>
 		  </xul:menupopup>
 		</xul:menu>
+		<xul:menu label="Tags" onclick="if(event.originalTarget == this){kgit.menuClick(event);kgit.tagAuto(event);}">
+		  <xul:menupopup>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagAuto(event)" label="Auto-Tag"/>
+			<xul:menuseparator/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagBetweenTheTwoLatestTagsLog(event)" label="Between the two latest tags show log"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagBetweenTheTwoLatestTagsDiff(event)" label="Between the two latest tags show diff"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagFromLatestTagLog(event)" label="From latest tag show log"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagFromLatestTagDiff(event)" label="From latest tag show diff"/>
+			<xul:menuseparator/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagList(event)" label="Tag list"/>
+			<xul:menuseparator/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagAdd(event)" label="Tag add"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagRemove(event)" label="Tag remove"/>
+		  </xul:menupopup>
+		</xul:menu>
 		<xul:menuseparator/>
 		<xul:menu label="Revert" onclick="if(event.originalTarget == this){kgit.menuClick(event);kgit.revert(event);}">
 		  <xul:menupopup>
@@ -60,22 +75,6 @@
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.init(event)" label="Init…"/>
 		<xul:menuitem oncommand="kgit.clone(event)" label="Clone…"/>
-		<xul:menuseparator/>
-		<xul:menu label="Tags" onclick="if(event.originalTarget == this){kgit.menuClick(event);kgit.tagAuto(event);}">
-		  <xul:menupopup>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagAuto(event)" label="Auto-Tag"/>
-			<xul:menuseparator/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagBetweenTheTwoLatestTagsLog(event)" label="Between the two latest tags show log"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagBetweenTheTwoLatestTagsDiff(event)" label="Between the two latest tags show diff"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagFromLatestTagLog(event)" label="From latest tag show log"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagFromLatestTagDiff(event)" label="From latest tag show diff"/>
-			<xul:menuseparator/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagList(event)" label="Tag list"/>
-			<xul:menuseparator/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagAdd(event)" label="Tag add"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagRemove(event)" label="Tag remove"/>
-		  </xul:menupopup>
-		</xul:menu>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.ignoreOpen(event)" label="Open Git Ignore"/>
 		<xul:menuitem oncommand="kgit.ignore(event)" label="Add to Git Ignore"/>
