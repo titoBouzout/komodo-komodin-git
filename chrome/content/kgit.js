@@ -1763,6 +1763,13 @@ function kGit()
 			else if(this.fileExists(this.gitPath+this.__DS+'bin'+this.__DS+'bash.exe'))
 			{
 			  prefsService.setCharPref('extensions.kgit.gitPath', this.gitPath);
+			  
+			  Components.classes["@mozilla.org/toolkit/app-startup;1"]
+				.getService(Components.interfaces.nsIAppStartup)
+				.quit(
+					  Components.interfaces.nsIAppStartup.eRestart |
+					  Components.interfaces.nsIAppStartup.eAttemptQuit
+				);
 			  break;
 			}
 		  }
