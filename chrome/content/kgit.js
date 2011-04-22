@@ -317,13 +317,13 @@ function kGit()
 	//TODO: allow user to revert to specific commit/branch/tag
     this.revertClean = function(event)
     {
-	  if(this.confirm('Are you sure?'))
+	  if(this.confirm('Revert & clean selected items?'))
 	  {
         var selected = this.getSelectedPaths(event);
 		var commands = '';
 		
         for(var id in selected)
-        {    
+        {
 		  var obj = this.getPaths(selected[id]);
 			  
 		  commands += 'cd '+obj.cwd+' ';
@@ -344,7 +344,7 @@ function kGit()
 	//TODO: allow user to revert to specific commit/branch/tag
     this.revert = function(event)
     {
-	  if(this.confirm('Are you sure?'))
+	  if(this.confirm('Revert selected items?'))
 	  {
         var selected = this.getSelectedPaths(event);
 		var commands = '';
@@ -369,10 +369,10 @@ function kGit()
 	//TODO: allow user to revert to specific commit/branch/tag
     this.revertToObject = function(event)
     {
-	  var aMsg = this.prompt('Revert to object…');
+	  var aMsg = this.prompt('Revert repository to object…');
 	  if(aMsg != '')
 	  {
-		if(this.confirm('Are you sure?'))
+		if(this.confirm('Revert repository to object?'))
 		{
 		  var selected = this.getSelectedPathFolder(event);
 		  var obj = this.getPaths(selected);
@@ -387,10 +387,10 @@ function kGit()
 	//TODO: allow user to checkout to specific commit/branch/tag
     this.checkoutToObject = function(event)
     {
-	  var aMsg = this.prompt('Checkout to object…');
+	  var aMsg = this.prompt('Checkout repository to object…');
 	  if(aMsg != '')
 	  {
-		if(this.confirm('Are you sure?'))
+		if(this.confirm('Checkout repository to object?'))
 		{
 		  var selected = this.getSelectedPathFolder(event);
 		  var obj = this.getPaths(selected);
@@ -405,10 +405,10 @@ function kGit()
 	//TODO: allow user to checkout to specific commit/branch/tag
     this.checkoutFilesToObject = function(event)
     {
-        var aMsg = this.prompt('Checkout files to object…');
+        var aMsg = this.prompt('Checkout selected items to object…');
         if(aMsg != '')
         {
-		  if(this.confirm('Are you sure?'))
+		  if(this.confirm('Checkout selected items to object?'))
 		  {
 			var selected = this.getSelectedPaths(event);
 			var commands = '';
@@ -472,7 +472,7 @@ function kGit()
 	  var aMsg = this.prompt('Enter URL to clone…');
 	  if(aMsg != '')
 	  {
-		aMsg = aMsg.replace(/^ ?git clone /, '');
+		aMsg = aMsg.replace(/^ ?git clone ?/, '');
 		var selected = this.getSelectedPathFolder(event);
 		var obj = this.getPaths(selected);
 		
@@ -486,7 +486,7 @@ function kGit()
 	//TODO: show progress metter.
     this.pull = function(event)
     {
-	  if(this.confirm('Are you sure?'))
+	  if(this.confirm('Are you sure you want to pull from default?'))
 	  {
         var selected = this.getSelectedPathFolder(event);
 		var obj = this.getPaths(selected);
@@ -500,7 +500,7 @@ function kGit()
 	//TODO: show progress metter.
 	this.fetch = function(event)
     {
-	  if(this.confirm('Are you sure?'))
+	  if(this.confirm('Are you sure you want to fetch from default?'))
 	  {
         var selected = this.getSelectedPathFolder(event);
 		var obj = this.getPaths(selected);
@@ -617,7 +617,7 @@ function kGit()
     }
 	this.undoLastCommit = function(event)
 	{
-	  if(this.confirm('Are you sure?'))
+	  if(this.confirm('Are you sure you want to undo last commit?'))
 	  {
 		var selected = this.getSelectedPaths(event);
 		var commands = '';
@@ -744,7 +744,7 @@ function kGit()
     }
 	this.removeKeepLocal = function(event)
     {
-	  if(this.confirm('Are you sure?'))
+	  if(this.confirm('Remove selected items from the repository and keep the local copy?'))
 	  {
 		var selected = this.getSelectedPaths(event);
 		var commands = '';
@@ -774,7 +774,7 @@ function kGit()
     }
 	this.remove = function(event)
     {
-	  if(this.confirm('Are you sure?'))
+	  if(this.confirm('Remove selected items from the repository?'))
 	  {
 		var selected = this.getSelectedPaths(event);
 		var commands = '';
@@ -1409,6 +1409,18 @@ function kGit()
 	this.error = function(aString)
 	{
 	  setTimeout(function(){ throw new Error('kGit : ' + aString);}, 0);
+	}
+  /* menu */
+	this.menuClick = function(event)
+	{
+	  var item = event.originalTarget.parentNode;
+	  if(item.state)
+		item.hidePopup();
+	  if(item.parentNode.state)
+		item.parentNode.hidePopup();
+	  if(item.parentNode.parentNode.state)
+		item.parentNode.parentNode.hidePopup();
+	  event.stopPropagation();
 	}
   /* icons */
   
