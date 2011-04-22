@@ -6,12 +6,11 @@
     <Description about="urn:mozilla:install-manifest">
         <em:id>tito@kgit</em:id>
         <em:name>Komodin</em:name>
-        <em:version>1.110421.9</em:version>
+        <em:version>1.110422.10</em:version>
         <em:description>Adds Git commands to Komodo Edit and enhance Git commands on Komodo IDE</em:description>
         <em:creator>Roberto Bouzout (tito)</em:creator>
 		<em:iconURL>chrome://kgit/content/icon.png</em:iconURL>
 		<em:homepageURL>http://community.activestate.com/xpi/komodin-git-places</em:homepageURL>
-		<em:updateInfoURL>https://github.com/titoBouzout/komodin--Komodo-Edit-Git-/raw/master/changes.html</em:updateInfoURL>
 		
 		<em:contributor>sam sherlock</em:contributor>
 		
