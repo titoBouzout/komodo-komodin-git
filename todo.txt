@@ -13,13 +13,10 @@ Things to not forget
   TODO:
 	
 	add/edit/list branches
-	add/edit/list tags
 	
 	easy switch
 	easy merge
 	
 	stash
 	
-	allow to minimize the commit dialog..
-  
-  	When switching places path, call to "iconsUpdateCall" quickly to show instant icons instead of waiting for the time interval
+	submodules

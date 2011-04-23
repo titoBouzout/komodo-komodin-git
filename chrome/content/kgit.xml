@@ -21,6 +21,8 @@
 		<xul:menuitem oncommand="kgit.commitAll(event)" label="Commit All…"/>
 		<xul:menuitem oncommand="kgit.undoLastCommit(event)" label="Undo Last Commit"/>
 		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.status(event)" label="Status"/>
+		<xul:menuseparator/>
 		<xul:menu label="Diff" onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.diff(event);}">
 		  <xul:menupopup>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diff(event);" label="since last commit"/>
@@ -30,7 +32,6 @@
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diffBetweenTheTwoLatestTags(event);" label="between the two latest tags"/>
 		  </xul:menupopup>
 		</xul:menu>
-		<xul:menuitem oncommand="kgit.status(event)" label="Status"/>
 		<xul:menu label="Log" onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.logStatLatest(event);}">
 		  <xul:menupopup>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.logStatLatest(event);" label="stat last 30"/>
@@ -43,10 +44,9 @@
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.logSinceLatestPush(event)" label="since last push"/>
 			<xul:menuseparator/>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.logBetweenTheTwoLatestTags(event);" label="between the two latest tags"/>
-			<xul:menuseparator/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.blame(event)" label="blame"/>
 		  </xul:menupopup>
 		</xul:menu>
+		<xul:menuitem oncommand="kgit.menuClick(event);" label="Blame"/>
 		<xul:menu label="Tags" onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.tagAuto(event);}">
 		  <xul:menupopup>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagAuto(event)" label="Auto-Tag"/>
@@ -60,7 +60,9 @@
 		<xul:menuseparator/>
 		<xul:menu label="Revert" onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.revert(event);}">
 		  <xul:menupopup>
+			
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revert(event)" label="Revert"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revertDiscardChanges(event)" label="Discard dirty changes"/>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revertClean(event)" label="Revert &amp; Clean"/>
 			<xul:menuseparator/>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.checkoutFilesToObject(event)" label="Checkout Files to Object…"/>

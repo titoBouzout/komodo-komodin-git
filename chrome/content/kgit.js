@@ -372,7 +372,7 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		var tags = this.tagsGetFromRepo(obj);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags.pop() || '')+'"..HEAD '+obj.selected+' >>'+obj.output+' 2>&1\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags.pop() || '')+'"..HEAD --stat --graph '+obj.selected+' >>'+obj.output+' 2>&1\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
@@ -385,7 +385,7 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		var tags = this.tagsGetFromRepo(obj);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log origin/master..HEAD '+obj.selected+' >>'+obj.output+' 2>&1\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log origin/master..HEAD --stat --graph '+obj.selected+' >>'+obj.output+' 2>&1\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
@@ -397,23 +397,11 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		var tags = this.tagsGetFromRepo(obj);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+' echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags[tags.length-2] || '')+'".."'+(tags[tags.length-1] || '')+'" '+obj.selected+' >>'+obj.output+' 2>&1\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+' echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags[tags.length-2] || '')+'".."'+(tags[tags.length-1] || '')+'" --stat --graph '+obj.selected+' >>'+obj.output+' 2>&1\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
-	
-    this.status = function(event)
-    {
-	  var selected = this.getSelectedPaths(event);
-	  for(var id in selected)
-	  {
-		var obj = this.getPaths(selected[id]);
-		  
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "status:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git status --untracked-files=all '+ obj.selected+' >> '+obj.output+' \n');
-		  
-		this.run(obj.sh, obj.outputFile, true);
-	  }
-    }
+	//NOTE:multiple repository safe function
 	this.blame = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -422,13 +410,23 @@ function kGit()
 		if(!this.fileIsFolder(selected[id]))
 		{
 		  var obj = this.getPaths(selected[id]);
-		
-		  this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "blame:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git blame '+ obj.selected+' >> '+obj.output+' \n');
-			
+		  this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n git blame '+ obj.selected+' >> '+obj.output+' \n');
 		  this.run(obj.sh, obj.outputFile, true);
 		}
 	  }
     }
+	//NOTE:multiple repository safe function
+    this.status = function(event)
+    {
+	  var selected = this.getSelectedPaths(event);
+	  for(var id in selected)
+	  {
+		var obj = this.getPaths(selected[id]);
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "status:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git status --untracked-files=all '+ obj.selected+' >> '+obj.output+' \n');
+		this.run(obj.sh, obj.outputFile, true);
+	  }
+    }
+
 	//TODO: allow user to revert to specific commit/branch/tag
     this.revertClean = function(event)
     {
@@ -561,7 +559,7 @@ function kGit()
 	  {
 		commands += 'cd '+id+'';
 		commands += '\n';
-		commands += 'git push --tags >>'+obj.output+' 2>&1';
+		commands += 'git push && git push --tags >>'+obj.output+' 2>&1';
 		commands += '\n';
 	  }
 
@@ -859,7 +857,7 @@ function kGit()
 		  commands += '\n';
 		  commands += 'git commit '+repositories[id].join(' ')+' -m "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
 		  commands += '\n';
-		  commands += 'git push --tags >>'+obj.output+' 2>&1';
+		  commands += 'git push && git push --tags >>'+obj.output+' 2>&1';
 		  commands += '\n';
 		}
   

@@ -171,6 +171,9 @@ Changes From Latest Version:
 	  <ul>
 		<li>Ignored files take preferences (on icons) over untracked files.
 	  </ul>
+	  <ul>
+		<li>Auto-restart the application after set the "git installation path" (Windows only)
+	  </ul>
 	</ul>
   </li>
 	    
