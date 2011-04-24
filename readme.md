@@ -151,6 +151,9 @@ The output is redirected to "/tmp/kGit/kGit-[1-n].diff" and "on command complete
 License:<br/>
 GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
 
+Home-page:<br/>
+http://community.activestate.com/xpi/komodin-git-places
+
 Todo & know bugs:<br/>
 https://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/todo.txt
 
@@ -164,18 +167,7 @@ Changes From Latest Version:
 
 <ul>
   
-  <li>
-	<b>1.110422.10</b> - http://community.activestate.com/files/kGit_7.xpi
-	<ul>
-	  <li>Fix:
-	  <ul>
-		<li>Ignored files take preferences (on icons) over untracked files.
-	  </ul>
-	  <ul>
-		<li>Auto-restart the application after set the "git installation path" (Windows only)
-	  </ul>
-	</ul>
-  </li>
+
 	    
   <li>
 	<b>1.110421.9</b> - http://community.activestate.com/files/kGit_6.xpi

@@ -3,7 +3,7 @@ function kGit()
 {
 	this.rootButton = false;
 	
-	//runs a shell script
+	//runs a shell script and display or return the output
     this.run = function(aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox, aReturnOutput)
     {
 		this.loadingSet();
@@ -65,6 +65,7 @@ function kGit()
 		  var stdout = process.getStdout();
 		  
 		this.loadingRemove();
+		
 		delete process, retval, stderr, aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox;
 		
 		if(aReturnOutput)
@@ -112,7 +113,10 @@ function kGit()
 								if(!inNewTab)
 								  kgit.notification(kgit.fileRead(aOutputPath));
 								else
-								  kgit.openURL(aOutputPath, true);
+								{
+								  if(kgit.fileRead(aOutputPath) != '')
+									kgit.openURL(aOutputPath, true);
+								}
 							  }
 							  kgit.loadingRemove();
 							}
@@ -189,19 +193,31 @@ function kGit()
 	  var repos = [];
 	  for(var id in aSelected)
 	  {
-		var obj = this.getPaths(aSelected[id]);
+		var obj = this.getPaths(aSelected[id], true);
 		if(!repos[obj.git])
 		  repos[obj.git] = {};
 		//selected files
 		if(!repos[obj.git].selected)
 		  repos[obj.git].selected = [];
 		repos[obj.git].selected[repos[obj.git].selected.length] = obj.selected;
+		//selected recursive
+		if(!repos[obj.git].selectedRecursive)
+		  repos[obj.git].selectedRecursive = [];
+		repos[obj.git].selectedRecursive[repos[obj.git].selectedRecursive.length] = obj.selectedRecursive;
 		//object
 		if(!repos[obj.git].obj)
 		  repos[obj.git].obj = [];
 		repos[obj.git].obj[repos[obj.git].obj.length] = obj;
+		//cwd
+		if(!repos[obj.git].cwd)
+		  repos[obj.git].cwd = obj.cwd;
 	  }
-	  return repos;
+	  var obj = {};
+		  obj.sh = this.fileCreateTemporal('kGit.sh');
+		  obj.outputFile = this.fileCreateTemporal('kGit.diff');
+		  obj.output =' "'+this.escape(this.pathToNix(obj.outputFile))+'" ';
+		  
+	  return {'r' : repos, 'obj':obj};
 	}
 	this.getPlacesPath = function()
 	{
@@ -221,69 +237,67 @@ function kGit()
 	  
 	  if(!noTemp)
 	  {
+		obj.sh = this.fileCreateTemporal('kGit.sh');
+		//alert('sh:'+obj.sh);
+		
+		obj.outputFile = this.fileCreateTemporal('kGit.diff');
+		//alert('outputFile:'+obj.outputFile);
 
-		  obj.sh = this.fileCreateTemporal('kGit.sh');
-		  //alert('sh:'+obj.sh);
-		  
-		  obj.outputFile = this.fileCreateTemporal('kGit.diff');
-		  //alert('outputFile:'+obj.outputFile);
+		obj.output = ' "'+this.escape(this.pathToNix(obj.outputFile))+'" ';
+		//alert('output:'+obj.output);
 	  }
-		  obj.git = this.getGitRoot(aFile);
-		  //alert('git:'+obj.git);
-		  
-		  obj.cwd = ' "'+this.escape(this.pathToNix(obj.git))+'" ';
-		  //alert('cwd:'+obj.cwd);
-	  if(!noTemp)
+	  
+	  obj.git = this.getGitRoot(aFile);
+	  //alert('git:'+obj.git);
+	  
+	  obj.cwd = ' "'+this.escape(this.pathToNix(obj.git))+'" ';
+	  //alert('cwd:'+obj.cwd);
+
+	  obj.selected = this.getPathRelativeToGit(aFile);
+	  obj.relativeToGit = obj.selected;
+	  obj.isFolder = this.fileIsFolder(aFile);
+	  //alert('selected:'+obj.selected);
+	  
+	  obj.cwdSelected = aFile;
+	  if(obj.isFolder)
+		obj.cwdSelected = ' "'+this.escape(this.pathToNix(obj.cwdSelected))+'" ';
+	  else
+		obj.cwdSelected = ' "'+this.escape(this.pathToNix(this.fileDirname(obj.cwdSelected)))+'" ';
+	  //alert('cwdSelected:'+obj.cwdSelected);
+		
+	  obj.selectedFile = aFile;
+	  //alert('selectedFile:'+obj.selectedFile);
+	  if(obj.selected == '')
+		 obj.selected = ' . ';
+	  else
+		 obj.selected = ' "'+this.escape(this.pathToNix(obj.selected))+'" ';
+	  
+	  //selected recursive
+	  if(obj.selected == '')
+		 obj.selectedRecursive = ' . ';
+	  else
 	  {
-		  obj.output = ' "'+this.escape(this.pathToNix(obj.outputFile))+'" ';
-		  //alert('output:'+obj.output);
+		if(obj.isFolder)
+		  obj.selectedRecursive = ' "'+this.escape(this.pathToNix(obj.relativeToGit))+'*" ';
+		else
+		  obj.selectedRecursive = ' "'+this.escape(this.pathToNix(obj.relativeToGit))+'" ';
 	  }
-		  obj.selected = this.getPathRelativeToGit(aFile);
-		  //alert('selected:'+obj.selected);
-		  
-		  obj.cwdSelected = aFile;
-		  if(this.fileIsFolder(obj.cwdSelected))
-			obj.cwdSelected = ' "'+this.escape(this.pathToNix(obj.cwdSelected))+'" ';
-		  else
-			obj.cwdSelected = ' "'+this.escape(this.pathToNix(this.fileDirname(obj.cwdSelected)))+'" ';
-		  //alert('cwdSelected:'+obj.cwdSelected);
-			
-		  obj.selectedFile = aFile;
-		  //alert('selectedFile:'+obj.selectedFile);
-		  if(obj.selected == '')
-			 obj.selected = '';
-		  else
-			 obj.selected = ' "'+this.escape(this.pathToNix(obj.selected))+'" ';
-
-		  if(obj.selected == '')
-			 obj.selectedRecursive = ' . ';
-		  else
-		  {
-			if(this.fileIsFolder(aFile))
-			  obj.selectedRecursive = ' "'+this.escape(this.pathToNix(this.getPathRelativeToGit(aFile)))+'*" ';
-			else
-			  obj.selectedRecursive = ' "'+this.escape(this.pathToNix(this.getPathRelativeToGit(aFile)))+'" ';
-		  }
-		  //alert('selected:'+obj.selected);
-		  
-		  return obj;
+	  //alert('selected:'+obj.selected);
+	  
+	  return obj;
 	}
 	
 	//TODO allow user to use an external program for example winmerge.
-	//TODO allow user to see the diff with a commit/branch/tag
-	//NOTE:multiple repository safe function
     this.diff = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
 	  for(var id in selected)
 	  {
 		var obj = this.getPaths(selected[id]);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff HEAD '+obj.selected+' > '+obj.output+'\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff HEAD -- '+obj.selected+' > '+obj.output+'\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
-	//TODO allow user to see the diff with a commit/branch/tag
-	//NOTE:multiple repository safe function
 	//TODO: hardcoded branch name
 	this.diffSinceLastPush = function(event)
 	{
@@ -291,11 +305,10 @@ function kGit()
 	  for(var id in selected)
 	  {
 		var obj = this.getPaths(selected[id]);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff origin/master..HEAD '+obj.selected+' > '+obj.output+'\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff origin/master... -- '+obj.selected+' > '+obj.output+'\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
 	}
-	//NOTE:multiple repository safe function
 	this.diffSinceLatestTag = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -303,11 +316,10 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		var tags = this.tagsGetFromRepo(obj);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff "'+(tags.pop() || '')+'"..HEAD '+obj.selected+' >>'+obj.output+' 2>&1\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff "'+(tags.pop() || '')+'"... -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
-	//NOTE:multiple repository safe function
 	this.diffBetweenTheTwoLatestTags = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -315,56 +327,51 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		var tags = this.tagsGetFromRepo(obj);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff "'+(tags[tags.length-2] || '')+'".."'+(tags[tags.length-1] || '')+'" '+obj.selected+' >>'+obj.output+' 2>&1\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff "'+(tags[tags.length-2] || '')+'".."'+(tags[tags.length-1] || '')+'" -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
 
-	//NOTE:multiple repository safe function
     this.logStatLatest = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
 	  for(var id in selected)
 	  {
 		var obj = this.getPaths(selected[id]);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log -n 30 --stat --graph '+ obj.selected+' >> '+obj.output+' \n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log -n 30 --stat --graph -- '+ obj.selected+' >> '+obj.output+' \n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
-	//NOTE:multiple repository safe function
     this.logStatFull = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
 	  for(var id in selected)
 	  {
 		var obj = this.getPaths(selected[id]);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log --stat --graph '+ obj.selected+' >> '+obj.output+' \n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log --stat --graph -- '+ obj.selected+' >> '+obj.output+' \n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
-	//NOTE:multiple repository safe function
 	this.logExtendedLatest = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
 	  for(var id in selected)
 	  {
 		var obj = this.getPaths(selected[id]);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log -n 30 -p '+ obj.selected+' >> '+obj.output+' \n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log -n 30 -p -- '+ obj.selected+' >> '+obj.output+' \n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }	
-	//NOTE:multiple repository safe function
 	this.logExtendedFull = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
 	  for(var id in selected)
 	  {
 		var obj = this.getPaths(selected[id]);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log -p '+ obj.selected+' >> '+obj.output+' \n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log -p -- '+ obj.selected+' >> '+obj.output+' \n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
-	//NOTE:multiple repository safe function
 	this.logSinceLatestTag = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -372,12 +379,11 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		var tags = this.tagsGetFromRepo(obj);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags.pop() || '')+'"..HEAD --stat --graph '+obj.selected+' >>'+obj.output+' 2>&1\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags.pop() || '')+'"..HEAD --stat --graph -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
-	//NOTE:multiple repository safe function
-	//TODO: Hardcoded branch name
+	//TODO: Hardcoded remote and branch name
 	this.logSinceLatestPush = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -385,11 +391,10 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		var tags = this.tagsGetFromRepo(obj);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log origin/master..HEAD --stat --graph '+obj.selected+' >>'+obj.output+' 2>&1\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "origin/master"..HEAD --stat --graph -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
-	//NOTE:multiple repository safe function
 	this.logBetweenTheTwoLatestTags = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -397,11 +402,11 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		var tags = this.tagsGetFromRepo(obj);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+' echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags[tags.length-2] || '')+'".."'+(tags[tags.length-1] || '')+'" --stat --graph '+obj.selected+' >>'+obj.output+' 2>&1\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+' echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags[tags.length-2] || '')+'".."'+(tags[tags.length-1] || '')+'" --stat --graph -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
-	//NOTE:multiple repository safe function
+	
 	this.blame = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -410,203 +415,344 @@ function kGit()
 		if(!this.fileIsFolder(selected[id]))
 		{
 		  var obj = this.getPaths(selected[id]);
-		  this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n git blame '+ obj.selected+' >> '+obj.output+' \n');
+		  this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n git blame -- '+ obj.selected+' >> '+obj.output+' \n');
 		  this.run(obj.sh, obj.outputFile, true);
 		}
 	  }
     }
-	//NOTE:multiple repository safe function
+	
     this.status = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
 	  for(var id in selected)
 	  {
 		var obj = this.getPaths(selected[id]);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "status:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git status --untracked-files=all '+ obj.selected+' >> '+obj.output+' \n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "status:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git status --untracked-files=all -- '+ obj.selected+' >> '+obj.output+' \n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
-
-	//TODO: allow user to revert to specific commit/branch/tag
-    this.revertClean = function(event)
+	
+    this.revertTracked = function(event)
     {
-	  if(this.confirm('Revert & clean selected items?'))
+	  if(this.confirm('Discard changes to tracked on selected items?'))
 	  {
         var selected = this.getSelectedPaths(event);
 		var commands = '';
-		
         for(var id in selected)
         {
 		  var obj = this.getPaths(selected[id]);
-			  
 		  commands += 'cd '+obj.cwd+' ';
 		  commands += '\n';
-		  commands += 'git checkout -- '+ obj.selected+' >>'+obj.output+' 2>&1';
-		  commands += '\n';
-		  commands += 'git clean '+ obj.selected+' -f -d >>'+obj.output+' 2>&1';
+		  commands += 'git checkout HEAD -- '+ obj.selected+' >>'+obj.output+' 2>&1';
 		  commands += '\n';
         }
-		commands += '\n';
-		
 		this.fileWrite(obj.sh, commands);
-		
 		this.run(obj.sh, obj.outputFile, false, true);
 		this.iconsUpdateCall();
 	  }
     }
-	//TODO: allow user to revert to specific commit/branch/tag
-    this.revert = function(event)
+    this.revertTrackedCleanUntracked = function(event)
     {
-	  if(this.confirm('Revert selected items?'))
+	  if(this.confirm('Discard changes to tracked and clean untracked on selected items?'))
 	  {
         var selected = this.getSelectedPaths(event);
 		var commands = '';
-		
         for(var id in selected)
         {
 		  var obj = this.getPaths(selected[id]);
-			  
 		  commands += 'cd '+obj.cwd+' ';
 		  commands += '\n';
-		  commands += 'git checkout -- '+ obj.selected+' >>'+obj.output+' 2>&1';
+		  commands += 'git checkout HEAD -- '+ obj.selected+' >>'+obj.output+' 2>&1';
+		  commands += '\n';
+		  commands += 'git clean -f -d -- '+ obj.selected+' >>'+obj.output+' 2>&1';
 		  commands += '\n';
         }
-		commands += '\n';
-		
 		this.fileWrite(obj.sh, commands);
-		
 		this.run(obj.sh, obj.outputFile, false, true);
 		this.iconsUpdateCall();
 	  }
     }
-	//TODO: allow user to revert to specific commit/branch/tag
-    this.revertToObject = function(event)
+    this.revertTrackedCleanUntrackedUnstage = function(event)
     {
-	  var aMsg = this.prompt('Revert repository to object…');
-	  if(aMsg != '')
+	  if(this.confirm('Discard changes to tracked, clean untracked and unstage on selected items?'))
 	  {
-		if(this.confirm('Revert repository to object?'))
-		{
-		  var selected = this.getSelectedPathFolder(event);
-		  var obj = this.getPaths(selected);
-		  
-		  this.fileWrite(obj.sh, 'cd '+obj.cwd+' \ngit revert '+aMsg+' >>'+obj.output+' 2>&1 \n');
-		  
-		  this.run(obj.sh, obj.outputFile, false, true);
-		  this.iconsUpdateCall();
-		}
+        var selected = this.getSelectedPaths(event);
+		var commands = '';
+        for(var id in selected)
+        {
+		  var obj = this.getPaths(selected[id]);
+		  commands += 'cd '+obj.cwd+' ';
+		  commands += '\n';
+		  commands += 'git checkout HEAD -- '+ obj.selected+' >>'+obj.output+' 2>&1';
+		  commands += '\n';
+		  commands += 'git clean -f -d -- '+ obj.selected+' >>'+obj.output+' 2>&1';
+		  commands += '\n';
+		  commands += 'git reset HEAD -- '+ obj.selected+' >>'+obj.output+' 2>&1';
+		  commands += '\n';
+        }
+		this.fileWrite(obj.sh, commands);
+		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
 	  }
     }
-	//TODO: allow user to checkout to specific commit/branch/tag
-    this.checkoutToObject = function(event)
+    this.revertTrackedUnstageCleanUntracked = function(event)
+    {
+	  if(this.confirm('Discard changes to tracked, unstage and clean untracked on selected items?'))
+	  {
+        var selected = this.getSelectedPaths(event);
+		var commands = '';
+        for(var id in selected)
+        {
+		  var obj = this.getPaths(selected[id]);
+		  commands += 'cd '+obj.cwd+' ';
+		  commands += '\n';
+		  commands += 'git checkout HEAD -- '+ obj.selected+' >>'+obj.output+' 2>&1';
+		  commands += '\n';
+		  commands += 'git reset HEAD -- '+ obj.selected+' >>'+obj.output+' 2>&1';
+		  commands += '\n';
+		  commands += 'git clean -f -d -- '+ obj.selected+' >>'+obj.output+' 2>&1';
+		  commands += '\n';
+        }
+		this.fileWrite(obj.sh, commands);
+		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
+	  }
+    }
+    this.revertUnstage = function(event)
+    {
+	  if(this.confirm('Unstage selected items?'))
+	  {
+        var selected = this.getSelectedPaths(event);
+		var commands = '';
+        for(var id in selected)
+        {
+		  var obj = this.getPaths(selected[id]);
+		  commands += 'cd '+obj.cwd+' ';
+		  commands += '\n';
+		  commands += 'git reset HEAD -- '+ obj.selected+' >>'+obj.output+' 2>&1';
+		  commands += '\n';
+        }
+		this.fileWrite(obj.sh, commands);
+		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
+	  }
+    }
+    this.checkoutRepositoryTo = function(event)
     {
 	  var aMsg = this.prompt('Checkout repository to object…');
 	  if(aMsg != '')
 	  {
-		if(this.confirm('Checkout repository to object?'))
+		var repos = this.getSelectedRepos(event);
+		var commands = '';
+		for(var id in repos.r)
 		{
-		  var selected = this.getSelectedPathFolder(event);
-		  var obj = this.getPaths(selected);
-		  
-		  this.fileWrite(obj.sh, 'cd '+obj.cwd+' \ngit checkout '+aMsg+' >>'+obj.output+' 2>&1 \n ');
-		  
-		  this.run(obj.sh, obj.outputFile, false, true);
-		  this.iconsUpdateCall();
+		  commands += 'cd '+repos.r[id].cwd+'';
+		  commands += '\n';
+		  commands += 'git checkout '+aMsg+' >>'+repos.obj.output+' 2>&1';
+		  commands += '\n';
 		}
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+		this.iconsUpdateCall();
 	  }
     }
-	//TODO: allow user to checkout to specific commit/branch/tag
-    this.checkoutFilesToObject = function(event)
+    this.checkoutTo = function(event)
     {
-        var aMsg = this.prompt('Checkout selected items to object…');
-        if(aMsg != '')
-        {
-		  if(this.confirm('Checkout selected items to object?'))
-		  {
-			var selected = this.getSelectedPaths(event);
-			var commands = '';
-			
-			for(var id in selected)
-			{
-			  var obj = this.getPaths(selected[id]);
-				  
-			  commands += 'cd '+obj.cwd+' \ngit checkout '+aMsg+' '+obj.selected+' >>'+obj.output+' 2>&1 \n ';
-			}
-			this.fileWrite(obj.sh, commands);
-            
-            this.run(obj.sh, obj.outputFile, false, true);
-			this.iconsUpdateCall();
-		  }
-        }
+	  var aMsg = this.prompt('Checkout selected items to object…');
+	  if(aMsg != '')
+	  {
+		var selected = this.getSelectedPaths(event);
+		var commands = '';
+		for(var id in selected)
+		{
+		  var obj = this.getPaths(selected[id]);
+		  commands += 'cd '+obj.cwd+' ';
+		  commands += '\n';
+		  commands += 'git checkout '+aMsg+' -- '+ obj.selected+' >>'+obj.output+' 2>&1';
+		  commands += '\n';
+		}
+		this.fileWrite(obj.sh, commands);
+		this.run(obj.sh, obj.outputFile, false, true);
+		this.iconsUpdateCall();
+	  }
     }
-	//TODO: allow to push to different remotes/branches
-	//TODO: show progress metter.
+	this.remoteAdd = function(event)
+	{
+	  var aMsg = this.prompt('Enter name and URL of remote…');
+	  if(aMsg != '')
+	  {
+		var repos = this.getSelectedRepos(event);
+		var commands = '';
+		for(var id in repos.r)
+		{
+		  commands += 'cd '+repos.r[id].cwd+'';
+		  commands += '\n';
+		  commands += 'git remote add '+aMsg+' >>'+repos.obj.output+' 2>&1';
+		  commands += '\n';
+		}
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  }
+	}
+	this.configDefaultRemote = function(event)
+	{
+	  var aBranch = this.prompt('Enter the name of your local branch…');
+	  if(aBranch != '')
+		var aRemote = this.prompt('Enter the name of the remote…');
+	  if(aBranch != '' && aRemote != '')
+	  {
+		var repos = this.getSelectedRepos(event);
+		var commands = '';
+		for(var id in repos.r)
+		{
+		  commands += 'cd '+repos.r[id].cwd+'';
+		  commands += '\n';
+		  commands += 'git config branch.'+aBranch+'.remote '+aRemote+' >>'+repos.obj.output+' 2>&1';
+		  commands += '\n';
+		}
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  }
+	}
     this.push = function(event)
     {
-	  var selected = this.getSelectedPaths(event);
+	  var repos = this.getSelectedRepos(event);
 	  var commands = '';
-	  var repositories = [];
-	  
-	  for(var id in selected)
+	  for(var id in repos.r)
 	  {
-		var obj = this.getPaths(selected[id]);
-		if(!repositories[obj.cwd])
-		  repositories[obj.cwd] = [];
-		repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
-	  }
-	  
-	  for(var id in repositories)
-	  {
-		commands += 'cd '+id+'';
+		commands += 'cd '+repos.r[id].cwd+'';
 		commands += '\n';
-		commands += 'git push && git push --tags >>'+obj.output+' 2>&1';
+		commands += 'git push >>'+repos.obj.output+' 2>&1';
 		commands += '\n';
 	  }
-
-	  this.fileWrite(obj.sh, commands);
-	  
-	  this.execute(obj.sh, obj.outputFile);
+	  this.fileWrite(repos.obj.sh, commands);
+	  this.execute(repos.obj.sh, repos.obj.outputFile);
     }
-	//TODO: show progress metter.
-    this.pushToOriginMasterMaster = function(event)
+    this.pushPushTags = function(event)
     {
-	  var selected = this.getSelectedPaths(event);
+	  var repos = this.getSelectedRepos(event);
 	  var commands = '';
-	  var repositories = [];
-	  
-	  for(var id in selected)
+	  for(var id in repos.r)
 	  {
-		var obj = this.getPaths(selected[id]);
-		if(!repositories[obj.cwd])
-		  repositories[obj.cwd] = [];
-		repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
-	  }
-	  
-	  for(var id in repositories)
-	  {
-		commands += 'cd '+id+'';
+		commands += 'cd '+repos.r[id].cwd+'';
 		commands += '\n';
-		commands += 'git push --tags "origin" master:master >>'+obj.output+' 2>&1';
+		commands += 'git push && push --tags >>'+repos.obj.output+' 2>&1';
 		commands += '\n';
 	  }
-
-	  this.fileWrite(obj.sh, commands);
-	  
-	  this.execute(obj.sh, obj.outputFile);
+	  this.fileWrite(repos.obj.sh, commands);
+	  this.execute(repos.obj.sh, repos.obj.outputFile);
     }
-
+    this.pushTags = function(event)
+    {
+	  var repos = this.getSelectedRepos(event);
+	  var commands = '';
+	  for(var id in repos.r)
+	  {
+		commands += 'cd '+repos.r[id].cwd+'';
+		commands += '\n';
+		commands += 'git push --tags >>'+repos.obj.output+' 2>&1';
+		commands += '\n';
+	  }
+	  this.fileWrite(repos.obj.sh, commands);
+	  this.execute(repos.obj.sh, repos.obj.outputFile);
+    }
+    this.pushWithOptions = function(event)
+    {
+	  var aOptions = this.prompt('Push with options…', 'git push aRemoteName aLocalBranch:aRemoteBranch');
+	  if(aOptions != '')
+	  {
+		var repos = this.getSelectedRepos(event);
+		var commands = '';
+		for(var id in repos.r)
+		{
+		  commands += 'cd '+repos.r[id].cwd+'';
+		  commands += '\n';
+		  commands += aOptions+' >>'+repos.obj.output+' 2>&1';
+		  commands += '\n';
+		}
+		this.fileWrite(repos.obj.sh, commands);
+		this.execute(repos.obj.sh, repos.obj.outputFile);
+	  }
+    }
+    this.pull = function(event)
+    {
+	  if(this.confirm('Pull from default?'))
+	  {
+		var repos = this.getSelectedRepos(event);
+		var commands = '';
+		for(var id in repos.r)
+		{
+		  commands += 'cd '+repos.r[id].cwd+'';
+		  commands += '\n';
+		  commands += 'git pull >>'+repos.obj.output+' 2>&1';
+		  commands += '\n';
+		}
+		this.fileWrite(repos.obj.sh, commands);
+		this.execute(repos.obj.sh, repos.obj.outputFile);
+	  }
+	}
+    this.pullWithOptions = function(event)
+    {
+	  var aOptions = this.prompt('Pull with options…', 'git pull');
+	  if(aOptions != '')
+	  {
+		var repos = this.getSelectedRepos(event);
+		var commands = '';
+		for(var id in repos.r)
+		{
+		  commands += 'cd '+repos.r[id].cwd+'';
+		  commands += '\n';
+		  commands += aOptions+' >>'+repos.obj.output+' 2>&1';
+		  commands += '\n';
+		}
+		this.fileWrite(repos.obj.sh, commands);
+		this.execute(repos.obj.sh, repos.obj.outputFile);
+	  }
+    }
+	this.fetch = function(event)
+    {
+	  if(this.confirm('Fetch from default?'))
+	  {
+		var repos = this.getSelectedRepos(event);
+		var commands = '';
+		for(var id in repos.r)
+		{
+		  commands += 'cd '+repos.r[id].cwd+'';
+		  commands += '\n';
+		  commands += 'git fetch >>'+repos.obj.output+' 2>&1';
+		  commands += '\n';
+		}
+		this.fileWrite(repos.obj.sh, commands);
+		this.execute(repos.obj.sh, repos.obj.outputFile);
+	  }
+	}
+    this.fetchWithOptions = function(event)
+    {
+	  var aOptions = this.prompt('Fetch with options…', 'git fetch aRemoteName aRemoteBranch:aLocalBranch');
+	  if(aOptions != '')
+	  {
+		var repos = this.getSelectedRepos(event);
+		var commands = '';
+		for(var id in repos.r)
+		{
+		  commands += 'cd '+repos.r[id].cwd+'';
+		  commands += '\n';
+		  commands += aOptions+' >>'+repos.obj.output+' 2>&1';
+		  commands += '\n';
+		}
+		this.fileWrite(repos.obj.sh, commands);
+		this.execute(repos.obj.sh, repos.obj.outputFile);
+	  }
+    }
+	
     this.init = function(event)
     {
 	  var selected = this.getSelectedPathFolder(event);
 	  var obj = this.getPaths(selected);
-		
 	  this.fileWrite(obj.sh, 'cd '+obj.cwdSelected+' \ngit init >>'+obj.output+' 2>&1');
-	  
 	  this.run(obj.sh, obj.outputFile, false, true);
 	  this.iconsCleanCacheReposotories();
     }
-	//TODO: move all to the parent directory and remove the folder that a clone creates
-	//TODO: show progress metter.
     this.clone = function(event)
     {
 	  var aMsg = this.prompt('Enter URL to clone…');
@@ -615,42 +761,11 @@ function kGit()
 		aMsg = aMsg.replace(/^ ?git clone ?/, '');
 		var selected = this.getSelectedPathFolder(event);
 		var obj = this.getPaths(selected);
-		
 		this.fileWrite(obj.sh, 'cd '+obj.cwdSelected+' \ngit clone '+aMsg+' ./ >>'+obj.output+' 2>&1');
-		
 		this.execute(obj.sh, obj.outputFile);
 		this.iconsCleanCacheReposotories();
 	  }
     }
-	//TODO: allow to pull from different remotes/branches
-	//TODO: show progress metter.
-    this.pull = function(event)
-    {
-	  if(this.confirm('Are you sure you want to pull from default?'))
-	  {
-        var selected = this.getSelectedPathFolder(event);
-		var obj = this.getPaths(selected);
-        
-        this.fileWrite(obj.sh, 'cd '+obj.cwd+' \ngit pull >>'+obj.output+' 2>&1 \n ');
-        
-        this.execute(obj.sh, obj.outputFile);
-	  }
-	}
-	//TODO: allow to fetch from different remotes/branches
-	//TODO: show progress metter.
-	this.fetch = function(event)
-    {
-	  if(this.confirm('Are you sure you want to fetch from default?'))
-	  {
-        var selected = this.getSelectedPathFolder(event);
-		var obj = this.getPaths(selected);
-        
-        this.fileWrite(obj.sh, 'cd '+obj.cwd+' \ngit fetch >>'+obj.output+' 2>&1 \n ');
-        
-        this.execute(obj.sh, obj.outputFile);
-	  }
-	}
-	//free input command
     this.command = function(event)
     {
 	  var selected = this.getSelectedPathFolder(event);
@@ -660,39 +775,29 @@ function kGit()
 	  if(aMsg != '')
 	  {
 		this.fileWrite(obj.sh, 'cd '+obj.cwdSelected+' \n'+aMsg+' >>'+obj.output+' 2>&1');
-		
 		this.execute(obj.sh, obj.outputFile, true);
 	  }
     }
+	
+	
 	//TODO: show "Changes to be committed".
 	this.commit = function(event)
     {
 	  if(event.aMsg && event.aMsg != '')
 	  {
 		var aMsg = event.aMsg;
-		var selected = this.getSelectedPaths(event);
-		var commands = '';
-		var repositories = [];
-		
-		for(var id in selected)
-		{
-		  var obj = this.getPaths(selected[id]);
-		  if(!repositories[obj.cwd])
-			repositories[obj.cwd] = [];
-		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
-		}
-		
-		for(var id in repositories)
-		{
-		  commands += 'cd '+id+'';
-		  commands += '\n';
-		  commands += 'git commit '+repositories[id].join(' ')+' -m "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
-		  commands += '\n';
-		}
 
-		this.fileWrite(obj.sh, commands);
-		
-		this.run(obj.sh, obj.outputFile, false, true);
+		var repos = this.getSelectedRepos(event);
+		var commands = '';
+		for(var id in repos.r)
+		{
+		  commands += 'cd '+repos.r[id].cwd+'';
+		  commands += '\n';
+		  commands += 'git commit -m "'+this.escape(aMsg)+'" -- '+repos.r[id].selected.join(' ')+' >>'+repos.obj.output+' 2>&1';
+		  commands += '\n';
+		}
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
 	  	this.iconsUpdateCall();
 	  }
 	  else
@@ -700,36 +805,24 @@ function kGit()
 		this.prompt('Enter a commit message…', '', true, function(event){ kgit.commit(event)}, event);
 	  }
     }
-	//TODO: show "Changes to be committed".
     this.commitAll = function(event)
     {
 	  if(event.aMsg && event.aMsg != '')
 	  {
 		var aMsg = event.aMsg;
-		var selected = this.getSelectedPaths(event);
-		var commands = '';
-		var repositories = [];
-		
-		for(var id in selected)
-		{
-		  var obj = this.getPaths(selected[id]);
-		  if(!repositories[obj.cwd])
-			repositories[obj.cwd] = [];
-		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
-		}
-		
-		for(var id in repositories)
-		{
-		  commands += 'cd '+id+'';
-		  commands += '\n';
-		  commands += 'git commit -a -m "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
-		  commands += '\n';
-		}
 
-		this.fileWrite(obj.sh, commands);
-		
-		this.run(obj.sh, obj.outputFile, false, true);
-		this.iconsUpdateCall();
+		var repos = this.getSelectedRepos(event);
+		var commands = '';
+		for(var id in repos.r)
+		{
+		  commands += 'cd '+repos.r[id].cwd+'';
+		  commands += '\n';
+		  commands += 'git commit -a -m "'+this.escape(aMsg)+'" >>'+repos.obj.output+' 2>&1';
+		  commands += '\n';
+		}
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  	this.iconsUpdateCall();
 	  }
 	  else
 	  {
@@ -738,133 +831,84 @@ function kGit()
     }
 	this.commitAmend = function(event)
     {
-	  var selected = this.getSelectedPaths(event);
+	  var repos = this.getSelectedRepos(event);
 	  var commands = '';
-	  var repositories = [];
-	  
-	  for(var id in selected)
+	  for(var id in repos.r)
 	  {
-		var obj = this.getPaths(selected[id]);
-		if(!repositories[obj.cwd])
-		  repositories[obj.cwd] = [];
-		repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
-	  }
-	  
-	  for(var id in repositories)
-	  {
-		commands += 'cd '+id+'';
+		commands += 'cd '+repos.r[id].cwd+'';
 		commands += '\n';
-		commands += 'git commit '+repositories[id].join(' ')+' --amend -C HEAD >>'+obj.output+' 2>&1';
+		commands += 'git commit --amend -C HEAD -- '+repos.r[id].selected.join(' ')+' >>'+repos.obj.output+' 2>&1';
 		commands += '\n';
 	  }
-
-	  this.fileWrite(obj.sh, commands);
-	  
-	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.fileWrite(repos.obj.sh, commands);
+	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
 	  this.iconsUpdateCall();
     }
-	this.undoLastCommit = function(event)
+	this.commitUndo = function(event)
 	{
-	  if(this.confirm('Are you sure you want to undo last commit?'))
+	  if(this.confirm('Undo Last Commit?'))
 	  {
-		var selected = this.getSelectedPaths(event);
+		var repos = this.getSelectedRepos(event);
 		var commands = '';
-		var repositories = [];
-		
-		for(var id in selected)
+		for(var id in repos.r)
 		{
-		  var obj = this.getPaths(selected[id]);
-		  if(!repositories[obj.cwd])
-			repositories[obj.cwd] = [];
-		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
-		}
-		
-		for(var id in repositories)
-		{
-		  commands += 'cd '+id+'';
+		  commands += 'cd '+repos.r[id].cwd+'';
 		  commands += '\n';
-		  commands += 'git reset --soft HEAD^ >>'+obj.output+' 2>&1';
+		  commands += 'git reset --soft HEAD^ >>'+repos.obj.output+' 2>&1';
 		  commands += '\n';
 		}
-  
-		this.fileWrite(obj.sh, commands);
-		
-		this.run(obj.sh, obj.outputFile, false, true);
-		this.iconsUpdateCall();
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  	this.iconsUpdateCall();
 	  }
 	}
-	//TODO: show added files and "Changes to be committed".
     this.addCommit = function(event)
     {
 	  if(event.aMsg && event.aMsg != '')
 	  {
 		var aMsg = event.aMsg;
-		var selected = this.getSelectedPaths(event);
+
+		var repos = this.getSelectedRepos(event);
 		var commands = '';
-		var repositories = [];
-		
-		for(var id in selected)
+		for(var id in repos.r)
 		{
-		  var obj = this.getPaths(selected[id]);
-		  if(!repositories[obj.cwd])
-			repositories[obj.cwd] = [];
-		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selectedRecursive;
-		}
-		
-		for(var id in repositories)
-		{
-		  commands += 'cd '+id+'';
+		  commands += 'cd '+repos.r[id].cwd+'';
 		  commands += '\n';
-		  commands += 'git add '+repositories[id].join(' ')+' >>'+obj.output+' 2>&1';
+		  commands += 'git add -- '+repos.r[id].selectedRecursive.join(' ')+' >>'+repos.obj.output+' 2>&1';
 		  commands += '\n';
-		  commands += 'git commit '+repositories[id].join(' ')+' -m "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
+		  commands += 'git commit -m "'+this.escape(aMsg)+'" -- '+repos.r[id].selected.join(' ')+' >>'+repos.obj.output+' 2>&1';
 		  commands += '\n';
 		}
-  
-		this.fileWrite(obj.sh, commands);
-		
-		this.run(obj.sh, obj.outputFile, false, true);
-		this.iconsUpdateCall();
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  	this.iconsUpdateCall();
 	  }
 	  else
 	  {
 		this.prompt('Enter a commit message…', '', true, function(event){ kgit.addCommit(event)}, event);
 	  }
     }
-	//TODO: show added files and "Changes to be committed".
     this.addCommitPush = function(event)
     {
 	  if(event.aMsg && event.aMsg != '')
 	  {
 		var aMsg = event.aMsg;
-		var selected = this.getSelectedPaths(event);
+
+		var repos = this.getSelectedRepos(event);
 		var commands = '';
-		var repositories = [];
-		
-		for(var id in selected)
+		for(var id in repos.r)
 		{
-		  var obj = this.getPaths(selected[id]);
-		  if(!repositories[obj.cwd])
-			repositories[obj.cwd] = [];
-		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selectedRecursive;
-		}
-		
-		for(var id in repositories)
-		{
-		  commands += 'cd '+id+'';
+		  commands += 'cd '+repos.r[id].cwd+'';
 		  commands += '\n';
-		  commands += 'git add '+repositories[id].join(' ')+' >>'+obj.output+' 2>&1';
+		  commands += 'git add -- '+repos.r[id].selectedRecursive.join(' ')+' >>'+repos.obj.output+' 2>&1';
 		  commands += '\n';
-		  commands += 'git commit '+repositories[id].join(' ')+' -m "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
+		  commands += 'git commit -m "'+this.escape(aMsg)+'" -- '+repos.r[id].selected.join(' ')+' >>'+repos.obj.output+' 2>&1';
 		  commands += '\n';
-		  commands += 'git push && git push --tags >>'+obj.output+' 2>&1';
+		  commands += 'git push >>'+repos.obj.output+' 2>&1';
 		  commands += '\n';
 		}
-  
-		this.fileWrite(obj.sh, commands);
-		
-		this.execute(obj.sh, obj.outputFile);
-		this.iconsUpdateCall();
+		this.fileWrite(repos.obj.sh, commands);
+		this.execute(repos.obj.sh, repos.obj.outputFile);
 	  }
 	  else
 	  {
@@ -873,58 +917,34 @@ function kGit()
     }
 	this.add = function(event)
     {
-	  var selected = this.getSelectedPaths(event);
+	  var repos = this.getSelectedRepos(event);
 	  var commands = '';
-	  var repositories = [];
-	  
-	  for(var id in selected)
+	  for(var id in repos.r)
 	  {
-		var obj = this.getPaths(selected[id]);
-		if(!repositories[obj.cwd])
-		  repositories[obj.cwd] = [];
-		repositories[obj.cwd][repositories[obj.cwd].length] = obj.selectedRecursive;
-	  }
-	  
-	  for(var id in repositories)
-	  {
-		commands += 'cd '+id+'';
+		commands += 'cd '+repos.r[id].cwd+'';
 		commands += '\n';
-		commands += 'git add '+repositories[id].join(' ')+' >>'+obj.output+' 2>&1';
+		commands += 'git add -- '+repos.r[id].selectedRecursive.join(' ')+' >>'+repos.obj.output+' 2>&1';
 		commands += '\n';
 	  }
-
-	  this.fileWrite(obj.sh, commands);
-	  
-	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.fileWrite(repos.obj.sh, commands);
+	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
 	  this.iconsUpdateCall();
     }
 	this.removeKeepLocal = function(event)
     {
 	  if(this.confirm('Remove selected items from the repository and keep the local copy?'))
 	  {
-		var selected = this.getSelectedPaths(event);
+		var repos = this.getSelectedRepos(event);
 		var commands = '';
-		var repositories = [];
-		
-		for(var id in selected)
+		for(var id in repos.r)
 		{
-		  var obj = this.getPaths(selected[id]);
-		  if(!repositories[obj.cwd])
-			repositories[obj.cwd] = [];
-		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
-		}
-		
-		for(var id in repositories)
-		{
-		  commands += 'cd '+id+'';
+		  commands += 'cd '+repos.r[id].cwd+'';
 		  commands += '\n';
-		  commands += 'git rm -r --cached '+repositories[id].join(' ')+' >>'+obj.output+' 2>&1';
+		  commands += 'git rm -r --cached -- '+repos.r[id].selected.join(' ')+' >>'+repos.obj.output+' 2>&1';
 		  commands += '\n';
 		}
-  
-		this.fileWrite(obj.sh, commands);
-		
-		this.run(obj.sh, obj.outputFile, false, true);
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
 		this.iconsUpdateCall();
 	  }
     }
@@ -932,29 +952,17 @@ function kGit()
     {
 	  if(this.confirm('Remove selected items from the repository?'))
 	  {
-		var selected = this.getSelectedPaths(event);
+		var repos = this.getSelectedRepos(event);
 		var commands = '';
-		var repositories = [];
-		
-		for(var id in selected)
+		for(var id in repos.r)
 		{
-		  var obj = this.getPaths(selected[id]);
-		  if(!repositories[obj.cwd])
-			repositories[obj.cwd] = [];
-		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
-		}
-		
-		for(var id in repositories)
-		{
-		  commands += 'cd '+id+'';
+		  commands += 'cd '+repos.r[id].cwd+'';
 		  commands += '\n';
-		  commands += 'git rm -r -f '+repositories[id].join(' ')+' >>'+obj.output+' 2>&1';
+		  commands += 'git rm -r -f -- '+repos.r[id].selected.join(' ')+' >>'+repos.obj.output+' 2>&1';
 		  commands += '\n';
 		}
-  
-		this.fileWrite(obj.sh, commands);
-		
-		this.run(obj.sh, obj.outputFile, false, true);
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
 		this.iconsUpdateCall();
 	  }
     }
@@ -963,29 +971,17 @@ function kGit()
 	  var aMsg = this.prompt('Enter tag name to add…', '');
 	  if(aMsg != '')
 	  {
-		var selected = this.getSelectedPaths(event);
+		var repos = this.getSelectedRepos(event);
 		var commands = '';
-		var repositories = [];
-		
-		for(var id in selected)
+		for(var id in repos.r)
 		{
-		  var obj = this.getPaths(selected[id]);
-		  if(!repositories[obj.cwd])
-			repositories[obj.cwd] = [];
-		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
-		}
-		
-		for(var id in repositories)
-		{
-		  commands += 'cd '+id+'';
+		  commands += 'cd '+repos.r[id].cwd+'';
 		  commands += '\n';
-		  commands += 'git tag "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
+		  commands += 'git tag "'+this.escape(aMsg)+'" >>'+repos.obj.output+' 2>&1';
 		  commands += '\n';
 		}
-  
-		this.fileWrite(obj.sh, commands);
-		
-		this.run(obj.sh, obj.outputFile, false, true);
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
 	  }
     }
 	this.tagRemove = function(event)
@@ -993,88 +989,51 @@ function kGit()
 	  var aMsg = this.prompt('Enter tag name to remove…', '');
 	  if(aMsg != '')
 	  {
-		var selected = this.getSelectedPaths(event);
+		var repos = this.getSelectedRepos(event);
 		var commands = '';
-		var repositories = [];
-		
-		for(var id in selected)
+		for(var id in repos.r)
 		{
-		  var obj = this.getPaths(selected[id]);
-		  if(!repositories[obj.cwd])
-			repositories[obj.cwd] = [];
-		  repositories[obj.cwd][repositories[obj.cwd].length] = obj.selected;
-		}
-		
-		for(var id in repositories)
-		{
-		  commands += 'cd '+id+'';
+		  commands += 'cd '+repos.r[id].cwd+'';
 		  commands += '\n';
-		  commands += 'git tag -d "'+this.escape(aMsg)+'" >>'+obj.output+' 2>&1';
+		  commands += 'git tag -d "'+this.escape(aMsg)+'" >>'+repos.obj.output+' 2>&1';
 		  commands += '\n';
 		}
-  
-		this.fileWrite(obj.sh, commands);
-		
-		this.run(obj.sh, obj.outputFile, false, true);
+		this.fileWrite(repos.obj.sh, commands);
+		this.run(repos.obj.sh, repos.obj.outputFile, false, true);
 	  }
     }
 	this.tagAuto = function(event)
     {
-	  var selected = this.getSelectedPaths(event);
+	  var repos = this.getSelectedRepos(event);
 	  var commands = '';
-	  var repositories = [];
-	  
-	  for(var id in selected)
+	  for(var id in repos.r)
 	  {
-		var obj = this.getPaths(selected[id]);
-		if(!repositories[obj.cwd])
-		  repositories[obj.cwd] = [];
-		repositories[obj.cwd][repositories[obj.cwd].length] = obj.git;
-	  }
-	  
-	  for(var id in repositories)
-	  {
-		var version = this.repositoryPreference(repositories[id][0], 'version') || 0;
+		var version = this.repositoryPreference(id, 'version') || 0;
 			version++;
-		this.repositoryPreference(repositories[id][0], 'version', version);
-		
-		commands += 'cd '+id+'';
+		this.repositoryPreference(id, 'version', version);
+	  
+		commands += 'cd '+repos.r[id].cwd+'';
 		commands += '\n';
-		commands += 'git tag "'+this.escape(this.now()+'.'+version)+'" >>'+obj.output+' 2>&1';
+		commands += 'git tag "'+this.escape(this.now()+'.'+version)+'" >>'+repos.obj.output+' 2>&1';
 		commands += '\n';
 	  }
-
-	  this.fileWrite(obj.sh, commands);
-	  
-	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.fileWrite(repos.obj.sh, commands);
+	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
     }
 	this.tagList = function(event)
     {
-	  var selected = this.getSelectedPaths(event);
+	  var repos = this.getSelectedRepos(event);
 	  var commands = '';
-	  var repositories = [];
-	  
-	  for(var id in selected)
+	  for(var id in repos.r)
 	  {
-		var obj = this.getPaths(selected[id]);
-		if(!repositories[obj.cwd])
-		  repositories[obj.cwd] = [];
-		repositories[obj.cwd][repositories[obj.cwd].length] = obj.git;
-	  }
-	  for(var id in repositories)
-	  {
-		commands += 'cd '+id+'';
+		commands += 'cd '+repos.r[id].cwd+'';
 		commands += '\n';
-		commands += 'git tag -l >>'+obj.output+' 2>&1';
+		commands += 'git tag -l >>'+repos.obj.output+' 2>&1';
 		commands += '\n';
 	  }
-
-	  this.fileWrite(obj.sh, commands);
-	  
-	  this.run(obj.sh, obj.outputFile, true, false);
+	  this.fileWrite(repos.obj.sh, commands);
+	  this.run(repos.obj.sh, repos.obj.outputFile, true, false);
     }
-
-	
 	this.tagsGetFromRepo = function(aObj)
 	{
 	  var sh = this.fileCreateTemporal('kGit.sh', '');
@@ -1155,17 +1114,17 @@ function kGit()
 		  var ignore = this.fileRead(aPath+this.__DS+'.gitignore');
 			  ignore += '\n';
 			  if(this.fileIsFolder(selected[id]))
-				ignore += selected[id].replace(aPath+this.__DS, '')+this.__DS;
+				ignore += (selected[id].replace(aPath+this.__DS, '')+this.__DS).split(this.__DS).join('/');
 			  else
-				 ignore += selected[id].replace(aPath+this.__DS, '');
+				ignore += (selected[id].replace(aPath+this.__DS, '')).split(this.__DS).join('/');
 			  ignore = this.arrayUnique(ignore.split('\n')).sort(this.sortLocale).join('\n');
 		}
 		else
 		{
 		  if(this.fileIsFolder(selected[id]))
-			var ignore = selected[id].replace(this.getGitRoot(aPath)+this.__DS, '')+this.__DS;
+			var ignore = (selected[id].replace(this.getGitRoot(aPath)+this.__DS, '')+this.__DS).split(this.__DS).join('/');
 		  else
-			var ignore = selected[id].replace(this.getGitRoot(aPath)+this.__DS, '');
+			var ignore = (selected[id].replace(this.getGitRoot(aPath)+this.__DS, '')).split(this.__DS).join('/');
 		}
 		ignore += '\n';
 
@@ -1243,7 +1202,7 @@ function kGit()
 		//security - works always in a folder with with the name of this extension
 		file.append('kGit');
 		
-		if( !file.exists() || !file.isDirectory() ) // if it doesn't exist..
+		if( !file.exists() || !file.isDirectory() ) // if it doesn't exist.
 		{
 		  
 		}
@@ -1331,7 +1290,6 @@ function kGit()
 	}
 
     //shows a custom prompt
-	//TODO: allow to "minimize" the dialog
 	this.prompt = function(aString, aDefault, multiline, aFunction, aParams)
 	{
 		if(!aDefault)
@@ -1655,7 +1613,7 @@ function kGit()
 	}
 	this.sortLocale = function(a, b)
 	{
-		return a.localeCompare(b);
+	  return a.localeCompare(b);
 	}
 	this.md5 = function(aString)
 	{
@@ -2218,17 +2176,15 @@ function kGit()
 	}
 	this.repositoryPreference = function(aRepository, aName, aValue)
 	{
+	  var file = aRepository+this.__DS+'.git'+this.__DS+'komodin.json';
 	  var obj = {};
-	  if(this.fileExists(aRepository+this.__DS+'.gitkomodin'))
-		obj = JSON.parse(this.fileRead(aRepository+this.__DS+'.gitkomodin'));
-	  if(typeof(aValue) == 'undefined')
-	  {
-		obj[aName];
-	  }
+	  if(this.fileExists(file))
+		obj = JSON.parse(this.fileRead(file));
+	  if(typeof(aValue) == 'undefined'){}
 	  else
 	  {
 		obj[aName] = aValue;
-		this.fileWrite(aRepository+this.__DS+'.gitkomodin', JSON.stringify(obj));
+		this.fileWrite(file, JSON.stringify(obj));
 	  }
 	  return obj[aName];
 	}

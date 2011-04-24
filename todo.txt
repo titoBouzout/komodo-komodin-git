@@ -6,17 +6,20 @@ Things to not forget
 	
 	if it is a unix link resolve the link
 	
-	parsing of gitignore is not really looking for gitignore rules, it looks for file paths instead of the "gitignored expressions"
+	parsing of gitignore is not really looking for gitignore rules.
 	
 	On windows there is a problem of encoding on some UTF8 path names.
+	
+	git gui and gitk opens with a terminal.
 	
   TODO:
 	
 	add/edit/list branches
 	
-	easy switch
-	easy merge
-	
 	stash
 	
 	submodules
+	
+	show progress about communications
+	
+	diff or log since last push is not working

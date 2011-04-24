@@ -16,14 +16,15 @@
 		<xul:menuitem oncommand="kgit.addCommitPush(event)" label="Add &amp; Commit &amp; Push…"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.commit(event)" label="Commit…"/>
-		<xul:menuitem oncommand="kgit.commitAmend(event)" label="Commit Amend"/>
+		<xul:menuitem oncommand="kgit.commitUndo(event)" label="Commit Undo"/>
 		<xul:menuseparator/>
+		<xul:menuitem oncommand="kgit.commitAmend(event)" label="Commit Amend"/>
 		<xul:menuitem oncommand="kgit.commitAll(event)" label="Commit All…"/>
-		<xul:menuitem oncommand="kgit.undoLastCommit(event)" label="Undo Last Commit"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.status(event)" label="Status"/>
 		<xul:menuseparator/>
-		<xul:menu label="Diff" onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.diff(event);}">
+		<xul:menu label="Diff"
+				  onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.diff(event);}">
 		  <xul:menupopup>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diff(event);" label="since last commit"/>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diffSinceLatestTag(event);" label="since last tag"/>
@@ -32,7 +33,8 @@
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diffBetweenTheTwoLatestTags(event);" label="between the two latest tags"/>
 		  </xul:menupopup>
 		</xul:menu>
-		<xul:menu label="Log" onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.logStatLatest(event);}">
+		<xul:menu label="Log"
+				  onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.logStatLatest(event);}">
 		  <xul:menupopup>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.logStatLatest(event);" label="stat last 30"/>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.logStatFull(event);" label="stat full"/>
@@ -46,55 +48,77 @@
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.logBetweenTheTwoLatestTags(event);" label="between the two latest tags"/>
 		  </xul:menupopup>
 		</xul:menu>
-		<xul:menuitem oncommand="kgit.menuClick(event);" label="Blame"/>
-		<xul:menu label="Tags" onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.tagAuto(event);}">
+		<xul:menuitem oncommand="kgit.blame(event);" label="Blame"/>
+		<xul:menu label="Tags"
+				  onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.tagAuto(event);}">
 		  <xul:menupopup>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagAuto(event)" label="Auto-Tag"/>
 			<xul:menuseparator/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagAdd(event)" label="Tag add"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagRemove(event)" label="Tag remove"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagAdd(event)" label="Tag add…"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagRemove(event)" label="Tag remove…"/>
 			<xul:menuseparator/>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.tagList(event)" label="Tag list"/>
 		  </xul:menupopup>
 		</xul:menu>
 		<xul:menuseparator/>
-		<xul:menu label="Revert" onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.revert(event);}">
+		<xul:menu label="Revert"
+				  onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.revertTracked(event);}">
 		  <xul:menupopup>
-			
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revert(event)" label="Revert"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revertDiscardChanges(event)" label="Discard dirty changes"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revertClean(event)" label="Revert &amp; Clean"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revertTracked(event)" label="Discard changes to tracked"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revertTrackedCleanUntracked(event)" label="Discard changes to tracked, clean untracked"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revertTrackedCleanUntrackedUnstage(event)" label="Discard changes to tracked, clean untracked, unstage"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revertTrackedUnstageCleanUntracked(event)" label="Discard changes to tracked, unstage, clean untracked"/>
 			<xul:menuseparator/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.checkoutFilesToObject(event)" label="Checkout Files to Object…"/>
-			<xul:menuseparator/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revertToObject(event)" label="Revert to Object…"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.checkoutToObject(event)" label="Checkout to Object…"/>
-		  </xul:menupopup>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.revertUnstage(event)" label="Unstage"/>
+		 </xul:menupopup>
 		</xul:menu>
+		<xul:menuitem oncommand="kgit.checkoutTo(event)" label="Checkout to…"/>
+		<xul:menuitem oncommand="kgit.checkoutRepositoryTo(event)" label="Checkout repo to…"/>
+
 		<xul:menuseparator/>
-		<xul:menu label="Push" onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.push(event);}">
+		<xul:menu label="Push, Pull, Fetch"
+				  onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.push(event);}">
 		  <xul:menupopup>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.push(event)" label="Push"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.pushToOriginMasterMaster(event)" label="Push to 'origin' master:master"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.pushPushTags(event)" label="Push &amp; push tags"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.pushTags(event)" label="Push tags"/>
+			<xul:menuseparator/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.pushWithOptions(event)" label="Push with options…"/>
+			<xul:menuseparator/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.pull(event)" label="Pull"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.pullWithOptions(event)" label="Pull with options…"/>
+			<xul:menuseparator/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.fetch(event)" label="Fetch"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.fetchWithOptions(event)" label="Fetch with options…"/>
+			<xul:menuseparator/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.remoteAdd(event)" label="Remote add…"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.configDefaultRemote(event)" label="Configure default remote…"/>
 		  </xul:menupopup>
 		</xul:menu>
-		<xul:menuseparator/>
-		<xul:menuitem oncommand="kgit.pull(event)" label="Pull"/>
-		<xul:menuitem oncommand="kgit.fetch(event)" label="Fetch"/>
+		<xul:menuitem oncommand="kgit.clone(event)" label="Clone…"/>
+		<xul:menuitem oncommand="kgit.init(event)" label="Init"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.add(event)" label="Add"/>
 		<xul:menuitem oncommand="kgit.remove(event)" label="Remove"/>
 		<xul:menuitem oncommand="kgit.removeKeepLocal(event)" label="Remove Keep Local"/>
-		<xul:menuseparator/>
-		<xul:menuitem oncommand="kgit.init(event)" label="Init…"/>
-		<xul:menuitem oncommand="kgit.clone(event)" label="Clone…"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.ignoreOpen(event)" label="Open Git Ignore"/>
 		<xul:menuitem oncommand="kgit.ignore(event)" label="Add to Git Ignore"/>
 		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.gitGUI(event)" label="Git GUI…"/>
 		<xul:menuitem oncommand="kgit.gitK(event)" label="Gitk…"/>
+		<xul:menuseparator/>
 		<xul:menuitem oncommand="kgit.command(event)" label="Liberal Git Command…"/>
+		<xul:menuseparator/>
+		<xul:menu label="Reference">
+		  <xul:menupopup>
+			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('http://git-scm.com/')" label="Git"/>
+			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('http://www.dmoz.org/Computers/Software/Configuration_Management/Tools/Git/')" label="Git Directory"/>
+			<xul:menuseparator/>			
+			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('http://support.activestate.com/xpi/komodin-git-places');" label="Komodin Home-Page"/>
+			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('https://github.com/titoBouzout/komodin--Komodo-Edit-Git-')" label="Komodin Source Code"/>
+		  </xul:menupopup>
+		</xul:menu>
 	  </content>
 	</binding>
 </bindings>
