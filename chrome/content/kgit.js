@@ -305,7 +305,7 @@ function kGit()
 	  for(var id in selected)
 	  {
 		var obj = this.getPaths(selected[id]);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff origin/master... -- '+obj.selected+' > '+obj.output+'\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff origin... -- '+obj.selected+' > '+obj.output+'\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
 	}
@@ -361,7 +361,7 @@ function kGit()
 		this.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log -n 30 -p -- '+ obj.selected+' >> '+obj.output+' \n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
-    }	
+    }
 	this.logExtendedFull = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
@@ -379,7 +379,7 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		var tags = this.tagsGetFromRepo(obj);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags.pop() || '')+'"..HEAD --stat --graph -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags.pop() || '')+'"... --stat --graph -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }
@@ -391,7 +391,7 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		var tags = this.tagsGetFromRepo(obj);
-		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "origin/master"..HEAD --stat --graph -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
+		this.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.escape(this.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log origin... --stat --graph -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
 		this.run(obj.sh, obj.outputFile, true);
 	  }
     }

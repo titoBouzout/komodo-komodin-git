@@ -21,5 +21,3 @@ Things to not forget
 	submodules
 	
 	show progress about communications
-	
-	diff or log since last push is not working
