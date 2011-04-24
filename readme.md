@@ -1,4 +1,5 @@
 Adds Git commands to Komodo Edit and enhance Git commands on Komodo IDE. Also adds icons overlay to Komodo Edit.
+
 <img src="http://dl.dropbox.com/u/9303546/komodo/kGit/screenshot.png" style="float:right"/>
 
 Usage:
