@@ -71,7 +71,7 @@ function kGit()
 		if(aReturnOutput)
 		  return stdout;
     }
-	//executes a shell script in a window ( allows user iteraction )
+	//executes a shell script in a window ( allows user iteration )
 	this.execute = function(aScriptPath, aOutputPath, inNewTab)
 	{
 	  this.loadingSet();
@@ -141,7 +141,7 @@ function kGit()
 	  //from focused files and/or folders of the places sidebar
 	  //places root folder if no selection on the places sidebar
 	  //places root folder if right click on "placesRootButton"
-	  //asumes document unless noted different with target attribute of parent parent
+	  //assumes document unless noted different with target attribute of parent parent
     this.getSelectedPaths = function(event)
     {
 	  if(
@@ -1368,7 +1368,7 @@ function kGit()
 			toolbarbutton.setAttribute('style', 'border:1px solid transparent !important;margin:2px !important;padding:0px !important;-moz-appearance: none;margin-left:6px !important;');
 			hbox.appendChild(toolbarbutton);
 				  
-		//the messsage
+		//the message
 		var description = document.createElement('description');
 			description.appendChild(document.createTextNode('kGit : '+aString));
 			description.setAttribute("wrap", 'true');
