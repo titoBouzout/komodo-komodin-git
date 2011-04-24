@@ -299,7 +299,7 @@ function kGit()
 	  }
     }
 	//TODO: hardcoded branch name
-	this.diffSinceLastPush = function(event)
+	this.diffBetweenLatestPushAndLastCommit = function(event)
 	{
 	  var selected = this.getSelectedPaths(event);
 	  for(var id in selected)
@@ -309,7 +309,7 @@ function kGit()
 		this.run(obj.sh, obj.outputFile, true);
 	  }
 	}
-	this.diffSinceLatestTag = function(event)
+	this.diffBetweenLatestTagAndLastCommit = function(event)
     {
 	  var selected = this.getSelectedPaths(event);
 	  for(var id in selected)

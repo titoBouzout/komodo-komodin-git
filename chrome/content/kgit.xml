@@ -27,8 +27,9 @@
 				  onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.diff(event);}">
 		  <xul:menupopup>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diff(event);" label="since last commit"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diffSinceLatestTag(event);" label="since last tag"/>
-			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diffSinceLastPush(event);" label="since last push"/>
+			<xul:menuseparator/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diffBetweenLatestTagAndLastCommit(event);" label="between the latest tag and last commit"/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diffBetweenLatestPushAndLastCommit(event);" label="between the latest push and last commit"/>
 			<xul:menuseparator/>
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.diffBetweenTheTwoLatestTags(event);" label="between the two latest tags"/>
 		  </xul:menupopup>
