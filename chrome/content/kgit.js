@@ -1674,11 +1674,11 @@ function kGit()
 	}
 	this.loadingSet = function()
 	{
-	  document.getElementById('kgit-toolbarbutton').setAttribute('image', 'chrome://kgit/content/loading.png');
-	  document.getElementById('kgit-places-file-popup').setAttribute('image', 'chrome://kgit/content/loading.png');
-	  document.getElementById('kgit-document-context-menu').setAttribute('image', 'chrome://kgit/content/loading.png');
-	  document.getElementById('kgit-tab-context-menu').setAttribute('image', 'chrome://kgit/content/loading.png');
-	  document.getElementById('kgit-menu-bar-file').setAttribute('image', 'chrome://kgit/content/loading.png');
+	  document.getElementById('kgit-toolbarbutton').setAttribute('image', 'chrome://kgit/content/icon16.loading.png');
+	  document.getElementById('kgit-places-file-popup').setAttribute('image', 'chrome://kgit/content/icon16.loading.png');
+	  document.getElementById('kgit-document-context-menu').setAttribute('image', 'chrome://kgit/content/icon16.loading.png');
+	  document.getElementById('kgit-tab-context-menu').setAttribute('image', 'chrome://kgit/content/icon16.loading.png');
+	  document.getElementById('kgit-menu-bar-file').setAttribute('image', 'chrome://kgit/content/icon16.loading.png');
 	}
 	this.loadingRemove = function()
 	{
