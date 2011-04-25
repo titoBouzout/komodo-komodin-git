@@ -636,7 +636,7 @@ function kGit()
 	  {
 		commands += 'cd '+repos.r[id].cwd+'';
 		commands += '\n';
-		commands += 'git push && push --tags >>'+repos.obj.output+' 2>&1';
+		commands += 'git push && git push --tags >>'+repos.obj.output+' 2>&1';
 		commands += '\n';
 	  }
 	  this.fileWrite(repos.obj.sh, commands);

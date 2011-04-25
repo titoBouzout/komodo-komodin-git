@@ -100,7 +100,7 @@ Push
   o git push
   
 	Push, Push Tags
-	  o git push && push --tags 
+	  o git push && git push --tags 
 	Push Tags
 	  o git push --tags 
 	Push with options…
