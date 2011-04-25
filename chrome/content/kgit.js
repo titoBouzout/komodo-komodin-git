@@ -1712,7 +1712,11 @@ function kGit()
 							.classes["@mozilla.org/network/io-service;1"]
 							.getService(Components.interfaces.nsIIOService)
 							.newURI('file://'+this.iconsObj.outputFile+'.css', null, null);
-		  
+		  Components
+			.classes["@particle.universe.tito/kGit;1"]
+			.getService(Components.interfaces.IKGit)
+			.KGit_hookFunction();
+			
 		  //check for changes on current place.
 		  if(!this.iconsLastFocusedPlacesPathTimer)
 		  {
@@ -2260,7 +2264,46 @@ function kGit()
 	}
 	this.loadExtension = function(event)
 	{
-	  event.currentTarget.removeEventListener('load', kgit.loadExtension, false)
+	  event.currentTarget.removeEventListener('load', kgit.loadExtension, false);
+	  
+	  /*
+		In order to get the python component properly loaded the extension should be located into the "application" folder, and not into the profile folder.
+	  */
+	  var file = Components.classes["@mozilla.org/file/directory_service;1"]
+					.getService(Components.interfaces.nsIProperties)
+					.get("ProfD", Components.interfaces.nsIFile);
+		  file.append('extensions');
+		  file.append('tito@kgit');
+	
+		  if(file.exists())
+		  {
+			//after reinstalling.. if the directory exists we need to remove it first.
+			var destinationExistsCheck = Components
+								.classes["@mozilla.org/file/directory_service;1"]
+								.getService(Components.interfaces.nsIProperties)
+								.get("resource:app", Components.interfaces.nsIFile);
+				destinationExistsCheck.append('extensions');
+				destinationExistsCheck.append('tito@kgit');
+				if(destinationExistsCheck.exists())
+				  destinationExistsCheck.remove(true);
+				  
+			//move the extension from the profile directory to the application directory
+			var destination = Components
+								.classes["@mozilla.org/file/directory_service;1"]
+								.getService(Components.interfaces.nsIProperties)
+								.get("resource:app", Components.interfaces.nsIFile);
+				destination.append('extensions');
+				file.moveTo(destination, 'tito@kgit');
+			//restart the application
+				Components
+					.classes["@mozilla.org/toolkit/app-startup;1"]
+					.getService(Components.interfaces.nsIAppStartup)
+					.quit(
+					  Components.interfaces.nsIAppStartup.eRestart |
+					  Components.interfaces.nsIAppStartup.eAttemptQuit
+					);
+		   }
+			   
 	  kgit.initExtension();
 	}
     return this;

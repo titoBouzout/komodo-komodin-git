@@ -1,0 +1,9 @@
+#include "nsISupports.idl"
+[scriptable, uuid(3848d480-6ee8-11e0-a1f0-0800200c9a66)]
+interface IKGit: nsISupports
+{
+    void KGit_hookFunction();
+};
+
+
+
