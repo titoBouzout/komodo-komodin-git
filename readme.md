@@ -1,13 +1,13 @@
-Adds Git commands to Komodo Edit and enhance Git commands on Komodo IDE. Also adds icons overlay to Komodo Edit.
+Adds Git commands to "Komodo Edit" and enhance Git commands on "Komodo IDE". Also adds icons overlay to "Komodo Edit".
 
 <img src="http://dl.dropbox.com/u/9303546/komodo/kGit/screenshot.png" style="float:right"/>
 
 Usage:
 
 <blockquote>
-Right click on multiple/single files/folders of the "places" sidebar to apply commands on selected files.
+Right click on multiple/single files/folders of the "places" sidebar to apply commands on selected files which maybe are from different repositories.
 
-To apply commands to focused document use the toolbarbutton. There is also a git submenu on document and tab context menu.
+To apply commands to focused document use the toolbarbutton, or there is also a git submenu on document and tab context menu.
 
 </blockquote><br/>
 
@@ -84,61 +84,6 @@ Git GUI
 Gitk
 Liberal Git Command
 </pre>
-
-Enabling Icons Overlay (KOMODO EDIT ONLY!!!!):
-Properly formated explanation at : http://community.activestate.com/xpi/komodin-git-places 
-
-<blockquote>
-Locate and Backup the file: /ActiveState Komodo Edit 6/lib/mozilla/extensions/places@activestate.com/components/koPlaceTreeView.py
-
-Backup!
-
-Ok, now open the file and make the following changes:
-
-Under "import uriparse"
-Write: "import hashlib"
-
-Should be:
-"
-...
-import uriparse
-import hashlib
-...
-"
-
-Then locate the function "_buildCellProperties" and replace it with :
-NOTE: KOMODO EDIT ONLY!!
-<python>
-    def _buildCellProperties(self, rowNode):
-        properties = []
-        if not self.safe_isLocal():
-            return properties
-        koFileObject = rowNode.koFile
-        if not koFileObject:
-            return properties
-        koFileObject = UnwrapObject(koFileObject)
-        m = hashlib.md5()
-        m.update(koFileObject.path.replace('\\', '/'))
-        properties.append('k'+m.hexdigest())#the css selector need start with a letter
-        if koFileObject.isReadOnly:
-            properties.append("isReadOnly")
-
-        return properties
-</python>
-
-Start and close komodo two times..
-
-If the places sidebar is not loading, look if there is a syntax error into the file. ( "Tabs at the begging of each line should be spaces" )
-
-Done!
-
-NOTE: If there is some error just restore your backup and restart komodo two times.
-
-NOTES:
- - Unmodified files will shows as is ( normal komodo icons )
- - The "look for changes" executes every 7 seconds.
- 
-</blockquote>
 
 Internals:
 <blockquote>
