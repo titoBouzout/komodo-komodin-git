@@ -1404,7 +1404,7 @@ function kGit()
 						 .getService(Components.interfaces.nsIProperties)
 						 .get("TmpD", Components.interfaces.nsIFile);
 		//security - works always in a folder with with the name of this extension
-		file.append('kGit');
+		file.append('kGit-'+this.applicationVersion);
 		if( !file.exists() || !file.isDirectory() )   // if it doesn't exist, create
 		{
 			file.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0775);
@@ -1640,7 +1640,7 @@ function kGit()
 	  
 	  // convert the binary hash data to a hex string.
 	  var s = [this.toHexString(hash.charCodeAt(i)) for (i in hash)].join("");
-	  if(this.__DS == '/' || !this.applicationVersion6)
+	  if(this.__DS == '/' || this.applicationVersionShort != 6)
 	  {
 		return s;
 	  }
@@ -2251,7 +2251,8 @@ function kGit()
 		  else
 			this.gitPathSet = true;
 	  }
-	  this.applicationVersion6 = (parseInt(Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo).version) == 6);
+	  this.applicationVersion = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo).version;
+	  this.applicationVersionShort = parseInt(this.applicationVersion);
 	
 	  //empty the temporal folder on exit.
 	  this.observerService = Components
