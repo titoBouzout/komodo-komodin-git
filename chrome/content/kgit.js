@@ -1200,7 +1200,7 @@ function kGit()
 						 .getService(Components.interfaces.nsIProperties)
 						 .get("TmpD", Components.interfaces.nsIFile);
 		//security - works always in a folder with with the name of this extension
-		file.append('kGit');
+		file.append('kGit-'+kgit.applicationVersion);
 		
 		if( !file.exists() || !file.isDirectory() ) // if it doesn't exist.
 		{
@@ -2230,6 +2230,10 @@ function kGit()
 		
 		  while(!this.fileExists(this.gitPath+this.__DS+'bin'+this.__DS+'bash.exe'))
 		  {
+		  
+			window.focus();
+			window.getAttention();
+			
 			this.gitPath = ko.filepicker.getFolder(null, "kGit : Please select the Git directory. ( Usually 'C:/Program Files/Git/'");
 			if(!this.gitPath)
 			  break;
