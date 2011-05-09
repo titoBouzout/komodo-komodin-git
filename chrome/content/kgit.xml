@@ -118,9 +118,9 @@
 			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('http://www.dmoz.org/Computers/Software/Configuration_Management/Tools/Git/')" label="Git Directory"/>
 			<xul:menuseparator/>			
 			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('http://support.activestate.com/xpi/komodin-git-places');" label="Komodin Home-Page"/>
-			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('https://github.com/titoBouzout/komodin--Komodo-Edit-Git-')" label="Komodin Source Code"/>
-			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('https://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/todo.txt')" label="Komodin Bugs &amp; TODO"/>
-			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('https://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.html')" label="Komodin Version History"/>
+			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('https://github.com/titoBouzout/komodo-komodin-git')" label="Komodin Source Code"/>
+			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('https://github.com/titoBouzout/komodo-komodin-git/blob/master/todo.txt')" label="Komodin Bugs &amp; TODO"/>
+			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('https://github.com/titoBouzout/komodo-komodin-git/blob/master/changes.html')" label="Komodin Version History"/>
 		  </xul:menupopup>
 		</xul:menu>
 	  </content>

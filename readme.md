@@ -159,13 +159,13 @@ Home-page:<br/>
 http://community.activestate.com/xpi/komodin-git-places
 
 Todo & know bugs:<br/>
-https://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/todo.txt
+https://github.com/titoBouzout/komodo-komodin-git/blob/master/todo.txt
 
 Source-Code:<br/>
-https://github.com/titoBouzout/komodin--Komodo-Edit-Git-
+https://github.com/titoBouzout/komodo-komodin-git
 
 All versions Changes:<br/>
-https://github.com/titoBouzout/komodin--Komodo-Edit-Git-/blob/master/changes.html
+https://github.com/titoBouzout/komodo-komodin-git/blob/master/changes.html
 
 Changes From Latest Version:
 

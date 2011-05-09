@@ -12,6 +12,8 @@ Things to not forget
 	
 	git gui and gitk opens with a terminal.
 	
+	requires htmltoolkit installed?!??
+	
   TODO:
 	
 	add/edit/list branches
