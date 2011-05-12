@@ -1,1 +1,1 @@
-C:\xulrunner-2.0.en-US.win32.sdk\xulrunner-sdk\bin\xpidl.exe -m typelib -w -v -I C:\xulrunner-2.0.en-US.win32.sdk\xulrunner-sdk\idl D:\www\extensiondevelopment.org\_em\kGit\kGit\idl\kIGit.idl
+C:\xulrunner-2.0.en-US.win32.sdk\xulrunner-sdk\bin\xpidl.exe -m typelib -w -v -I C:\xulrunner-2.0.en-US.win32.sdk\xulrunner-sdk\idl D:\www\extensiondevelopment.org\_em\komodo-komodin\idl\kIGit.idl
