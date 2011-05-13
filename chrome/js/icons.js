@@ -4,7 +4,7 @@
 	this.init = function()
 	{
 	  var kGitIcons = this;
-	  this.loadTimer = this.s.timerIntervalAdd(100, function(){kGitIcons.hook();});
+	  this.loadTimer = this.s.timerIntervalAdd(500, function(){kGitIcons.hook();});
 	}
 	this.hook = function()
 	{
@@ -13,7 +13,6 @@
 	  else
 	  {
 		this.loadTimer.cancel();
-		
 		Components
 		.classes["@particle.universe.tito/kGit;1"]
 		.getService(Components.interfaces.IKGit)
