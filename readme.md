@@ -171,71 +171,35 @@ Changes From Latest Version:
 
 <ul>
   
-    <li>
-	<b>1.110513.11</b> - http://community.activestate.com/files/kGit_8.xpi
+  <li>
+	<b>1.110513.11</b>
+	<br/> http://community.activestate.com/files/kGit_8.xpi
+	<br/> https://github.com/titoBouzout/komodo-komodin-git/tree/110513.11
 	<ul>
 	  <li>Fix:
-	  <ul>
-		<li>Temporal folder is not deleted when closing application.
-		<li>Cleaned up interval/threads mess
-		<li>The notification is shown only if a tab is opened
-	  </ul>
+		<ul>
+		  <li>Temporal folder is not deleted when closing application.</li>
+		  <li>Cleaned up interval/threads mess</li>
+		  <li>The notification is shown only if a tab is opened</li>
+		</ul>
+	  </li>
 	  <li>Improves:
-	  <ul>
-		<li>Disable the menus when the current document is from the extension it self
-		<li>Works with multiples windows
-		<li>Runs only if the window is focused
-	  </ul>
+		<ul>
+		  <li>Disable the menus when the current document is from the extension it self</li>
+		  <li>Works with multiples windows</li>
+		  <li>Runs only if the window is focused</li>
+		</ul>
+	  </li>
 	  <li>Changes:
-	  <ul>
-		<li>Changes the home page to github
-		<li>Renames chrome/content to chrome/
-		<li>Renames defaults/preferences/kgit.js to defaults/preferences/preferences.js
-		<li>Separate xul into multiples files
-		<li>Better hierarchical for folders and overlays
-		<li>Use universal API see: https://github.com/titoBouzout/extensions-lib
-	  </ul>
-	</ul>
-  </li>
-  
-
-  <li>
-	<b>1.110425.10</b> - http://community.activestate.com/files/kGit_7.xpi
-	<ul>
-	  <li>Fix:
-	  <ul>
-		<li>MD5 values differ betwen javascript and python.
-		<li>Adds a python component to properly hook the places sidebar in order to provide icons. /The manual hacks to places extension is no longer needed./
-		<li>Empty temporal folder on application quit. not window unload.
-		<li>Restart the application after setting up the "git installation path".
-	  </ul>
-	  <li>Improves:
-	  <ul>
-		<li>Improves a lot diff and log commands by adding many options.
-		<li>Adds tags tools (auto tag, add tag, remove tag, tag list)
-		<li>Adds a "loading" icon for commands that take time
-		<li>Improves messages on "prompts" and "confirms" by adding contextual information.
-		<li>Commit window is no longer modal
-		<li>Prevents multiples runs of updateIcons at same time.
-		<li>Cache the scan of repositories on current places and cleanup the cache every X minutes.
-		<li>Prevents scanning to deep directories by setting a timeout and killing the process
-		<li>Instant update to icons on some commands.
-	  </ul>
-	</ul>
-  </li>
-  
-  <li>
-	<b>1.110421.9</b> - http://community.activestate.com/files/kGit_6.xpi
-	<ul>
-	  <li>Fix:
-	  <ul>
-		<li>Directories with special characters now show icons properly
-	  </ul>
-	  <li>Improves:
-	  <ul>
-		<li>Show icons for all the repositories under the current places sidebar
-		<li>Renames icons to short CSS size.
-	  </ul>
+		<ul>
+		  <li>Changes the home page to github</li>
+		  <li>Renames chrome/content to chrome/</li>
+		  <li>Renames defaults/preferences/kgit.js to defaults/preferences/preferences.js</li>
+		  <li>Separate xul into multiples files</li>
+		  <li>Better hierarchical for folders and overlays</li>
+		  <li>Use universal API see: https://github.com/titoBouzout/extensions-lib</li>
+		</ul>
+	  </li>
 	</ul>
   </li>
 
