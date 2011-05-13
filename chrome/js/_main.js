@@ -20,7 +20,7 @@ function kGit()
 	this.debug = true;
 
 	//global singleton object
-	  Components.utils.import('resource://up.tito/_init.js', this);
+	  Components.utils.import('resource://up.tito.kgit/_init.js', this);
 	  this.s.extensionID = 'tito@kgit';
 	  this.s.extensionName = 'Komodin Git';
 	  this.s.extensionChromeName = 'kgit';
@@ -67,6 +67,8 @@ function kGit()
 	  }
 
 	  this.s.addObserver('quit-application-requested', function(){ kgit.s.folderDeleteTemporal();});
+	  //listen restart
+	  this.s.addObserver('quit-application', function(){ kgit.s.folderDeleteTemporal();});
 
 	  this.s.addListener(
 						 {'id':this.windowID,'window':window},

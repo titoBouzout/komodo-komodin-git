@@ -1,6 +1,6 @@
 content kgit chrome/
 
-resource up.tito chrome/js/API/
+resource up.tito.kgit chrome/js/API/
 
 overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/_includes.xul
 overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/document.context.xul
