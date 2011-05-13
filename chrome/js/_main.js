@@ -165,7 +165,7 @@ function kGit()
 		this.loadingRemove();
 		
 		delete process, retval, stderr, aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox;
-		
+		this.kGitIconsOverlay.requestUpdate();
 		if(aReturnOutput)
 		  return stdout;
     }
@@ -190,6 +190,7 @@ function kGit()
 			kgit.s.openURL(window, aOutputPath, true);
 		}
 	  }
+	  kgit.kGitIconsOverlay.requestUpdate();
 	  kgit.loadingRemove();
 	}
 	this.getSelectedPaths = function(event)
