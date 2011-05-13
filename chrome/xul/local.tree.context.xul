@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+ 
+  <!-- places context menu-->
+
+  <menupopup id="places-files-popup">
+	  
+	  <menuseparator insertafter="placesContextMenu_separatorDelete"/>
+	  <menu
+			id="kgit-places-file-popup"
+			insertafter="placesContextMenu_separatorDelete"
+			label="Git"
+			tooltiptext="Executes Git Commands on Selected Items"
+			class="menu-iconic kgit-icon"
+			target="places">
+		  <menupopup class="kgit-menupopup-xbl"/>
+	  </menu>
+	  
+  </menupopup>
+  
+</overlay>

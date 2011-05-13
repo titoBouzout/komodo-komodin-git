@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+ 
+  	<!-- tab context menu -->
+  
+	  <menupopup id="tabContextMenu">
+		  
+		  <menuseparator insertafter="buffertab-context-sep-properties"/>
+  		  <menu
+				id="kgit-tab-context-menu"
+				insertafter="buffertab-context-sep-properties"
+				label="Git"
+				tooltiptext="Executes Git Commands on Current Document"
+				class="menu-iconic kgit-icon"
+		  >
+			  <menupopup class="kgit-menupopup-xbl"/>
+		  </menu>
+		  
+	  </menupopup>
+  
+</overlay>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+ 
+  <!--file menu-->
+
+	<menupopup id="popup_file">
+		
+		<menuseparator insertafter="file_print_menuseparator"/>
+		<menu
+			  id="kgit-menu-bar-file"
+			  insertafter="file_print_menuseparator"
+			  label="Git"
+			  tooltiptext="Executes Git Commands on Current Document"
+			  class="menu-iconic kgit-icon"
+		>
+			<menupopup class="kgit-menupopup-xbl"/>
+		</menu>
+		
+	</menupopup>
+  
+</overlay>

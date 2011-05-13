@@ -1,0 +1,16 @@
+.kgit-menupopup-xbl
+{
+    -moz-binding:url('chrome://kgit/content/xml/menupopup.xml#kgit-menupopup-xbl');
+}
+.kgit-icon
+{
+  list-style-image:url(chrome://kgit/content/icons/icon16.png);
+}
+.kgit-icon[loading]
+{
+  list-style-image:url(chrome://kgit/content/icons/icon16.loading.png);
+}
+.kgit-icon[disabled]
+{
+  list-style-image:url(chrome://kgit/content/icons/icon16.disabled.png);
+}

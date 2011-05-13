@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+ 
+ <script src="chrome://kgit/content/js/icons.js" type="application/x-javascript"></script>
+ <script src="chrome://kgit/content/js/_main.js" type="application/x-javascript"></script>
+  
+</overlay>

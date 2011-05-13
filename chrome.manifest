@@ -1,2 +1,12 @@
-content kgit chrome/content/
-overlay chrome://komodo/content/komodo.xul chrome://kgit/content/kgit.xul
+content kgit chrome/
+
+resource up.tito chrome/js/API/
+
+overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/_includes.xul
+overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/document.context.xul
+overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/local.tree.context.xul
+overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/menubar.xul
+overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/tab.context.xul
+overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/toolbar.xul
+
+style chrome://komodo/content/komodo.xul chrome://kgit/content/css/css.css

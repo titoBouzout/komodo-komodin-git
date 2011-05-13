@@ -1,9 +1,4 @@
-<?xml version="1.0"?>
-
-<!DOCTYPE bindings [
-
-]>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <bindings xmlns="http://www.mozilla.org/xbl"
           xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
           xmlns:xbl="http://www.mozilla.org/xbl">
@@ -96,6 +91,12 @@
 			<xul:menuitem oncommand="kgit.menuClick(event);kgit.configDefaultRemote(event)" label="Configure default remote…"/>
 		  </xul:menupopup>
 		</xul:menu>
+		<xul:menu label="Submodules"
+				  onmouseup="if(event.originalTarget == this){kgit.menuClick(event);kgit.submoduleAdd(event);}">
+		  <xul:menupopup>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.submoduleAdd(event)" label="Add…"/>
+		  </xul:menupopup>
+		</xul:menu>
 		<xul:menuitem oncommand="kgit.clone(event)" label="Clone…"/>
 		<xul:menuitem oncommand="kgit.init(event)" label="Init"/>
 		<xul:menuseparator/>
@@ -121,6 +122,8 @@
 			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('https://github.com/titoBouzout/komodo-komodin-git')" label="Komodin Source Code"/>
 			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('https://github.com/titoBouzout/komodo-komodin-git/blob/master/todo.txt')" label="Komodin Bugs &amp; TODO"/>
 			<xul:menuitem oncommand="ko.browse.openUrlInDefaultBrowser('https://github.com/titoBouzout/komodo-komodin-git/blob/master/changes.html')" label="Komodin Version History"/>
+			<xul:menuseparator/>
+			<xul:menuitem oncommand="kgit.menuClick(event);kgit.cleanRepositoriesCache(event);" label="Clean Repositories Cache"/>
 		  </xul:menupopup>
 		</xul:menu>
 	  </content>

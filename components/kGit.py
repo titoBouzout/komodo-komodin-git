@@ -33,7 +33,7 @@ class KGit:
         koFileObject = UnwrapObject(koFileObject)
         m = hashlib.md5()
         m.update(koFileObject.path.replace('\\', '/'))
-        #qlog.debug("koFile getter: file:%s, isLink:%r",
+        #qlog.debug("file:%s, md5:%r",
         #              koFileObject.path.replace('\\', '/'),
         #               m.hexdigest())
         properties.append('k'+m.hexdigest())#the css selector need start with a letter

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+ 
+  <!-- toolbarbutton-->
+
+	<toolbaritem id="standardToolbar">
+	   <toolbarseparator/>
+	   <toolbarbutton
+		   id="kgit-toolbarbutton"
+		   label="Komodin"
+		   tooltiptext="Executes Git Commands on Current Document"
+		   buttonstyle="pictures"
+		   type="button"
+		   persist="buttonstyle"
+		   oncommand="this.firstChild.openPopup(this, 'after_start')"
+		   class="kgit-icon"
+		 >
+		 <menupopup class="kgit-menupopup-xbl"/>
+	   </toolbarbutton>
+	 </toolbaritem>
+	  
+</overlay>
