@@ -32,20 +32,23 @@
 	  this.sss = Components
 				  .classes["@mozilla.org/content/style-sheet-service;1"]
 				  .getService(Components.interfaces.nsIStyleSheetService);
-		
+	  
+	  this.watchedDirectories = [];
+	  
 	  this.running = false;
 	  this.obj = kgit.getPaths(this.s.filePathFromFileURI(this.s.placesLocalCurrentPath(window)));
 	  this.lastCommmand ='';
 	  this.repositoriesCache = kgit.s.sharedObjectGet('repositoriesCache', [])//holds the paths of all the repositories in a directory
-	  this.repositoriesPlacesCache = kgit.s.sharedObjectGet('repositoriesPlacesCache', []);//holds the paths of all the repositories for a directory
+	  this.repositoriesPlacesCache = kgit.s.sharedObjectGet('repositoriesPlacesCache', []);//holds the commands to apply to a place by filtering the git repositories to the current view.
+	  this.repositoriesPlacesCachePaths = kgit.s.sharedObjectGet('repositoriesPlacesCachePaths', []);//holds the paths of all the repositories for a given place
 	  this.lastCSS = '';
 	  this.iconsURI = this.s.uri('file://'+this.obj.outputFile+'.css');
-						  
+	  
 	  var kGitIcons = this;
 	  
 	  //check for changes on current place.
-	  this.lastFocusedLocalPlacesPath = this.s.placesLocalCurrentPath(window);
-	  this.updatePlacesTimer = this.s.timerIntervalAdd(500,
+	  this.lastFocusedLocalPlacesPath = '';
+	  this.updatePlacesTimer = this.s.timerIntervalAdd(400,
 						function(){
 						  var aLocation = kGitIcons.s.placesLocalCurrentPath(window);
 						  if(kGitIcons.lastFocusedLocalPlacesPath != aLocation)
@@ -54,89 +57,52 @@
 							kGitIcons.requestUpdate();
 						  }
 						});
-	  //update icons periodically TODO how can I watch for changes on a folder?
-	  this.requestUpdateTimer = this.s.timerIntervalAdd(5000, function(){kGitIcons.requestUpdate();});
-	  
-	  this.windowFocused  = true;
-	  var kGitIconsOverlay = this;
-	  window.addEventListener('focus', function(){ kGitIconsOverlay.windowFocused = true;}, false);
-	  window.addEventListener('blur', function(){ kGitIconsOverlay.windowFocused = false;}, false);
 	  this.requestUpdate();
 	}
 	this.uninit = function()
 	{
 	  this.updatePlacesTimer.cancel();
-	  this.requestUpdateTimer.cancel();
+	  for(var id in this.watchedDirectories)
+	  {
+		kgit.s.unwatchFolder(
+			  this.watchedDirectories[id],
+			  function(aFolder){kgit.kGitIconsOverlay.requestUpdate();},
+			  true,
+			  true
+			 );
+	  }
 	}
 	this.getRepositories = function(obj)
 	{
+	  //this.measureTime.start('get getRepositories');
+	  //this.s.dump('getRepositories');
+	  //this.s.dump((new Date()).toLocaleString());
 	  if(!this.repositoriesCache[obj.git])
 	  {
+		//this.measureTime.start('get getRepositories:findFiles');
 		//find all the repositories into this directory
-		var process, retval, stdout = '', timeout, paths, kGitIcons = this;
-		try
-		{
-		  if(!this.s.isWindows())
-		  {
-			process = this.runSvc.RunAndNotify(
-											  'find -name hooks',
-											  obj.git,
-											  '',
-											  '');
-			var timeout = this.s.timerAdd(6000,
-						  function(){
-							kGitIcons.repositoriesCache[obj.git] = [];
-							try{process.kill(true);}catch(e){}
-							Components.utils.reportError('killed');
-						  });
-			retval = process.wait(-1);
-			timeout.cancel();
-			stdout = process.getStdout();
-			stdout = stdout.split('./').join(obj.git+'/');
-		  }
-		  else
-		  {
-			//if windows
-			process = this.runSvc.RunAndNotify(
-											  'dir /S /B hooks',
-											  obj.git,
-											  '',
-											  '');
-			var timeout = this.s.timerAdd(6000,
-						  function(){
-							kGitIcons.repositoriesCache[obj.git] = [];
-							try{process.kill(true);}catch(e){}
-							Components.utils.reportError('killed');
-						  });
-			retval = process.wait(-1);
-			timeout.cancel();
-			stdout = process.getStdout();
-			stdout = stdout.split('./').join(obj.git+'/');
-		  }
-		  
-		  paths = stdout.split('\n');
-		  paths[paths.length] = obj.git.replace(/\/$/, '');
-		  
-		  for(var id in paths)
-			paths[id] = this.s.pathToNix(paths[id]).split('/.git/')[0];
-		  
-		  paths = this.s.arrayUnique(paths);
-		  paths.sort().reverse();
-		  this.repositoriesCache[obj.git] = paths;
-		}
-		catch(e)
-		{
-		  Components.utils.reportError(e);
-		  try{
-			Components.utils.reportError('killed');
-			process.kill(true);
-		  }catch(e){Components.utils.reportError(e);}
-		}
-		delete process, retval, stdout, timeout, paths;
+		var aList = {};
+			aList.entries = [];
+		kgit.s.runThreadAndWait(function(){
+		  //kgit.s.dump('1:'+(new Date()).toLocaleString());
+		  pathsEntries = kgit.s.findFiles(obj.git, /\.git$/, aList);
+		  //kgit.s.dump('2:'+(new Date()).toLocaleString());
+		  }, this.s.newThread());
+		var paths = [];
+		for(var id in aList.entries)
+		  paths[id] = this.s.pathToNix(aList.entries[id]).split('/.git')[0];
+		delete aList;
+		paths = this.s.arrayUnique(paths);
+		paths.sort().reverse();
+		this.repositoriesCache[obj.git] = paths;
+		//this.s.dump('on place '+obj.currentPlace+' about related repository '+obj.git+' found the following subrepositories', paths);
+		//this.s.dump((new Date()).toLocaleString());
+		//this.measureTime.stop('get getRepositories:findFiles');
 	  }
 	  if(!this.repositoriesPlacesCache[obj.currentPlace])
 	  {
-		//filter the list of repositories to these that are in the current view of places sidebar
+		//this.measureTime.start('get getRepositories:filter the list of repositories');
+		//filter the list of repositories to these that are in the current view of the places sidebar
 		var allowedLookups = [];
 		var currentPlacePaths = obj.currentPlace.split('/');
 		var aPath = '';
@@ -148,6 +114,7 @@
 		}
 		var paths = this.repositoriesCache[obj.git];
 		var commands = '';
+		var toWatchPaths = [];
 		for(var id in paths)
 		{
 		  if(paths[id] != '')
@@ -155,6 +122,8 @@
 			//only track repositories on current view
 			if(this.s.inArray(allowedLookups, paths[id]) || paths[id].indexOf(obj.currentPlace) === 0)
 			{
+			  toWatchPaths[toWatchPaths.length] = paths[id].split('/').join(this.s.__DS);
+			  
 			  commands += 'cd "'+this.s.filePathEscape(paths[id])+'"';
 			  commands += '\n';
 			  commands += 'echo "KGITPATH'+paths[id]+'KGITPATH"';
@@ -165,19 +134,53 @@
 		  }
 		}
 		this.repositoriesPlacesCache[obj.currentPlace] = commands;
+		this.repositoriesPlacesCachePaths[obj.currentPlace] = toWatchPaths;
 		delete commands, paths;
+		//this.measureTime.stop('get getRepositories:filter the list of repositories');
 	  }
-	  if(this.lastCommmand == this.repositoriesPlacesCache[obj.currentPlace]){}
+	  
+	  if(this.lastCommmand == this.repositoriesPlacesCache[obj.currentPlace])
+	  {
+		
+	  }
 	  else
 	  {
+		//this.measureTime.start('get getRepositories:newWatchedDirectories');
 		this.lastCommmand = this.repositoriesPlacesCache[obj.currentPlace];
 		this.s.fileWrite(obj.sh, this.lastCommmand);
+		
+		var newWatchedDirectories = [];
+		for(var id in this.repositoriesPlacesCachePaths[obj.currentPlace])
+		{
+		  newWatchedDirectories[newWatchedDirectories.length] = this.repositoriesPlacesCachePaths[obj.currentPlace][id];
+		  
+		  kgit.s.watchFolder(
+					  this.repositoriesPlacesCachePaths[obj.currentPlace][id],
+					  function(aFolder){kgit.kGitIconsOverlay.requestUpdate();},
+					  true,
+					  true
+					 );
+		}
+		
+		for(var id in this.watchedDirectories)
+		{
+		  kgit.s.unwatchFolder(
+				this.watchedDirectories[id],
+				function(aFolder){kgit.kGitIconsOverlay.requestUpdate();},
+				true,
+				true
+			   );
+		}
+		this.watchedDirectories = newWatchedDirectories;
+		//this.measureTime.stop('get getRepositories:newWatchedDirectories');
 	  }
+	  //this.measureTime.stop('get getRepositories');
 	}
 	this.cleanRepositoriesCache = function()
 	{
 	  this.reposotoriesCache = [];
 	  this.repositoriesPlacesCache = [];
+	  this.repositoriesPlacesCachePaths = [];
 	}
     this.iconsWrite = function()
     {
@@ -191,37 +194,51 @@
 	  ko.places.viewMgr.tree.treeBoxObject.clearStyleAndImageCaches();
 	  
 	  this.running = false;
+	  //this.measureTime.stop('updating.icons');
+	 // this.measureTime.display();
 	}
 	this.requestUpdate = function()
 	{
-	  if(this.running || !this.windowFocused)
+	  if(this.running)
+	  {
+		//this.s.dump('ignoring becuase is running or is unfocused:running:'+this.running);
 		return;
+	  }
 	  this.running = true;
-
+	  
+	  //this.s.dump('updating icons');
+	  //this.s.dump((new Date()).toLocaleString());
+	  //this.measureTime = new this.s.measureTime();
+	  //this.measureTime.start('updating.icons');
+	  
 	  var commands, kGitIcons = this;
 	  var currentPlace = this.s.filePathFromFileURI(this.s.placesLocalCurrentPath(window));
-		var obj = kgit.getPaths(currentPlace, true);
-		obj.sh = this.obj.sh;
-		obj.outputFile = this.obj.outputFile;
-		obj.currentPlace = this.s.pathToNix(currentPlace);
- 
+	  var obj = kgit.getPaths(currentPlace, true);
+	  obj.sh = this.obj.sh;
+	  obj.outputFile = this.obj.outputFile;
+	  obj.currentPlace = this.s.pathToNix(currentPlace);
+	  
 	  //get all the repositories on current places
 	  
-		this.s.runThreadAndWait(function(){ kGitIcons.getRepositories(obj);}, this.thread);
-		
-		if(!this.repositoriesCache[obj.git])
-		{
-		  this.running = false;
-		  return;
-		}
-	  
-	  //get and write the icons if needed 
-	  
-		this.s.runThread(function(){ try{kGitIcons.iconsGet(obj);} catch(e){Components.utils.reportError(e);kGitIcons.running = false;} }, this.thread);
-	  
+		this.s.runThread(function()
+								{
+								  kGitIcons.getRepositories(obj);
+								  if(!kGitIcons.repositoriesCache[obj.git])
+								  {
+									//kGitIcons.s.dump('repositoriesCache is empty');
+									kGitIcons.running = false;
+									return;
+								  }
+								  //get and write the icons if needed 
+								  kGitIcons.iconsGet(obj);
+								}, this.thread);
 	}
 	this.iconsGet = function(obj)
 	{
+	  //this.measureTime.start('iconsGet');
+	  //this.s.dump('iconsGet');
+	  //this.s.dump((new Date()).toLocaleString());
+	  
 	  var process, retval, stdout = '';
 	  
 	  if(!this.s.isWindows())
@@ -482,5 +499,6 @@
 		var kGitIcons = this;
 		this.s.runMain(function(){ kGitIcons.iconsWrite()});
 	  }
+	  //this.measureTime.stop('iconsGet');
 	}
   }
