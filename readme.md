@@ -170,27 +170,44 @@ https://github.com/titoBouzout/komodo-komodin-git/blob/master/changes.html
 Changes From Latest Version:
 
 <ul>
+
+   <li>
+	<b>1.110514.12</b>
+	<br/> http://community.activestate.com/files/kGit_9.xpi
+	<br/> https://github.com/titoBouzout/komodo-komodin-git/tree/1.110514.12
+	<ul>
+	  <li>Fix:</li>
+	  <ul>
+		<li>Slow down the amount of time we wait for the places extension to load.</li>
+		<li>Solves namespace issue between my own add-ons.</li>
+	  </ul>
+	  <li>Improves:</li>
+	  <ul>
+		<li>Instead of updating the icons every x time, now the add-on watch the folders for modifications.</li>
+	  </ul>
+	</ul>
+  </li>
   
   <li>
 	<b>1.110513.11</b>
 	<br/> http://community.activestate.com/files/kGit_8.xpi
 	<br/> https://github.com/titoBouzout/komodo-komodin-git/tree/110513.11
 	<ul>
-	  <li>Fix:
+	  <li>Fix:</li>
 		<ul>
 		  <li>Temporal folder is not deleted when closing application.</li>
 		  <li>Cleaned up interval/threads mess</li>
 		  <li>The notification is shown only if a tab is opened</li>
 		</ul>
-	  </li>
-	  <li>Improves:
+
+	  <li>Improves:</li>
 		<ul>
 		  <li>Disable the menus when the current document is from the extension it self</li>
 		  <li>Works with multiples windows</li>
 		  <li>Runs only if the window is focused</li>
 		</ul>
-	  </li>
-	  <li>Changes:
+
+	  <li>Changes:</li>
 		<ul>
 		  <li>Changes the home page to github</li>
 		  <li>Renames chrome/content to chrome/</li>
@@ -199,8 +216,6 @@ Changes From Latest Version:
 		  <li>Better hierarchical for folders and overlays</li>
 		  <li>Use universal API see: https://github.com/titoBouzout/extensions-lib</li>
 		</ul>
-	  </li>
 	</ul>
   </li>
-
 </ul>
