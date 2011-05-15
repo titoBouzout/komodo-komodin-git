@@ -85,11 +85,9 @@
 		//find all the repositories into this directory
 		var aList = {};
 			aList.entries = [];
-		kgit.s.runThreadAndWait(function(){
-		  //kgit.s.dump('1:'+(new Date()).toLocaleString());
-		  pathsEntries = kgit.s.findFiles(obj.git, /\.git$/, aList);
-		  //kgit.s.dump('2:'+(new Date()).toLocaleString());
-		  }, this.s.newThread());
+		//kgit.s.dump('1:'+(new Date()).toLocaleString());
+		this.s.findFiles(obj.git, /\.git$/, aList);
+		//kgit.s.dump('2:'+(new Date()).toLocaleString());
 		var paths = [];
 		for(var id in aList.entries)
 		  paths[id] = this.s.pathToNix(aList.entries[id]).split('/.git')[0];
