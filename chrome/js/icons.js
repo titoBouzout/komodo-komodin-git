@@ -83,18 +83,41 @@
 	  {
 		//this.measureTime.start('get getRepositories:findFiles');
 		//find all the repositories into this directory
-		var aList = {};
-			aList.entries = [];
-		//kgit.s.dump('1:'+(new Date()).toLocaleString());
-		this.s.findFiles(obj.git, /\.git$/, aList);
-		//kgit.s.dump('2:'+(new Date()).toLocaleString());
-		var paths = [];
-		for(var id in aList.entries)
-		  paths[id] = this.s.pathToNix(aList.entries[id]).split('/.git')[0];
-		delete aList;
-		paths = this.s.arrayUnique(paths);
-		paths.sort().reverse();
-		this.repositoriesCache[obj.git] = paths;
+		  if(!this.s.isWindows())
+		  {
+			process = this.runSvc.RunAndNotify(
+											  'find -name hooks',
+											  obj.git,
+											  '',
+											  '');
+		  }
+		  else
+		  {
+			//if windows
+			process = this.runSvc.RunAndNotify(
+											  'dir /S /B hooks',
+											  obj.git,
+											  '',
+											  '');
+		  }
+		  retval = process.wait(-1);
+		  stdout = process.getStdout();
+		  stdout = stdout.split('./').join(obj.git+'/');
+		  paths = stdout.split('\n');
+		  paths[paths.length] = obj.git.replace(/\/$/, '');
+		  
+		  for(var id in paths)
+		  {
+			if(paths[id].indexOf('.git') != -1)
+			  paths[id] = this.s.pathToNix(paths[id]).split('/.git/')[0];
+			else
+			  paths[id] = '';
+		  }
+		  
+		  paths = this.s.arrayUnique(paths);
+		  paths.sort().reverse();
+		  this.repositoriesCache[obj.git] = paths;
+		  
 		//this.s.dump('on place '+obj.currentPlace+' about related repository '+obj.git+' found the following subrepositories', paths);
 		//this.s.dump((new Date()).toLocaleString());
 		//this.measureTime.stop('get getRepositories:findFiles');
