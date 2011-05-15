@@ -110,7 +110,7 @@ function kGit()
   }
  
   //runs a shell script and display or return the output
-  this.run = function(aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox, aReturnOutput)
+  this.run = function(aScriptPath, aOutputPath, aMsg, openInNewTab, displayIntoNotificationBox, aReturnOutput)
   {
 	this.loadingSet();
 	
@@ -139,21 +139,21 @@ function kGit()
 	  if(this.s.fileRead(aOutputPath) != '')
 		this.s.notifyTab(document, this.s.fileRead(aOutputPath));
 	  else
-		ko.statusBar.AddMessage('kGit: Command complete nothing to show', "kgit", 7 * 1000, true);
+		ko.statusBar.AddMessage('kGit: Command complete '+aMsg, "kgit", 7 * 1000, true);
 	}
 	else if(openInNewTab)
 	{
 	  if(this.s.fileRead(aOutputPath) != '')
 		this.s.openURL(window, aOutputPath, true);
 	  else
-		ko.statusBar.AddMessage('kGit: Command complete nothing to show', "kgit", 7 * 1000, true);
+		ko.statusBar.AddMessage('kGit: Command complete '+aMsg, "kgit", 7 * 1000, true);
 	}
 	else if(!aReturnOutput)
 	{
 	  if(this.s.fileRead(aOutputPath) != '')
 		this.s.commandOutput(window, this.s.fileRead(aOutputPath));
 	  else
-		ko.statusBar.AddMessage('kGit: Command complete nothing to show', "kgit", 7 * 1000, true);
+		ko.statusBar.AddMessage('kGit: Command complete '+aMsg, "kgit", 7 * 1000, true);
 	}
 	var stderr = process.getStderr();
 	if(stderr && stderr != '')
@@ -335,7 +335,7 @@ function kGit()
 	{
 	  var obj = this.getPaths(selected[id]);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff HEAD -- '+obj.selected+' > '+obj.output+'\n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No difference found', true);
 	}
   }
   //TODO: hardcoded branch name
@@ -346,7 +346,7 @@ function kGit()
 	{
 	  var obj = this.getPaths(selected[id]);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff origin... -- '+obj.selected+' > '+obj.output+'\n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No difference found', true);
 	}
   }
   this.diffBetweenLatestTagAndLastCommit = function(event)
@@ -357,7 +357,7 @@ function kGit()
 	  var obj = this.getPaths(selected[id]);
 	  var tags = this.tagsGetFromRepo(obj);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff "'+(tags.pop() || '')+'"... -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No difference found', true);
 	}
   }
   this.diffBetweenTheTwoLatestTags = function(event)
@@ -368,7 +368,7 @@ function kGit()
 	  var obj = this.getPaths(selected[id]);
 	  var tags = this.tagsGetFromRepo(obj);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+'\ngit diff "'+(tags[tags.length-2] || '')+'".."'+(tags[tags.length-1] || '')+'" -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No difference found', true);
 	}
   }
 
@@ -379,7 +379,7 @@ function kGit()
 	{
 	  var obj = this.getPaths(selected[id]);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.s.filePathEscape(this.s.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log -n 30 --stat --graph -- '+ obj.selected+' >> '+obj.output+' \n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No log to show', true);
 	}
   }
   this.logStatFull = function(event)
@@ -389,7 +389,7 @@ function kGit()
 	{
 	  var obj = this.getPaths(selected[id]);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.s.filePathEscape(this.s.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log --stat --graph -- '+ obj.selected+' >> '+obj.output+' \n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No log to show', true);
 	}
   }
   this.logExtendedLatest = function(event)
@@ -399,7 +399,7 @@ function kGit()
 	{
 	  var obj = this.getPaths(selected[id]);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.s.filePathEscape(this.s.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log -n 30 -p -- '+ obj.selected+' >> '+obj.output+' \n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No log to show', true);
 	}
   }
   this.logExtendedFull = function(event)
@@ -409,7 +409,7 @@ function kGit()
 	{
 	  var obj = this.getPaths(selected[id]);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "log:'+this.s.filePathEscape(this.s.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log -p -- '+ obj.selected+' >> '+obj.output+' \n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No log to show', true);
 	}
   }
   this.logSinceLatestTag = function(event)
@@ -420,7 +420,7 @@ function kGit()
 	  var obj = this.getPaths(selected[id]);
 	  var tags = this.tagsGetFromRepo(obj);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.s.filePathEscape(this.s.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags.pop() || '')+'"... --stat --graph -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No log to show', true);
 	}
   }
   //TODO: Hardcoded remote and branch name
@@ -432,7 +432,7 @@ function kGit()
 	  var obj = this.getPaths(selected[id]);
 	  var tags = this.tagsGetFromRepo(obj);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+'\n echo "log:'+this.s.filePathEscape(this.s.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log origin... --stat --graph -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No log to show', true);
 	}
   }
   this.logBetweenTheTwoLatestTags = function(event)
@@ -443,7 +443,7 @@ function kGit()
 	  var obj = this.getPaths(selected[id]);
 	  var tags = this.tagsGetFromRepo(obj);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+' echo "log:'+this.s.filePathEscape(this.s.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git log "'+(tags[tags.length-2] || '')+'".."'+(tags[tags.length-1] || '')+'" --stat --graph -- '+obj.selected+' >>'+obj.output+' 2>&1\n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, 'No log to show', true);
 	}
   }
   
@@ -456,7 +456,7 @@ function kGit()
 	  {
 		var obj = this.getPaths(selected[id]);
 		this.s.fileWrite(obj.sh, 'cd '+obj.cwd+' \n git blame -- '+ obj.selected+' >> '+obj.output+' \n');
-		this.run(obj.sh, obj.outputFile, true);
+		this.run(obj.sh, obj.outputFile, '', true);
 	  }
 	}
   }
@@ -468,7 +468,7 @@ function kGit()
 	{
 	  var obj = this.getPaths(selected[id]);
 	  this.s.fileWrite(obj.sh, 'cd '+obj.cwd+' \n echo "status:'+this.s.filePathEscape(this.s.pathToNix(obj.selectedFile))+'" >> '+obj.output+' \n git status --untracked-files=all -- '+ obj.selected+' >> '+obj.output+' \n');
-	  this.run(obj.sh, obj.outputFile, true);
+	  this.run(obj.sh, obj.outputFile, '', true);
 	}
   }
   
@@ -487,7 +487,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(obj.sh, commands);
-	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.run(obj.sh, obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
@@ -508,7 +508,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(obj.sh, commands);
-	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.run(obj.sh, obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
@@ -531,7 +531,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(obj.sh, commands);
-	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.run(obj.sh, obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
@@ -554,7 +554,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(obj.sh, commands);
-	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.run(obj.sh, obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
@@ -573,7 +573,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(obj.sh, commands);
-	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.run(obj.sh, obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
@@ -592,7 +592,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
@@ -612,7 +612,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(obj.sh, commands);
-	  this.run(obj.sh, obj.outputFile, false, true);
+	  this.run(obj.sh, obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
@@ -631,7 +631,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	}
   }
   this.configDefaultRemote = function(event)
@@ -651,7 +651,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	}
   }
   this.push = function(event)
@@ -802,7 +802,7 @@ function kGit()
 	var selected = this.getSelectedPathFolder(event);
 	var obj = this.getPaths(selected);
 	this.s.fileWrite(obj.sh, 'cd '+obj.cwdSelected+' \ngit init >>'+obj.output+' 2>&1');
-	this.run(obj.sh, obj.outputFile, false, true);
+	this.run(obj.sh, obj.outputFile, '', false, true);
 	this.kGitIconsOverlay.cleanRepositoriesCache();
   }
   this.clone = function(event)
@@ -874,7 +874,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
 	else
@@ -898,7 +898,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
 	else
@@ -918,7 +918,7 @@ function kGit()
 	  commands += '\n';
 	}
 	this.s.fileWrite(repos.obj.sh, commands);
-	this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	this.kGitIconsOverlay.requestUpdate();
   }
   this.commitUndo = function(event)
@@ -935,7 +935,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
@@ -957,7 +957,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
 	else
@@ -1005,7 +1005,7 @@ function kGit()
 	  commands += '\n';
 	}
 	this.s.fileWrite(repos.obj.sh, commands);
-	this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	this.kGitIconsOverlay.requestUpdate();
   }
   this.removeKeepLocal = function(event)
@@ -1022,7 +1022,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
@@ -1040,7 +1040,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
@@ -1059,7 +1059,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, 'Tag "'+aMsg+'" added', false, true);
 	}
   }
   this.tagRemove = function(event)
@@ -1077,7 +1077,7 @@ function kGit()
 		commands += '\n';
 	  }
 	  this.s.fileWrite(repos.obj.sh, commands);
-	  this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	  this.run(repos.obj.sh, repos.obj.outputFile, '', false, true);
 	}
   }
   this.tagAuto = function(event)
@@ -1096,7 +1096,7 @@ function kGit()
 	  commands += '\n';
 	}
 	this.s.fileWrite(repos.obj.sh, commands);
-	this.run(repos.obj.sh, repos.obj.outputFile, false, true);
+	this.run(repos.obj.sh, repos.obj.outputFile, 'Tag '+this.s.now().replace(/-/g, '').substr(2, 6)+' added', false, true);
   }
   this.tagList = function(event)
   {
@@ -1110,7 +1110,7 @@ function kGit()
 	  commands += '\n';
 	}
 	this.s.fileWrite(repos.obj.sh, commands);
-	this.run(repos.obj.sh, repos.obj.outputFile, true, false);
+	this.run(repos.obj.sh, repos.obj.outputFile, '', true, false);
   }
   this.tagsGetFromRepo = function(aObj)
   {
@@ -1118,7 +1118,7 @@ function kGit()
 
 	this.s.fileWrite(sh, 'cd '+aObj.cwd+' \n echo `git for-each-ref refs/tags --sort=-authordate` \n');
 	
-	var tags = this.run(sh, sh+'.diff', false, false, true).split('\n');
+	var tags = this.run(sh, sh+'.diff', '', false, false, true).split('\n');
 		tags.shift();
 		tags.shift();
 		tags.shift();
