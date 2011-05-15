@@ -190,6 +190,12 @@
 		this.sss.unregisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
 	  this.sss.loadAndRegisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
 	  
+	  //ensure we have the hook there
+	  Components
+		.classes["@particle.universe.tito/kGit;1"]
+		.getService(Components.interfaces.IKGit)
+		.KGit_hookFunction();
+	  
 	  setTimeout( function(){
 		gPlacesViewMgr.view.refreshFullTreeView();
 	  }, 10);
