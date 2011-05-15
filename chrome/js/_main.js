@@ -170,7 +170,9 @@ function kGit()
 	this.loadingRemove();
 	
 	delete process, retval, stderr, aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox;
+	
 	this.kGitIconsOverlay.requestUpdate();
+	
 	if(aReturnOutput)
 	  return stdout;
   }
@@ -732,6 +734,7 @@ function kGit()
 	  this.s.fileWrite(repos.obj.sh, commands);
 	  this.loadingSet();
 	  this.s.execute(this.gitPath, repos.obj.sh, repos.obj.outputFile, this.executeObserver);
+	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
   this.pullWithOptions = function(event)
@@ -751,6 +754,7 @@ function kGit()
 	  this.s.fileWrite(repos.obj.sh, commands);
 	  this.loadingSet();
 	  this.s.execute(this.gitPath, repos.obj.sh, repos.obj.outputFile, this.executeObserver);
+	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
   this.fetch = function(event)
@@ -769,6 +773,7 @@ function kGit()
 	  this.s.fileWrite(repos.obj.sh, commands);
 	  this.loadingSet();
 	  this.s.execute(this.gitPath, repos.obj.sh, repos.obj.outputFile, this.executeObserver);
+	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
   this.fetchWithOptions = function(event)
@@ -788,6 +793,7 @@ function kGit()
 	  this.s.fileWrite(repos.obj.sh, commands);
 	  this.loadingSet();
 	  this.s.execute(this.gitPath, repos.obj.sh, repos.obj.outputFile, this.executeObserver);
+	  this.kGitIconsOverlay.requestUpdate();
 	}
   }
   
