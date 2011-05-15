@@ -30,7 +30,7 @@ class KGit:
             return properties
         koFileObject = UnwrapObject(koFileObject)
         m = hashlib.md5()
-        m.update(koFileObject.path.replace('\\', '/'))
+        m.update(koFileObject.path.replace('\\', '/').replace(':', ':/').replace('://', ':/'))
         #qlog.debug("file:%s, md5:%r",
         #              koFileObject.path.replace('\\', '/'),
         #               m.hexdigest())
