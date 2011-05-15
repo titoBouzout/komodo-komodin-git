@@ -171,7 +171,7 @@ Changes From Latest Version:
 
 <ul>
 
-   <li>
+
 	<b>1.110514.12</b>
 	<br/> http://community.activestate.com/files/kGit_9.xpi
 	<br/> https://github.com/titoBouzout/komodo-komodin-git/tree/1.110514.12
@@ -180,15 +180,15 @@ Changes From Latest Version:
 	  <ul>
 		<li>Slow down the amount of time we wait for the places extension to load.</li>
 		<li>Solves namespace issue between my own add-ons.</li>
+		<li>Forgot to remove the stylesheet when a window is unloaded.</li>
 	  </ul>
 	  <li>Improves:</li>
 	  <ul>
 		<li>Instead of updating the icons every x time, now the add-on watch the folders for modifications.</li>
 	  </ul>
 	</ul>
-  </li>
   
-  <li>
+
 	<b>1.110513.11</b>
 	<br/> http://community.activestate.com/files/kGit_8.xpi
 	<br/> https://github.com/titoBouzout/komodo-komodin-git/tree/110513.11
@@ -217,5 +217,5 @@ Changes From Latest Version:
 		  <li>Use universal API see: https://github.com/titoBouzout/extensions-lib</li>
 		</ul>
 	</ul>
-  </li>
+
 </ul>
