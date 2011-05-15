@@ -71,6 +71,8 @@
 			  true
 			 );
 	  }
+	  if(this.sss.sheetRegistered(this.iconsURI, this.sss.AGENT_SHEET))
+		this.sss.unregisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
 	}
 	this.getRepositories = function(obj)
 	{
