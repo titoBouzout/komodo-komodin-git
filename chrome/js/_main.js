@@ -71,8 +71,6 @@ function kGit()
 					.createInstance(Components.interfaces.koIRunService);
 
 	this.s.addObserver('quit-application-requested', function(){ kgit.s.folderDeleteTemporal();});
-	this.s.addObserver('quit-application-granted', function(){ kgit.s.folderDeleteTemporal();});
-	this.s.addObserver('quit-application', function(){ kgit.s.folderDeleteTemporal();});
 
 	this.s.addListener(
 					   {'id':this.windowID,'window':window},
@@ -862,7 +860,7 @@ function kGit()
   {
 	if(event.aMsg && event.aMsg != '')
 	{
-	  var aMsg = event.aMsg;
+	  var aMsg = this.s.ucFirst(event.aMsg);
 
 	  var repos = this.getSelectedRepos(event);
 	  var commands = '';
@@ -886,7 +884,7 @@ function kGit()
   {
 	if(event.aMsg && event.aMsg != '')
 	{
-	  var aMsg = event.aMsg;
+	  var aMsg =  this.s.ucFirst(event.aMsg);
 
 	  var repos = this.getSelectedRepos(event);
 	  var commands = '';
@@ -943,7 +941,7 @@ function kGit()
   {
 	if(event.aMsg && event.aMsg != '')
 	{
-	  var aMsg = event.aMsg;
+	  var aMsg =  this.s.ucFirst(event.aMsg);
 
 	  var repos = this.getSelectedRepos(event);
 	  var commands = '';
@@ -969,7 +967,7 @@ function kGit()
   {
 	if(event.aMsg && event.aMsg != '')
 	{
-	  var aMsg = event.aMsg;
+	  var aMsg =  this.s.ucFirst(event.aMsg);
 
 	  var repos = this.getSelectedRepos(event);
 	  var commands = '';
