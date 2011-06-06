@@ -4,7 +4,8 @@ resource up.tito.kgit chrome/js/API/
 
 overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/_includes.xul
 overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/document.context.xul
-overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/local.tree.context.xul
+overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/places.context.xul
+overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/garden.context.xul
 overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/menubar.xul
 overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/tab.context.xul
 overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/toolbar.xul
