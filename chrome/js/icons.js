@@ -4,19 +4,29 @@
 	this.init = function()
 	{
 	  var kGitIcons = this;
-	  this.loadTimer = this.s.timerIntervalAdd(500, function(){kGitIcons.hook();});
+	  if(!ko.places)
+		this.loadTimer = this.s.timerIntervalAdd(500, function(){kGitIcons.hook();});
+	  else
+		this.loadTimer = this.s.timerIntervalAdd(2000, function(){kGitIcons.hook();});
 	}
 	this.hook = function()
 	{
 	  //wait for places extension to load
-	  if(this.s.placesLocalCurrentPath(window) == ''){}
+	  if(kgit.getCurrentPath() == ''){}
 	  else
 	  {
 		this.loadTimer.cancel();
-		Components
-		.classes["@particle.universe.tito/kGit;1"]
-		.getService(Components.interfaces.IKGit)
-		.KGit_hookFunction();
+		if(!ko.places)
+		{
+		  
+		}
+		else
+		{
+		  Components
+		  .classes["@particle.universe.tito/kGit;1"]
+		  .getService(Components.interfaces.IKGit)
+		  .KGit_hookFunction();
+		}
 
 		this.load();
 	  }
@@ -36,7 +46,7 @@
 	  this.watchedDirectories = [];
 	  
 	  this.running = false;
-	  this.obj = kgit.getPaths(this.s.filePathFromFileURI(this.s.placesLocalCurrentPath(window)));
+	  this.obj = kgit.getPaths(kgit.getCurrentPath());
 	  this.lastCommmand ='';
 	  this.repositoriesCache = kgit.s.sharedObjectGet('repositoriesCache', [])//holds the paths of all the repositories in a directory
 	  this.repositoriesPlacesCache = kgit.s.sharedObjectGet('repositoriesPlacesCache', []);//holds the commands to apply to a place by filtering the git repositories to the current view.
@@ -50,7 +60,7 @@
 	  this.lastFocusedLocalPlacesPath = '';
 	  this.updatePlacesTimer = this.s.timerIntervalAdd(400,
 						function(){
-						  var aLocation = kGitIcons.s.placesLocalCurrentPath(window);
+						  var aLocation = kgit.getCurrentPath();
 						  if(kGitIcons.lastFocusedLocalPlacesPath != aLocation)
 						  {
 							kGitIcons.lastFocusedLocalPlacesPath = aLocation;
@@ -207,20 +217,26 @@
 	}
     this.iconsWrite = function()
     {
-	  if(this.sss.sheetRegistered(this.iconsURI, this.sss.AGENT_SHEET))
-		this.sss.unregisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
-	  this.sss.loadAndRegisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
-	  
 	  //ensure we have the hook there
-	  Components
+	  if(!ko.places)
+	  {
+	  }
+	  else
+	  {
+		if(this.sss.sheetRegistered(this.iconsURI, this.sss.AGENT_SHEET))
+		  this.sss.unregisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
+		this.sss.loadAndRegisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
+	  
+		Components
 		.classes["@particle.universe.tito/kGit;1"]
 		.getService(Components.interfaces.IKGit)
 		.KGit_hookFunction();
-	  
-	  setTimeout( function(){
-		gPlacesViewMgr.view.refreshFullTreeView();
-	  }, 10);
-	  ko.places.viewMgr.tree.treeBoxObject.clearStyleAndImageCaches();
+
+		setTimeout( function(){
+		  gPlacesViewMgr.view.refreshFullTreeView();
+		}, 10);
+		ko.places.viewMgr.tree.treeBoxObject.clearStyleAndImageCaches();
+	  }
 	  
 	  this.running = false;
 	  //this.measureTime.stop('updating.icons');
@@ -241,7 +257,7 @@
 	  //this.measureTime.start('updating.icons');
 	  
 	  var commands, kGitIcons = this;
-	  var currentPlace = this.s.filePathFromFileURI(this.s.placesLocalCurrentPath(window));
+	  var currentPlace = kgit.getCurrentPath();
 	  var obj = kgit.getPaths(currentPlace, true);
 	  obj.sh = this.obj.sh;
 	  obj.outputFile = this.obj.outputFile;
@@ -293,10 +309,12 @@
 	  
 	  delete process, retval;
 	  
-	  var file, hash, css = '', rootPath, aString, aGitPath, aTemp;
+	  var file, hash, css = '', rootPath, aString, aGitPath, aTemp, filePath;
 	  
 	  aStatusContent = aStatusContent.split('KGITPATH');
-
+	  
+	  kgit.status = [];
+	  
 	  for(var i=1;i<aStatusContent.length;i++)
 	  {
 		aGitPath = aStatusContent[i].split('/').join(this.s.__DS);
@@ -334,6 +352,11 @@
 			  }
 			  for(var file in files)
 			  {
+				filePath = files[file];
+				if(!kgit.status[filePath])
+				  kgit.status[filePath] = {};
+				kgit.status[filePath].unknow = true;
+				
 				hash = 'k'+this.s.md5(this.s.pathToNix(files[file]))
 				if(this.s.pathIsFolder(files[file]))
 				  css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__){list-style-image:url("chrome://kgit/content/icons/i/du.png") !important;}'.replace('__FILE__', hash)+'\n';
@@ -370,6 +393,10 @@
 				}
 				for(var file in files)
 				{
+				  filePath = files[file];
+				  if(!kgit.status[filePath])
+					kgit.status[filePath] = {};
+				  kgit.status[filePath].ignored = true;
 				  hash = 'k'+this.s.md5(this.s.pathToNix(files[file]))
 				  if(this.s.pathIsFolder(files[file]))
 					css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__){list-style-image:url("chrome://kgit/content/icons/i/di.png") !important;}'.replace('__FILE__', hash)+'\n';
@@ -414,6 +441,10 @@
 			}
 			for(var file in files)
 			{
+			  filePath = files[file];
+			  if(!kgit.status[filePath])
+				kgit.status[filePath] = {};
+			  kgit.status[filePath].deleted = true;
 			  hash = 'k'+this.s.md5(this.s.pathToNix(files[file]))
 			  if(this.s.pathIsFolder(files[file]))
 				css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__){list-style-image:url("chrome://kgit/content/icons/i/dd.png") !important;}'.replace('__FILE__', hash)+'\n';
@@ -444,6 +475,10 @@
 			}
 			for(var file in files)
 			{
+			  filePath = files[file];
+			  if(!kgit.status[filePath])
+				kgit.status[filePath] = {};
+			  kgit.status[filePath].added = true;
 			  hash = 'k'+this.s.md5(this.s.pathToNix(files[file]))
 			  if(this.s.pathIsFolder(files[file]))
 				css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__){list-style-image:url("chrome://kgit/content/icons/i/da.png") !important;}'.replace('__FILE__', hash)+'\n';
@@ -474,6 +509,11 @@
 			}
 			for(var file in files)
 			{
+			  filePath = files[file];
+			  if(!kgit.status[filePath])
+				kgit.status[filePath] = {};
+			  kgit.status[filePath].conflict = true;
+			  
 			  hash = 'k'+this.s.md5(this.s.pathToNix(files[file]))
 			  if(this.s.pathIsFolder(files[file]))
 				css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__){list-style-image:url("chrome://kgit/content/icons/i/dc.png") !important;}'.replace('__FILE__', hash)+'\n';
@@ -504,6 +544,10 @@
 			}
 			for(var file in files)
 			{
+			  filePath = files[file];
+			  if(!kgit.status[filePath])
+				kgit.status[filePath] = {};
+			  kgit.status[filePath].modified = true;
 			  hash = 'k'+this.s.md5(this.s.pathToNix(files[file]))
 			  if(this.s.pathIsFolder(files[file]))
 				css += 'treechildren#places-files-tree-body::-moz-tree-image(__FILE__){list-style-image:url("chrome://kgit/content/icons/i/dm.png") !important;}'.replace('__FILE__', hash)+'\n';
