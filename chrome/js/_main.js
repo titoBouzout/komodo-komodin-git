@@ -78,6 +78,8 @@ function kGit()
 					   function(aTab){ kgit.onLocationChange(aTab);}
 					  );
 	
+	this.filesStatus = [];
+	
 	this.kGitIconsOverlay = new kGitIconsOverlay();
 	this.kGitIconsOverlay.s = this.s;
 	this.kGitIconsOverlay.gitPath = this.gitPath;
@@ -199,6 +201,36 @@ function kGit()
 	//places root folder if no selection on the places sidebar
 	//places root folder if right click on "placesRootButton"
 	//assumes document unless noted different with target attribute of parent parent
+
+  this.getCurrentPath = function()
+  {
+	//if garden is not installed or "places" extension is focused
+	if(!gardenAPI || (ko.places && ko.places.viewMgr &&
+				   (
+					ko.places.viewMgr.focused ||
+					(document.popupNode && document.popupNode.id && document.popupNode.id == 'placesRootButton')
+					)) )
+	  var selected = this.s.filePathFromFileURI(this.s.placesLocalCurrentPath(window));
+	else
+	  var selected = gardenAPI.getFocusedPathLocal();
+
+	return selected;
+  }
+  this._getSelectedPaths = function(aboutFocusedTab)
+  {
+	//if garden is not installed or "places" extension is focused
+	if(!gardenAPI || (ko.places && ko.places.viewMgr &&
+				   (
+					ko.places.viewMgr.focused ||
+					(document.popupNode && document.popupNode.id && document.popupNode.id == 'placesRootButton')
+				   )
+				   ) )
+	  var selected = this.s.placesLocalGetSelectedPaths(window, aboutFocusedTab);
+	else
+	  var selected = gardenAPI.getSelectedPaths(aboutFocusedTab);
+
+	return selected;
+  }
   this.getSelectedPaths = function(event)
   {
 	if(
@@ -220,11 +252,11 @@ function kGit()
 	   )
 	  )
 	{
-	  var selected = this.s.placesLocalGetSelectedPaths(window, false);
+		var selected = this._getSelectedPaths(false);
 	}
 	else
 	{
-	  var selected = this.s.placesLocalGetSelectedPaths(window, true);
+	  var selected = this._getSelectedPaths(true);
 	}
 	return selected;
   }
@@ -266,7 +298,7 @@ function kGit()
 	var selected = this.getSelectedPaths(event)[0];
 	  if(this.s.pathIsFolder(selected)){}
 	  else
-		  selected = this.s.fileDirname(selected);
+		selected = this.s.fileDirname(selected);
 	return selected;
   }
   this.getPaths = function(aFile, noTemp)
@@ -1311,7 +1343,10 @@ function kGit()
   {
 	this.itemsLoading++;
 	this.element('kgit-toolbarbutton').setAttribute('loading', true);
-	this.element('kgit-places-file-popup').setAttribute('loading', true);
+	if(this.element('kgit-places-file-popup'))
+	  this.element('kgit-places-file-popup').setAttribute('loading', true);
+	if(this.element('kgit-garden-file-popup'))
+	  this.element('kgit-garden-file-popup').setAttribute('loading', true);
 	this.element('kgit-document-context-menu').setAttribute('loading', true);
 	this.element('kgit-tab-context-menu').setAttribute('loading', true);
 	this.element('kgit-menu-bar-file').setAttribute('loading', true);
@@ -1322,7 +1357,10 @@ function kGit()
 	if(this.itemsLoading == 0)
 	{
 	  this.element('kgit-toolbarbutton').removeAttribute('loading');
-	  this.element('kgit-places-file-popup').removeAttribute('loading');
+	  if(this.element('kgit-places-file-popup'))
+		this.element('kgit-places-file-popup').removeAttribute('loading');
+	  if(this.element('kgit-garden-file-popup'))
+		this.element('kgit-garden-file-popup').removeAttribute('loading');
 	  this.element('kgit-document-context-menu').removeAttribute('loading');
 	  this.element('kgit-tab-context-menu').removeAttribute('loading');
 	  this.element('kgit-menu-bar-file').removeAttribute('loading');
@@ -1331,7 +1369,10 @@ function kGit()
   this.disable = function()
   {
 	this.element('kgit-toolbarbutton').setAttribute('disabled', true);
-	this.element('kgit-places-file-popup').setAttribute('disabled', true);
+	if(this.element('kgit-places-file-popup'))
+	  this.element('kgit-places-file-popup').setAttribute('disabled', true);
+	if(this.element('kgit-garden-file-popup'))
+	  this.element('kgit-garden-file-popup').setAttribute('disabled', true);
 	this.element('kgit-document-context-menu').setAttribute('disabled', true);
 	this.element('kgit-tab-context-menu').setAttribute('disabled', true);
 	this.element('kgit-menu-bar-file').setAttribute('disabled', true);
