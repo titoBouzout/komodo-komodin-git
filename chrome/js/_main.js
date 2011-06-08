@@ -205,7 +205,7 @@ function kGit()
   this.getCurrentPath = function()
   {
 	//if garden is not installed or "places" extension is focused
-	if(!gardenAPI || (ko.places && ko.places.viewMgr &&
+	if(typeof(gardenAPI) == 'undefined' || (ko.places && ko.places.viewMgr &&
 				   (
 					ko.places.viewMgr.focused ||
 					(document.popupNode && document.popupNode.id && document.popupNode.id == 'placesRootButton')
@@ -219,7 +219,7 @@ function kGit()
   this._getSelectedPaths = function(aboutFocusedTab)
   {
 	//if garden is not installed or "places" extension is focused
-	if(!gardenAPI || (ko.places && ko.places.viewMgr &&
+	if(typeof(gardenAPI) == 'undefined' || (ko.places && ko.places.viewMgr &&
 				   (
 					ko.places.viewMgr.focused ||
 					(document.popupNode && document.popupNode.id && document.popupNode.id == 'placesRootButton')

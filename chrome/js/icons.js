@@ -26,7 +26,7 @@
 		  .KGit_hookFunction();
 		}
 
-		if(gardenAPI)
+		if(typeof(gardenAPI) != 'undefined')
 		  gardenAPI.addEventListener('onPropertiesRequired', function(aEvent){ kgit.kGitIconsOverlay.onPropertiesRequired(aEvent)});
 		
 		this.load();
@@ -84,7 +84,7 @@
 	  }
 	  if(this.sss.sheetRegistered(this.iconsURI, this.sss.AGENT_SHEET))
 		this.sss.unregisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
-	  if(gardenAPI)
+	  if(typeof(gardenAPI) != 'undefined')
 		gardenAPI.removeEventListener('onPropertiesRequired', function(aEvent){ kgit.kGitIconsOverlay.onPropertiesRequired(aEvent)});
 	}
 	this.onPropertiesRequired = function(aEvent)
@@ -263,7 +263,7 @@
 		ko.places.viewMgr.tree.treeBoxObject.clearStyleAndImageCaches();
 	  }
 	  
-	  if(gardenAPI)
+	  if(typeof(gardenAPI) != 'undefined')
 		gardenAPI.treesClearStyle();
 	  
 	  this.running = false;
