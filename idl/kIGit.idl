@@ -3,6 +3,7 @@
 interface IKGit: nsISupports
 {
     void KGit_hookFunction();
+	string KGit_test();
 };
 
 

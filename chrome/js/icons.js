@@ -102,8 +102,8 @@
 		  aEvent.appendAtom('deleted');
 		else if(kgit.filesStatus[path].ignored)
 		  aEvent.appendAtom('ignored');
-		else if(kgit.filesStatus[path].unknow)
-		  aEvent.appendAtom('unknow');
+		else if(kgit.filesStatus[path].unknown)
+		  aEvent.appendAtom('unknown');
 	  }
 	}
 	this.getRepositories = function(obj)
@@ -383,7 +383,7 @@
 				filePath = files[file];
 				if(!kgit.filesStatus[filePath])
 				  kgit.filesStatus[filePath] = {};
-				kgit.filesStatus[filePath].unknow = true;
+				kgit.filesStatus[filePath].unknown = true;
 				
 				hash = 'k'+this.s.md5(this.s.pathToNix(files[file]))
 				if(this.s.pathIsFolder(files[file]))
@@ -601,5 +601,20 @@
 		this.s.runMain(function(){ kGitIcons.iconsWrite()});
 	  }
 	  //this.measureTime.stop('iconsGet');
+	}
+	this.test = function()
+	{
+	  var md5Python = Components
+		  .classes["@particle.universe.tito/kGit;1"]
+		  .getService(Components.interfaces.IKGit)
+		  .KGit_test();
+	  var md5JavaScript = this.s.md5('/this/just/a/test');
+	  
+	  alert('md5 of "/this/just/a/test" via python is:"'+md5Python+'"');
+	  alert('md5 of "/this/just/a/test" via python is:"'+md5JavaScript+'"');
+	  if(md5Python == md5JavaScript)
+		alert('test success');
+	  else
+		alert('test failed');
 	}
   }

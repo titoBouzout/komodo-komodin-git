@@ -36,3 +36,7 @@ class KGit:
         #               m.hexdigest())
         properties.append('k'+m.hexdigest())#the css selector need start with a letter
         return properties
+    def KGit_test(self):
+        m = hashlib.md5()
+        m.update('/this/just/a/test');
+        return m.hexdigest();
