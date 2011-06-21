@@ -140,10 +140,10 @@
 											  '');
 		  }
 		  
-		  var soulAssassins = kgit.s.timerAdd(4000, function(){process.kill(true);});
+		  var soulAssassins = setTimeout(function(){process.kill(true);}, 4000);
 		  
 		  retval = process.wait(-1);
-		  soulAssassins.cancel();
+		  try{clearTimeout(soulAssassins)}catch(e){};
 		  stdout = process.getStdout();
 		  stdout = stdout.split('./').join(obj.git+'/');
 		  paths = stdout.split('\n');
