@@ -166,7 +166,7 @@ https://github.com/titoBouzout/komodo-komodin-git
 
 NOTE: To clone this repository you should use the following command:
 
-<code>git clone --recursive git://github.com/titoBouzout/komodo-komodin-git.git"</code>
+<code>git clone --recursive git://github.com/titoBouzout/komodo-komodin-git.git</code>
 
 All versions Changes:<br/>
 https://github.com/titoBouzout/komodo-komodin-git/blob/master/changes.html
