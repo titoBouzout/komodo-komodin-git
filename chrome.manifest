@@ -12,4 +12,6 @@ overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/toolbar.xul
 
 style chrome://komodo/content/komodo.xul chrome://kgit/content/css/css.css
 
-manifest components/component.manifest
+contract @particle.universe.tito/kGit;1 {04e01b80-6eca-11e0-a1f0-0800200c9a66}
+component {04e01b80-6eca-11e0-a1f0-0800200c9a66} components/kGit.py
+interfaces components/kIGit.xpt
