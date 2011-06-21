@@ -11,3 +11,5 @@ overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/tab.context
 overlay chrome://komodo/content/komodo.xul chrome://kgit/content/xul/toolbar.xul
 
 style chrome://komodo/content/komodo.xul chrome://kgit/content/css/css.css
+
+manifest components/component.manifest
