@@ -11,8 +11,11 @@
         <em:creator>Tito Bouzout</em:creator>
 		<em:iconURL>chrome://kgit/content/icons/icon.png</em:iconURL>
 		<em:homepageURL>https://github.com/titoBouzout/komodo-komodin-git</em:homepageURL>
+		
 		<em:unpack>true</em:unpack>
+		
 		<em:contributor>sam sherlock</em:contributor>
+		<em:contributor>petey</em:contributor>
 		
         <em:targetApplication>
             <Description>
