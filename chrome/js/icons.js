@@ -195,7 +195,8 @@
 		}
 		this.repositoriesPlacesCache[obj.currentPlace] = commands;
 		this.repositoriesPlacesCachePaths[obj.currentPlace] = toWatchPaths;
-		delete commands, paths;
+		commands = null;
+		paths = null;
 		//this.measureTime.stop('get getRepositories:filter the list of repositories');
 	  }
 	  
@@ -335,7 +336,8 @@
 
 	  var aStatusContent = process.getStdout();
 	  
-	  delete process, retval;
+	  process = null;
+	  retval = null;
 	  
 	  var file, hash, css = '', rootPath, aString, aGitPath, aTemp, filePath;
 	  
@@ -587,7 +589,13 @@
 		}
 	  }
 	  
-	  delete aStatusContent, file, hash, rootPath, aString, aGitPath, aTemp;
+	  aStatusContent = null;
+	  file = null;
+	  hash = null;
+	  rootPath = null;
+	  aString = null;
+	  aGitPath = null;
+	  aTemp = null;
 	  
 	  if(this.lastCSS == css)
 	  {

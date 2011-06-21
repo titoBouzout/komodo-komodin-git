@@ -169,7 +169,13 @@ function kGit()
 	  
 	this.loadingRemove();
 	
-	delete process, retval, stderr, aScriptPath, aOutputPath, openInNewTab, displayIntoNotificationBox;
+	process = null;
+	retval = null;
+	stderr = null;
+	aScriptPath = null;
+	aOutputPath = null;
+	openInNewTab = null;
+	displayIntoNotificationBox = null;
 	
 	this.kGitIconsOverlay.requestUpdate();
 	
