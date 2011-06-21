@@ -119,7 +119,7 @@
 		  if(!this.s.isWindows())
 		  {
 			process = this.runSvc.RunAndNotify(
-											  'find -name hooks',
+											  'find . -name hooks',
 											  obj.git,
 											  '',
 											  '');
