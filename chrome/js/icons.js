@@ -44,14 +44,14 @@
 				  .classes["@mozilla.org/content/style-sheet-service;1"]
 				  .getService(Components.interfaces.nsIStyleSheetService);
 	  
-	  this.watchedDirectories = [];
+	  //this.watchedDirectories = [];
 	  
 	  this.running = false;
 	  this.obj = kgit.getPaths(kgit.getCurrentPath());
 	  this.lastCommmand ='';
 	  this.repositoriesCache = kgit.s.sharedObjectGet('repositoriesCache', [])//holds the paths of all the repositories in a directory
 	  this.repositoriesPlacesCache = kgit.s.sharedObjectGet('repositoriesPlacesCache', []);//holds the commands to apply to a place by filtering the git repositories to the current view.
-	  this.repositoriesPlacesCachePaths = kgit.s.sharedObjectGet('repositoriesPlacesCachePaths', []);//holds the paths of all the repositories for a given place
+	  //this.repositoriesPlacesCachePaths = kgit.s.sharedObjectGet('repositoriesPlacesCachePaths', []);//holds the paths of all the repositories for a given place
 	  this.lastCSS = '';
 	  this.iconsURI = this.s.uri('file://'+this.obj.outputFile+'.css');
 	  
@@ -68,11 +68,17 @@
 							kGitIcons.requestUpdate();
 						  }
 						});
+	  this.updatePlacesIconsTimer = this.s.timerIntervalAdd(4000,
+						function(){
+						  kGitIcons.requestUpdate();
+						});
 	  this.requestUpdate();
 	}
 	this.uninit = function()
 	{
 	  this.updatePlacesTimer.cancel();
+	  this.updatePlacesIconsTimer.cancel();
+	 /*
 	  for(var id in this.watchedDirectories)
 	  {
 		kgit.s.unwatchFolder(
@@ -81,7 +87,7 @@
 			  true,
 			  true
 			 );
-	  }
+	  }*/
 	  if(this.sss.sheetRegistered(this.iconsURI, this.sss.AGENT_SHEET))
 		this.sss.unregisterSheet(this.iconsURI, this.sss.AGENT_SHEET);
 	  if(typeof(gardenAPI) != 'undefined')
@@ -174,7 +180,7 @@
 		}
 		var paths = this.repositoriesCache[obj.git];
 		var commands = '';
-		var toWatchPaths = [];
+		//var toWatchPaths = [];
 		for(var id in paths)
 		{
 		  if(paths[id] != '')
@@ -182,7 +188,7 @@
 			//only track repositories on current view
 			if(this.s.inArray(allowedLookups, paths[id]) || paths[id].indexOf(obj.currentPlace) === 0)
 			{
-			  toWatchPaths[toWatchPaths.length] = paths[id].split('/').join(this.s.__DS);
+			  //toWatchPaths[toWatchPaths.length] = paths[id].split('/').join(this.s.__DS);
 			  
 			  commands += 'cd "'+this.s.filePathEscape(paths[id])+'"';
 			  commands += '\n';
@@ -194,7 +200,7 @@
 		  }
 		}
 		this.repositoriesPlacesCache[obj.currentPlace] = commands;
-		this.repositoriesPlacesCachePaths[obj.currentPlace] = toWatchPaths;
+		//this.repositoriesPlacesCachePaths[obj.currentPlace] = toWatchPaths;
 		commands = null;
 		paths = null;
 		//this.measureTime.stop('get getRepositories:filter the list of repositories');
@@ -210,7 +216,7 @@
 		this.lastCommmand = this.repositoriesPlacesCache[obj.currentPlace];
 		this.s.fileWrite(obj.sh, this.lastCommmand);
 		
-		var newWatchedDirectories = [];
+		/*var newWatchedDirectories = [];
 		for(var id in this.repositoriesPlacesCachePaths[obj.currentPlace])
 		{
 		  newWatchedDirectories[newWatchedDirectories.length] = this.repositoriesPlacesCachePaths[obj.currentPlace][id];
@@ -232,7 +238,7 @@
 				true
 			   );
 		}
-		this.watchedDirectories = newWatchedDirectories;
+		this.watchedDirectories = newWatchedDirectories;*/
 		//this.measureTime.stop('get getRepositories:newWatchedDirectories');
 	  }
 	  //this.measureTime.stop('get getRepositories');
@@ -241,7 +247,7 @@
 	{
 	  this.reposotoriesCache = [];
 	  this.repositoriesPlacesCache = [];
-	  this.repositoriesPlacesCachePaths = [];
+	  //this.repositoriesPlacesCachePaths = [];
 	}
     this.iconsWrite = function()
     {
