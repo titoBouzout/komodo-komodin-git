@@ -28,6 +28,12 @@
 
 		if(typeof(gardenAPI) != 'undefined')
 		  gardenAPI.addEventListener('onPropertiesRequired', function(aEvent){ kgit.kGitIconsOverlay.onPropertiesRequired(aEvent)});
+		  
+		if(document.getElementById('placesRefreshButton'))
+		  document.getElementById('placesRefreshButton').addEventListener('command', function(){ kgit.kGitIconsOverlay.requestUpdate();}, false);
+		
+		if(document.getElementById('g-process'))
+		  document.getElementById('g-process').nextSibling.addEventListener('command', function(){ kgit.kGitIconsOverlay.requestUpdate();}, false);
 		
 		this.load();
 	  }
@@ -59,7 +65,7 @@
 	  
 	  //check for changes on current place.
 	  this.lastFocusedLocalPlacesPath = '';
-	  this.updatePlacesTimer = this.s.timerIntervalAdd(400,
+	  /*this.updatePlacesTimer = this.s.timerIntervalAdd(400,
 						function(){
 						  var aLocation = kgit.getCurrentPath();
 						  if(aLocation != '' && kGitIcons.lastFocusedLocalPlacesPath != aLocation)
@@ -67,17 +73,20 @@
 							kGitIcons.lastFocusedLocalPlacesPath = aLocation;
 							kGitIcons.requestUpdate();
 						  }
-						});
+						});*/
+	  /*
 	  this.updatePlacesIconsTimer = this.s.timerIntervalAdd(4000,
 						function(){
 						  kGitIcons.requestUpdate();
 						});
+	  */
+	  
 	  this.requestUpdate();
 	}
 	this.uninit = function()
 	{
-	  this.updatePlacesTimer.cancel();
-	  this.updatePlacesIconsTimer.cancel();
+	  //this.updatePlacesTimer.cancel();
+	  //this.updatePlacesIconsTimer.cancel();
 	 /*
 	  for(var id in this.watchedDirectories)
 	  {
@@ -276,6 +285,10 @@
 	  this.running = false;
 	  //this.measureTime.stop('updating.icons');
 	 // this.measureTime.display();
+	}
+	this._requestUpdate = function()
+	{
+	  kgit.kGitIconsOverlay.requestUpdate();
 	}
 	this.requestUpdate = function()
 	{
