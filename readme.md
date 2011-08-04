@@ -177,6 +177,22 @@ Changes From Latest Version:
 
 
   <li>
+	<b>1.110804.13</b>
+	<br/> http://community.activestate.com/files/kGit_10.xpi
+	<br/> https://github.com/titoBouzout/komodo-komodin-git/tree/110804.13
+	<ul>
+	  <li>Fix:</li>
+	  <ul>
+		<li>Icons not working on Mac.</li>
+	  </ul>
+	  <li>Change:</li>
+	  <ul>
+		<li>Icons refresh only when required by user.</li>
+	  </ul>
+	</ul>
+  </li>
+  
+  <li>
 	<b>1.110515.12</b>
 	<br/> http://community.activestate.com/files/kGit_9.xpi
 	<br/> https://github.com/titoBouzout/komodo-komodin-git/tree/110515.12
